@@ -2,17 +2,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { MediaManagerComponent } from './media-manager/media-manager.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    MediaManagerComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [MediaManagerComponent]
 })
 export class AppModule { }
