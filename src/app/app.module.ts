@@ -2,17 +2,22 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
-import { MediaManagerComponent } from './media-manager/media-manager.component';
+import { MusicCatalogComponent } from './music-catalog/music-catalog.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [
-    MediaManagerComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
-  providers: [],
-  bootstrap: [MediaManagerComponent]
+    declarations: [
+        MusicCatalogComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+    ],
+    providers: [
+        HttpClient,
+    ],
+    bootstrap: [MusicCatalogComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
