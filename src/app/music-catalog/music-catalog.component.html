@@ -1,7 +1,5 @@
 <div class="music-catalog">
-    <h1>{{ title }}</h1>
     <music-catalog-header></music-catalog-header>
-    <music-catalog-login></music-catalog-login>
-    <music-catalog-overview></music-catalog-overview>
+    <music-catalog-overview *ngIf="loggedIn"></music-catalog-overview>
 </div>
 

@@ -1,6 +1,7 @@
 div.music-catalog {
   font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
 }
-div.music-catalog h1 {
-  color: orange;
+div.music-catalog music-catalog-header,
+div.music-catalog music-catalog-overview {
+  display: block;
 }
