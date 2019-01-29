@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { AuthenticationService } from '../../services/authentication.service';
 import { ApiRequestService } from '../../services/api-request.service';
+import { ModalService } from '../../modals/modal.service';
 
 @Component({
     selector: 'music-catalog-overview',
@@ -12,6 +13,7 @@ export class OverviewComponent {
     public constructor(
         private authenticationService: AuthenticationService,
         private apiRequestService: ApiRequestService,
+        private modalService: ModalService,
     ) {
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
@@ -21,8 +23,11 @@ export class OverviewComponent {
             next: (response) => {
                 console.log(response);
             },
-            error: (error) => {
+            error: (error: HttpErrorResponse) => {
                 console.log(error);
+                this.modalService.getModal('message-modal')
+                    .setMessage(error.error.message)
+                    .open();
             }
         });
     }

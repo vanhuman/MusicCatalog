@@ -1,0 +1,50 @@
+@import 'defines';
+
+.default-button {
+    padding: 0 15px;
+    font-weight: 600;
+    min-width: 40px;
+    margin-left: 20px;
+}
+
+.btn-primary {
+    .default-button;
+    height: 34px;
+    border-radius: 3px;
+    background-color: @primary-button-background-color;
+    border: 1px solid transparent;
+    color: @primary-button-text-color;
+    font-size: 13px;
+    outline: none; // to prevent blue border on click, only on combination MacOS & Chrome
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+    cursor: pointer;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: darken(@primary-button-background-color, 5%);
+}
+
+.btn-primary:disabled {
+    background-color: #c2c2c2;
+}
+
+.btn-secondary {
+    .default-button;
+    height: 34px;
+    border-radius: 3px;
+    background-color: #fff;
+    color: @secondary-button-text-color;
+    border: solid 2px @secondary-button-border-color;
+    font-size: 13px;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    border: solid 2px darken(@secondary-button-border-color, 10%);
+}
+
+.btn-secondary:disabled {
+    border: solid 2px #d5d5d5;
+    color: #b7b7b7;
+}

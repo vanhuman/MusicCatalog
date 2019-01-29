@@ -8,12 +8,15 @@ import { HeaderComponent } from './music-catalog/components/header/header.compon
 import { OverviewComponent } from './music-catalog/components/overview/overview.component';
 import { AuthenticationService } from './music-catalog/services/authentication.service';
 import { ApiRequestService } from './music-catalog/services/api-request.service';
+import { CustomModalComponent } from './music-catalog/modals/custom-modal.component';
+import { ModalService } from './music-catalog/modals/modal.service';
 
 @NgModule({
     declarations: [
         MusicCatalogComponent,
         HeaderComponent,
         OverviewComponent,
+        CustomModalComponent,
     ],
     imports: [
         BrowserModule,
@@ -24,6 +27,7 @@ import { ApiRequestService } from './music-catalog/services/api-request.service'
         HttpClient,
         AuthenticationService,
         ApiRequestService,
+        ModalService,
     ],
     bootstrap: [MusicCatalogComponent]
 })
