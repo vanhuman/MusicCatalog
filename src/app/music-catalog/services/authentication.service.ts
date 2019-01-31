@@ -4,7 +4,8 @@ import { AuthenticateApiResponse } from '../models/authenticate-api-response.mod
 import { Observable, of, Subject } from 'rxjs';
 import { SessionInterface } from '../models/session.model.interface';
 import { Session } from '../models/session.model';
-import { ApiRequestService } from './api-request.service';
+import { ApiRequestServiceInterface } from './api-request.service.interface';
+import { AuthenticationServiceInterface } from './authentication.service.interface';
 
 export interface AuthenticationResult {
     succes: boolean;
@@ -12,12 +13,12 @@ export interface AuthenticationResult {
 }
 
 @Injectable()
-export class AuthenticationService {
+export class AuthenticationService implements AuthenticationServiceInterface {
 
     private session: SessionInterface;
 
     public constructor(
-        private apiRequestService: ApiRequestService,
+        private apiRequestService: ApiRequestServiceInterface,
     ) {
         //
     }

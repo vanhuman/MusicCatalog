@@ -1,7 +1,8 @@
 import { Component, ElementRef, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { AuthenticationResult, AuthenticationService } from '../../services/authentication.service';
+import { AuthenticationResult } from '../../services/authentication.service';
 import { KeyCode, KeyStrokeUtility } from '../../utilities/key-stroke.utility';
+import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
 
 @Component({
     selector: 'music-catalog-login',
@@ -23,7 +24,7 @@ export class LoginComponent implements OnInit {
 
     public constructor(
         private el: ElementRef,
-        private authenticationService: AuthenticationService,
+        private authenticationService: AuthenticationServiceInterface,
     ) {
         this.element = el.nativeElement;
     }

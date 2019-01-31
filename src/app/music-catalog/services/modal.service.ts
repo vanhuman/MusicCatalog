@@ -1,4 +1,4 @@
-import { CustomModalComponent } from './custom-modal.component';
+import { CustomModalComponent } from '../modals/custom-modal.component';
 
 export class ModalService {
     private modals: CustomModalComponent[] = [];

@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
-import { ModalService } from './modal.service';
+import { ModalServiceInterface } from '../services/modal.service.interface';
 
 @Component({
     selector: 'custom-modal',
@@ -9,12 +9,13 @@ import { ModalService } from './modal.service';
 
 export class CustomModalComponent implements OnInit, OnDestroy {
     @Input() id: string;
-
     public message = '';
-
     private element: any;
 
-    constructor(private modalService: ModalService, private el: ElementRef) {
+    constructor(
+        private modalService: ModalServiceInterface,
+        private el: ElementRef
+    ) {
         this.element = el.nativeElement;
     }
 

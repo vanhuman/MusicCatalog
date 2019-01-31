@@ -9,9 +9,12 @@ import { OverviewComponent } from './music-catalog/components/overview/overview.
 import { AuthenticationService } from './music-catalog/services/authentication.service';
 import { ApiRequestService } from './music-catalog/services/api-request.service';
 import { CustomModalComponent } from './music-catalog/modals/custom-modal.component';
-import { ModalService } from './music-catalog/modals/modal.service';
+import { ModalService } from './music-catalog/services/modal.service';
 import { LoginComponent } from './music-catalog/components/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ApiRequestServiceInterface } from './music-catalog/services/api-request.service.interface';
+import { AuthenticationServiceInterface } from './music-catalog/services/authentication.service.interface';
+import { ModalServiceInterface } from './music-catalog/services/modal.service.interface';
 
 @NgModule({
     declarations: [
@@ -30,9 +33,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ],
     providers: [
         HttpClient,
-        AuthenticationService,
-        ApiRequestService,
-        ModalService,
+        { provide: ModalServiceInterface, useClass: ModalService },
+        { provide: AuthenticationServiceInterface, useClass: AuthenticationService },
+        { provide: ApiRequestServiceInterface, useClass: ApiRequestService }
     ],
     bootstrap: [MusicCatalogComponent]
 })

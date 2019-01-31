@@ -1,8 +1,9 @@
 import { HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface ApiRequestServiceInterface {
-    get<T>(url: string, params: HttpParams): Observable<HttpResponse<T>>;
+export abstract class ApiRequestServiceInterface {
 
-    post<T>(url: string, body, headers): Observable<HttpResponse<T>>;
+    public abstract get<T>(url: string, params: HttpParams): Observable<HttpResponse<T>>;
+
+    public abstract post<T>(url: string, body, headers): Observable<HttpResponse<T>>;
 }
