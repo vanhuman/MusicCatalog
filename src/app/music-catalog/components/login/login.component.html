@@ -1,0 +1,30 @@
+<div class="login">
+    <form class="login" [formGroup]="loginForm">
+        <fieldset>
+            <div class="field">
+                <label for="{{id}}-username">Username</label>
+                <input id="{{id}}-username"
+                       type="text"
+                       formControlName="username"
+                       placeholder="Enter username"
+                >
+            </div>
+            <div class="field">
+                <label for="{{id}}-password">Password</label>
+                <input id="{{id}}-password"
+                       type="password"
+                       formControlName="password"
+                       placeholder="Enter password"
+                >
+            </div>
+            <div class="field">
+                <div class="error" *ngIf="error">{{ error }}</div>
+            </div>
+        </fieldset>
+        <div class="buttons">
+            <button class="btn-primary" (click)="login()">OK</button>
+            <button class="btn-secondary" (click)="close()">Cancel</button>
+        </div>
+    </form>
+</div>
+<div class="login-background"></div>

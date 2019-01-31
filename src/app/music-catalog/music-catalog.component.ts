@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AuthenticationService } from './services/authentication.service';
 
 @Component({
     selector: 'music-catalog',
@@ -10,10 +9,6 @@ export class MusicCatalogComponent {
     public loggedIn = false;
 
     public constructor(
-        private authenticationService: AuthenticationService,
     ) {
-        this.authenticationService.login().subscribe((loginSuccesful) => {
-            this.loggedIn = loginSuccesful;
-        });
     }
 }

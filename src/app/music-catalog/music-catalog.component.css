@@ -4,6 +4,7 @@ custom-modal {
 div.music-catalog,
 custom-modal {
   font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
+  font-size: 12px;
 }
 div.music-catalog music-catalog-header,
 custom-modal music-catalog-header,

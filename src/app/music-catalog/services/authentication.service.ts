@@ -6,6 +6,11 @@ import { SessionInterface } from '../models/session.model.interface';
 import { Session } from '../models/session.model';
 import { ApiRequestService } from './api-request.service';
 
+export interface AuthenticationResult {
+    succes: boolean;
+    error?: string;
+}
+
 @Injectable()
 export class AuthenticationService {
 
@@ -17,19 +22,19 @@ export class AuthenticationService {
         //
     }
 
-    public login(): Observable<boolean> {
+    public login(username: string, password: string): Observable<AuthenticationResult> {
         if (this.session) {
-            return of(true);
+            return of({succes: true});
         }
-        return this.authenticate();
+        return this.authenticate(username, password);
     }
 
-    public authenticate(): Observable<boolean> {
-        const observable: Subject<boolean> = new Subject();
+    public authenticate(username: string, password: string): Observable<AuthenticationResult> {
+        const observable: Subject<AuthenticationResult> = new Subject();
         const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         let body = new HttpParams();
-        body = body.set('username', 'robert');
-        body = body.set('password', 'ankerput');
+        body = body.set('username', username);
+        body = body.set('password', password);
         this.apiRequestService.post<AuthenticateApiResponse>(
             '/authenticate',
             body,
@@ -43,12 +48,15 @@ export class AuthenticationService {
                     response.body.session.time_out,
                     response.body.session.user_id
                 );
-                observable.next(true);
+                observable.next({succes: true});
             },
             error: (error: HttpErrorResponse) => {
                 console.log(error.error);
                 delete this.session;
-                observable.next(false);
+                observable.next({
+                    succes: false,
+                    error: error.error.message,
+                });
             }
         });
         return observable;
