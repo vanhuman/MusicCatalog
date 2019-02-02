@@ -1,3 +1,41 @@
-h1 {
+@import '../../styles/buttons';
+
+div.title {
+    display: inline-block;
+    margin-right: 20px;
     color: orange;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 40px;
+}
+form.header {
+    display: inline-block;
+    line-height: 45px;
+    float: right;
+    padding-right: @padding-side;
+
+    div {
+        display: inline-block;
+        margin-right: 20px;
+
+        button.btn-primary {
+            margin-left: 5px;
+        }
+    }
+    label {
+        display: inline-block;
+        color: @label-color;
+        margin-right: 5px;
+    }
+    input {
+        padding: 0 5px;
+        height: 28px;
+        font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
+        font-size: 12px;
+    }
+    div.offset {
+        input {
+            width: 50px;
+        }
+    }
 }

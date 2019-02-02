@@ -1,1 +1,29 @@
-<h1>{{ title }}</h1>
+<div class="title">
+    {{ title }}
+</div>
+<form class="header" [formGroup]="headerForm">
+    <div class="number-of-records">
+        <label>Total:</label>
+        {{ numberOfRecords }} ({{ numberOfPages }} pages)
+    </div>
+    <div class="offset">
+        <label for="{{id}}-offset">Offset:</label>
+        <input type="text" id="{{id}}-offset"
+               placeholder="Page"
+               formControlName="offset"
+        >
+    </div>
+    <div class="search">
+        <input type="text"
+               placeholder="Enter keywords"
+               formControlName="keywords"
+        >
+        <button class="btn-primary">Search</button>
+    </div>
+    <div class="export">
+        <button class="btn-primary">Export</button>
+    </div>
+    <div class="add">
+        <button class="btn-primary">Add</button>
+    </div>
+</form>

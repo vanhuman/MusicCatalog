@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
         this.element.addEventListener('click', function (el: any) {
             if (el.target.className === 'login'
                 || el.target.className === 'login-background') {
-                login.close();
+                login.cancel();
             }
         });
         const keyHandlings = [
@@ -48,6 +48,10 @@ export class LoginComponent implements OnInit {
             },
         ];
         KeyStrokeUtility.addListener(keyHandlings);
+    }
+
+    public cancel(): void {
+        this.error = 'Please login to continue.';
     }
 
     public close(): void {

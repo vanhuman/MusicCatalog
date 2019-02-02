@@ -7,6 +7,7 @@ import { ModalServiceInterface } from '../../services/modal.service.interface';
 @Component({
     selector: 'music-catalog-overview',
     templateUrl: './overview.component.html',
+    styleUrls: ['./overview.component.css'],
 })
 export class OverviewComponent {
 

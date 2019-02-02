@@ -1,12 +1,34 @@
+@import 'styles/defines';
+
 custom-modal {
     display: none;
 }
-
-div.music-catalog, custom-modal {
-    font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
-    font-size: 12px;
+div.music-catalog {
+    padding: 0;
+    margin: 0;
 
     music-catalog-header, music-catalog-overview {
         display: block;
+        min-width: 1024px;
+    }
+    music-catalog-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: @header-height;
+        background: @secondary-color;
+        padding: 0 @padding-side;
+        border-bottom: 1px solid @primary-color;
+    }
+    music-catalog-overview {
+        margin-top: @header-height + 10px;
+        height: 2000px;
+        padding: 0 @padding-side;
+    }
+    music-catalog-login {
+        position: fixed;
+        top: 50px;
+        width: 100%;
+        z-index: 1000;
     }
 }
