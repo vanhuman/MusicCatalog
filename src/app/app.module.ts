@@ -15,6 +15,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApiRequestServiceInterface } from './music-catalog/services/api-request.service.interface';
 import { AuthenticationServiceInterface } from './music-catalog/services/authentication.service.interface';
 import { ModalServiceInterface } from './music-catalog/services/modal.service.interface';
+import { AlbumsFactoryInterface } from './music-catalog/factories/albums.factory.interface';
+import { AlbumsFactory } from './music-catalog/factories/albums.factory';
+import { AlbumComponent } from './music-catalog/components/overview/album/album.component';
 
 @NgModule({
     declarations: [
@@ -23,6 +26,7 @@ import { ModalServiceInterface } from './music-catalog/services/modal.service.in
         OverviewComponent,
         CustomModalComponent,
         LoginComponent,
+        AlbumComponent,
     ],
     imports: [
         BrowserModule,
@@ -35,7 +39,8 @@ import { ModalServiceInterface } from './music-catalog/services/modal.service.in
         HttpClient,
         { provide: ModalServiceInterface, useClass: ModalService },
         { provide: AuthenticationServiceInterface, useClass: AuthenticationService },
-        { provide: ApiRequestServiceInterface, useClass: ApiRequestService }
+        { provide: ApiRequestServiceInterface, useClass: ApiRequestService },
+        { provide: AlbumsFactoryInterface, useClass: AlbumsFactory }
     ],
     bootstrap: [MusicCatalogComponent]
 })

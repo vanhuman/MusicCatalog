@@ -1,0 +1,43 @@
+@import '../../styles/defines';
+
+div.overview-header {
+    position: fixed;
+    top: @header-height;
+    height: @overview-labels-height;
+    width: ~'calc(100% - @{padding-side} - @{padding-side})';
+    border-bottom: 1px dashed @primary-color;
+    margin-bottom: 5px;
+    color: @label-color;
+    padding: 5px @padding-side 0 @padding-side;
+    background: #fff;
+
+    div {
+        display: inline-block;
+    }
+    div.artist {
+        width: @width-artist;
+    }
+    div.title {
+        width: @width-title;
+    }
+    div.year {
+        width: @width-year;
+    }
+    div.format {
+        width: @width-format;
+    }
+    div.label {
+        width: @width-label;
+    }
+    div.genre {
+        width: @width-genre;
+    }
+    div.date-added {
+        width: @width-date-added;
+    }
+}
+div.overview-body {
+    width: ~'calc(100% - @{padding-side} - @{padding-side})';
+    margin-top: @overview-labels-height + @header-height;
+    padding: 10px @padding-side 20px @padding-side;
+}

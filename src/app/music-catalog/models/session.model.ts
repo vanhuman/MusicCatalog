@@ -1,4 +1,6 @@
-export class Session {
+import { SessionInterface } from './session.model.interface';
+
+export class Session implements SessionInterface {
 
     public constructor(
         private id: number,

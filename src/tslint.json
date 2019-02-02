@@ -8,8 +8,7 @@
             "camelCase"
         ],
         "component-selector": [
-            true,
-            "element",
+            ["element", "attribute"],
             ["music-catalog", "app", "custom"],
             "kebab-case"
         ]

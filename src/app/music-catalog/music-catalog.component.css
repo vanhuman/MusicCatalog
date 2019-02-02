@@ -38,9 +38,8 @@ div.music-catalog music-catalog-header {
   border-bottom: 1px solid #ffa500;
 }
 div.music-catalog music-catalog-overview {
-  margin-top: 55px;
-  height: 2000px;
-  padding: 0 20px;
+  margin-top: 45px;
+  width: 100%;
 }
 div.music-catalog music-catalog-login {
   position: fixed;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { AuthenticateApiResponse } from '../models/authenticate-api-response.model';
+import { AuthenticateApiResponse } from '../models/api-responses/authenticate-api-response.model';
 import { Observable, of, Subject } from 'rxjs';
 import { SessionInterface } from '../models/session.model.interface';
 import { Session } from '../models/session.model';
@@ -42,7 +42,6 @@ export class AuthenticationService implements AuthenticationServiceInterface {
             headers
         ).subscribe({
             next: (response) => {
-                console.log('Login succesful');
                 this.session = new Session(
                     response.body.session.id,
                     response.body.session.token,
@@ -52,7 +51,6 @@ export class AuthenticationService implements AuthenticationServiceInterface {
                 observable.next({succes: true});
             },
             error: (error: HttpErrorResponse) => {
-                console.log(error.error);
                 delete this.session;
                 observable.next({
                     succes: false,

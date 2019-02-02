@@ -1,19 +1,24 @@
-@padding-side: 20px;
 @primary-color: #ffa500;
 @secondary-color: #f9f9f9;
-
 @primary-button-background-color: #ffa500;
 @primary-button-text-color: #000;
 @secondary-button-border-color: #979797;
 @secondary-button-text-color: #000;
-
 @input-border-color: #979797;
 @input-border-color-focus: #444444;
 @input-border-color-focus-secondary: #666666;
-
 @label-color: #945a00;
 
+@padding-side: 20px;
 @header-height: 45px;
+@overview-labels-height: 20px;
+@width-artist: 300px;
+@width-year: 50px;
+@width-format: 50px;
+@width-label: 200px;
+@width-genre: 150px;
+@width-date-added: 100px;
+@width-title: ~'calc(100% - @{width-artist} - @{width-year} - @{width-format} - @{width-label} - @{width-genre} - @{width-date-added})';
 
 input, button, select, textarea {
     border-radius: 4px;
