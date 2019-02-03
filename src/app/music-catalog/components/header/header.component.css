@@ -21,7 +21,7 @@ button.btn-secondary:focus {
   min-width: 40px;
   margin-left: 20px;
   border-radius: 3px;
-  height: 30px;
+  height: 20px;
   font-size: 12px;
 }
 .btn-primary {
@@ -29,7 +29,7 @@ button.btn-secondary:focus {
   min-width: 40px;
   margin-left: 20px;
   border-radius: 3px;
-  height: 30px;
+  height: 20px;
   font-size: 12px;
   background-color: #ffa500;
   border: 1px solid transparent;
@@ -50,7 +50,7 @@ button.btn-secondary:focus {
   min-width: 40px;
   margin-left: 20px;
   border-radius: 3px;
-  height: 30px;
+  height: 20px;
   font-size: 12px;
   background-color: #fff;
   border: solid 1px #979797;
@@ -66,14 +66,14 @@ button.btn-secondary:focus {
 div.title {
   display: inline-block;
   margin-right: 20px;
-  color: orange;
+  color: #ffa500;
   font-size: 16px;
   font-weight: 600;
-  line-height: 40px;
+  line-height: 35px;
 }
 form.header {
   display: inline-block;
-  line-height: 45px;
+  line-height: 35px;
   float: right;
   padding-right: 20px;
 }
@@ -91,7 +91,7 @@ form.header label {
 }
 form.header input {
   padding: 0 5px;
-  height: 28px;
+  height: 18px;
   font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
   font-size: 12px;
 }

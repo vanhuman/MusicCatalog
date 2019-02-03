@@ -2,25 +2,32 @@
 
 div {
     display: inline-block;
+    padding: 2px 0 1px 0;
 }
 div.artist {
-    width: @width-artist;
+    .ellipsis(@width-artist);
+    padding-right: @padding-right-artist;
 }
 div.title {
-    width: @width-title;
+    .ellipsis(@width-title);
+    padding-right: @padding-right-title;
 }
 div.year {
-    width: @width-year;
+    .ellipsis(@width-year);
+    text-align: center;
 }
 div.format {
-    width: @width-format;
+    .ellipsis(@width-format);
+    text-align: center;
 }
 div.label {
-    width: @width-label;
+    .ellipsis(@width-label);
+    padding-right: @padding-right-label;
 }
 div.genre {
-    width: @width-genre;
+    .ellipsis(@width-genre);
+    padding-right: @padding-right-genre;
 }
 div.date-added {
-    width: @width-date-added;
+    .ellipsis(@width-date-added);
 }

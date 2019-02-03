@@ -5,32 +5,38 @@ div.overview-header {
     top: @header-height;
     height: @overview-labels-height;
     width: ~'calc(100% - @{padding-side} - @{padding-side})';
-    border-bottom: 1px dashed @primary-color;
+    border-bottom: 1px solid @primary-color;
     margin-bottom: 5px;
     color: @label-color;
     padding: 5px @padding-side 0 @padding-side;
-    background: #fff;
+    background: @tertiary-color;
 
     div {
         display: inline-block;
     }
     div.artist {
         width: @width-artist;
+        padding-right: @padding-right-artist;
     }
     div.title {
         width: @width-title;
+        padding-right: @padding-right-title;
     }
     div.year {
+        text-align: center;
         width: @width-year;
     }
     div.format {
+        text-align: center;
         width: @width-format;
     }
     div.label {
         width: @width-label;
+        padding-right: @padding-right-label;
     }
     div.genre {
         width: @width-genre;
+        padding-right: @padding-right-genre;
     }
     div.date-added {
         width: @width-date-added;
@@ -40,4 +46,10 @@ div.overview-body {
     width: ~'calc(100% - @{padding-side} - @{padding-side})';
     margin-top: @overview-labels-height + @header-height;
     padding: 10px @padding-side 20px @padding-side;
+
+    div.album-row {
+        &:nth-of-type(10n) {
+            background: @tertiary-color;
+        }
+    }
 }

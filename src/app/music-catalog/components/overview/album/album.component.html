@@ -1,7 +1,7 @@
-<div class="artist">
+<div class="artist" title="{{ album.getArtist().getName() }}">
     {{ album.getArtist().getName() }}
 </div>
-<div class="title">
+<div class="title" title="{{ album.getTitle() }}">
     {{ album.getTitle() }}
 </div>
 <div class="year">
@@ -10,10 +10,10 @@
 <div class="format">
     {{ album.getFormat().getName() }}
 </div>
-<div class="label">
+<div class="label" title="{{ album.getLabel().getName() }}">
     {{ album.getLabel().getName() }}
 </div>
-<div class="genre">
+<div class="genre" title="{{ album.getGenre().getDescription() }}">
     {{ album.getGenre().getDescription() }}
 </div>
 <div class="date-added">

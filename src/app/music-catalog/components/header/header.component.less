@@ -3,14 +3,14 @@
 div.title {
     display: inline-block;
     margin-right: 20px;
-    color: orange;
+    color: @primary-color;
     font-size: 16px;
     font-weight: 600;
-    line-height: 40px;
+    line-height: @header-height;
 }
 form.header {
     display: inline-block;
-    line-height: 45px;
+    line-height: @header-height;
     float: right;
     padding-right: @padding-side;
 
@@ -29,7 +29,7 @@ form.header {
     }
     input {
         padding: 0 5px;
-        height: 28px;
+        height: @button-height - 2px;
         font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
         font-size: 12px;
     }

@@ -24,11 +24,12 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         //
     }
 
-    public getAlbums(): Observable<AlbumInterface[]> {
+    public getAlbums(page: number = 1): Observable<AlbumInterface[]> {
         const observable: Subject<AlbumInterface[]> = new Subject<AlbumInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
+        params = params.set('page', page.toString());
         this.apiRequestService.get<AlbumsApiResponse>('/albums', params).subscribe({
             next: (response) => {
                 const albums: Album[] = [];
