@@ -3,6 +3,7 @@ import { ArtistInterface } from './artist.model.interface';
 import { FormatInterface } from './format.model.interface';
 import { LabelInterface } from './label.model.interface';
 import { GenreInterface } from './genre.model.interface';
+import * as moment from 'moment';
 
 export class Album implements AlbumInterface {
     public constructor(
@@ -32,7 +33,7 @@ export class Album implements AlbumInterface {
     }
 
     public getDateAdded(): string {
-        return this.dateAdded.toLocaleDateString('nl-NL');
+        return moment(this.dateAdded).format('DD-MM-YYYY');
     }
 
     public getNotes(): string {
