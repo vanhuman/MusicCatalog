@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TooltipConfig } from '../tooltip/tooltip.directive';
+import { TooltipConfig } from '../directives/tooltip/tooltip.directive';
 
 @Injectable()
 export class TooltipService {

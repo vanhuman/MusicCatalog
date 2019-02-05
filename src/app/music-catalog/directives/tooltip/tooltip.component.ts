@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { TooltipConfig } from './tooltip.directive';
+
 declare var jQuery: any;
 
 @Component({
@@ -16,14 +17,14 @@ declare var jQuery: any;
 export class TooltipComponent implements AfterViewInit {
     @Input() public tooltipConfig: TooltipConfig;
 
-    @ViewChild('tooltipContent') public tooltipComponentText: ElementRef;
+    @ViewChild('tooltipContent') public tooltipContent: ElementRef;
     @ViewChild('tooltipArrowTop') public tooltipArrowTop: ElementRef;
     @ViewChild('tooltipArrowBottom') public tooltipArrowBottom: ElementRef;
 
     public ngAfterViewInit() {
         const targetElement = this.tooltipConfig.element.nativeElement;
         const targetElementOffset = jQuery(targetElement).offset();
-        const tooltipElement = this.tooltipComponentText.nativeElement;
+        const tooltipElement = this.tooltipContent.nativeElement;
         const tooltipArrowTopElement = this.tooltipArrowTop.nativeElement;
         const tooltipArrowBottomElement = this.tooltipArrowBottom.nativeElement;
 

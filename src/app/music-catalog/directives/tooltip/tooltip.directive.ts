@@ -1,5 +1,5 @@
 import { Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { TooltipService } from '../services/tooltipService';
+import { TooltipService } from '../../services/tooltipService';
 
 export type ArrowPosition = 'top' | 'bottom';
 

@@ -18,9 +18,9 @@ import { ModalServiceInterface } from './music-catalog/services/modal.service.in
 import { AlbumsFactoryInterface } from './music-catalog/factories/albums.factory.interface';
 import { AlbumsFactory } from './music-catalog/factories/albums.factory';
 import { AlbumComponent } from './music-catalog/components/overview/album/album.component';
-import { TooltipComponent } from './music-catalog/tooltip/tooltip.component';
-import { TooltipDirective } from './music-catalog/tooltip/tooltip.directive';
-import { TooltipContainerComponent } from './music-catalog/tooltip/tooltip-container';
+import { TooltipComponent } from './music-catalog/directives/tooltip/tooltip.component';
+import { TooltipDirective } from './music-catalog/directives/tooltip/tooltip.directive';
+import { TooltipContainerComponent } from './music-catalog/directives/tooltip/tooltip-container';
 import { TooltipService } from './music-catalog/services/tooltipService';
 
 @NgModule({

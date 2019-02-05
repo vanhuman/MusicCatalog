@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AlbumInterface } from '../../../models/album.model.interface';
-import { TooltipConfig } from '../../../tooltip/tooltip.directive';
+import { TooltipConfig } from '../../../directives/tooltip/tooltip.directive';
 
 @Component({
     selector: 'music-catalog-album',
