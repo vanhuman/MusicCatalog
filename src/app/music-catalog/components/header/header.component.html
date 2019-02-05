@@ -4,12 +4,12 @@
 <form class="header" [formGroup]="headerForm">
     <div class="number-of-records">
         <label>Total:</label>
-        {{ numberOfRecords }} ({{ numberOfPages }} pages)
+        {{ totalNumberOfAlbums }} ({{ totalNumberOfPages }} pages)
     </div>
     <div class="offset">
-        <label for="{{id}}-offset">Offset:</label>
+        <label for="{{id}}-offset">Go to page:</label>
         <input type="text" id="{{id}}-offset"
-               placeholder="Page"
+               placeholder="#"
                formControlName="offset"
         >
     </div>

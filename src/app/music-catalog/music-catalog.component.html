@@ -3,4 +3,5 @@
     <music-catalog-overview *ngIf="loggedIn"></music-catalog-overview>
     <music-catalog-login *ngIf="!loggedIn" (loggedInEmitter)="loggedIn = $event"></music-catalog-login>
     <custom-modal id="message-modal"></custom-modal>
+    <shared-tooltip-container></shared-tooltip-container>
 </div>

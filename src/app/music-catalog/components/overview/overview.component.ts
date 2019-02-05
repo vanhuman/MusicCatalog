@@ -25,9 +25,8 @@ export class OverviewComponent {
             next: (response) => {
                 this.loading = false;
                 this.albums = this.albums.concat(response);
-                console.log(this.albums);
             },
-            error: (error) => {
+            error: () => {
                 this.loading = false;
             }
         });

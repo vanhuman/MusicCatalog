@@ -1,8 +1,12 @@
-<div class="artist" title="{{ album.getArtist().getName() }}">
-    {{ album.getArtist().getName() }}
+<div class="artist">
+    <span [sharedTooltip]="getTooltipConfig('artist')">
+        {{ album.getArtist().getName() }}
+    </span>
 </div>
-<div class="title" title="{{ album.getTitle() }}">
-    {{ album.getTitle() }}
+<div class="title">
+    <span [sharedTooltip]="getTooltipConfig('title')">
+        {{ album.getTitle() }}
+    </span>
 </div>
 <div class="year">
     {{ album.getYear() }}
@@ -10,10 +14,12 @@
 <div class="format">
     {{ album.getFormat().getName() }}
 </div>
-<div class="label" title="{{ album.getLabel().getName() }}">
-    {{ album.getLabel().getName() }}
+<div class="label">
+    <span [sharedTooltip]="getTooltipConfig('label')">
+        {{ album.getLabel().getName() }}
+    </span>
 </div>
-<div class="genre" title="{{ album.getGenre().getDescription() }}">
+<div class="genre">
     {{ album.getGenre().getDescription() }}
 </div>
 <div class="date-added">

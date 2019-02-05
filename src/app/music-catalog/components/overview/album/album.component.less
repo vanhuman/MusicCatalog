@@ -7,10 +7,18 @@ div {
 div.artist {
     .ellipsis(@width-artist);
     padding-right: @padding-right-artist;
+
+    span {
+        cursor: pointer;
+    }
 }
 div.title {
     .ellipsis(@width-title);
     padding-right: @padding-right-title;
+
+    span {
+        cursor: pointer;
+    }
 }
 div.year {
     .ellipsis(@width-year);
@@ -23,6 +31,10 @@ div.format {
 div.label {
     .ellipsis(@width-label);
     padding-right: @padding-right-label;
+
+    span {
+        cursor: pointer;
+    }
 }
 div.genre {
     .ellipsis(@width-genre);

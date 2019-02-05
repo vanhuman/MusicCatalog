@@ -1,9 +1,9 @@
+import * as moment from 'moment';
 import { AlbumInterface } from './album.model.interface';
 import { ArtistInterface } from './artist.model.interface';
 import { FormatInterface } from './format.model.interface';
 import { LabelInterface } from './label.model.interface';
 import { GenreInterface } from './genre.model.interface';
-import * as moment from 'moment';
 
 export class Album implements AlbumInterface {
     public constructor(
