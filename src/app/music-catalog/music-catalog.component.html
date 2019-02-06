@@ -1,7 +1,15 @@
 <div class="music-catalog">
-    <music-catalog-header></music-catalog-header>
-    <music-catalog-overview *ngIf="loggedIn"></music-catalog-overview>
-    <music-catalog-login *ngIf="!loggedIn" (loggedInEmitter)="loggedIn = $event"></music-catalog-login>
+    <music-catalog-header
+            (mcCommunication)="processInputFromHeader($event)">
+    </music-catalog-header>
+    <music-catalog-overview
+            *ngIf="loggedIn"
+            [mcCommunication]="outputToOverview">
+    </music-catalog-overview>
+    <music-catalog-login
+            *ngIf="!loggedIn"
+            (mcCommunication)="processInputFromLogin($event)">
+    </music-catalog-login>
     <custom-modal id="message-modal"></custom-modal>
     <shared-tooltip-container></shared-tooltip-container>
 </div>

@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { AuthenticationResult } from '../../services/authentication.service';
 import { KeyCode, KeyStrokeUtility } from '../../utilities/key-stroke.utility';
 import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
+import { McCommunication } from '../../models/music-catalog-communication.interface';
 
 @Component({
     selector: 'music-catalog-login',
@@ -10,7 +11,7 @@ import { AuthenticationServiceInterface } from '../../services/authentication.se
     styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-    @Output() loggedInEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() mcCommunication: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
 
     public loginForm = new FormGroup({
         username: new FormControl(),
@@ -66,7 +67,9 @@ export class LoginComponent implements OnInit {
             const password = this.loginForm.controls['password'].value;
             this.authenticationService.login(username, password).subscribe((loginResult: AuthenticationResult) => {
                 if (loginResult.succes) {
-                    this.loggedInEmitter.emit(true);
+                    this.mcCommunication.emit({
+                        action: 'loggedIn'
+                    });
                     this.close();
                 } else {
                     this.error = loginResult.error;

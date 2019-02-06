@@ -11,6 +11,7 @@
             ["element", "attribute"],
             ["music-catalog", "app", "custom"],
             "kebab-case"
-        ]
+        ],
+        "no-bitwise": false
     }
 }

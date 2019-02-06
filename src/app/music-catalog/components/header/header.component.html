@@ -3,22 +3,23 @@
 </div>
 <form class="header" [formGroup]="headerForm">
     <div class="number-of-records">
-        <label>Total:</label>
+        <label>Total albums:</label>
         {{ totalNumberOfAlbums }} ({{ totalNumberOfPages }} pages)
     </div>
     <div class="offset">
-        <label for="{{id}}-offset">Go to page:</label>
+        <label for="{{id}}-offset">Page:</label>
         <input type="text" id="{{id}}-offset"
                placeholder="#"
                formControlName="offset"
         >
+        <button class="btn-primary" (click)="goToPage()">Go</button>
     </div>
     <div class="search">
         <input type="text"
                placeholder="Enter keywords"
                formControlName="keywords"
         >
-        <button class="btn-primary">Search</button>
+        <button class="btn-primary" (click)="search()">Search</button>
     </div>
     <div class="export">
         <button class="btn-primary">Export</button>

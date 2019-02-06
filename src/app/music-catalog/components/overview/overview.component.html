@@ -8,8 +8,9 @@
     <div class="date-added">Date Added</div>
     <div class="icons"></div>
 </div>
-<div class="overview-body">
+<div #musicCatalogOverview class="overview-body">
     <div class="album-row" *ngFor="let album of albums">
         <music-catalog-album [album]="album"></music-catalog-album>
     </div>
+    <button class="btn-primary scroll-up" (click)="scrollUp()">To top</button>
 </div>

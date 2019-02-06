@@ -1,7 +1,9 @@
 @import '../styles/buttons';
 
 .custom-modal {
-    position: relative;
+    position: fixed;
+    top: 100px;
+    width: 100%;
     z-index: 1000;
     /* enables scrolling for tall modals */
     overflow: auto;
@@ -14,6 +16,7 @@
         min-height: 60px;
         margin: 40px auto;
         position: relative;
+        background: #fff;
 
         div.message {
             padding-bottom: 50px;
