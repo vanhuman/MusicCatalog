@@ -1,7 +1,8 @@
-import { Component, ElementRef, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { AlbumsFactoryInterface } from '../../factories/albums.factory.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
+import { errorCode } from '../../models/api-responses/error-api-response.model';
 
 @Component({
     selector: 'music-catalog-overview',
@@ -9,6 +10,8 @@ import { McCommunication } from '../../models/music-catalog-communication.interf
     styleUrls: ['./overview.component.css'],
 })
 export class OverviewComponent {
+    @Output() authorised: EventEmitter<boolean> = new EventEmitter<boolean>();
+
     public albums: AlbumInterface[] = [];
     private loading = false;
     private page = 1;
@@ -67,8 +70,11 @@ export class OverviewComponent {
                     this.albums = response;
                 }
             },
-            error: () => {
+            error: (code: errorCode) => {
                 this.loading = false;
+                if (code === errorCode.authorisation) {
+                    this.authorised.emit(false);
+                }
             }
         });
     }

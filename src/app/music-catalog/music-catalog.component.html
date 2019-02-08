@@ -4,11 +4,12 @@
     </music-catalog-header>
     <music-catalog-overview
             *ngIf="loggedIn"
-            [mcCommunication]="outputToOverview">
+            [mcCommunication]="outputToOverview"
+            (authorised)="processInputFromOverview($event)">
     </music-catalog-overview>
     <music-catalog-login
             *ngIf="!loggedIn"
-            (mcCommunication)="processInputFromLogin($event)">
+            (loggedIn)="processInputFromLogin($event)">
     </music-catalog-login>
     <custom-modal id="message-modal"></custom-modal>
     <shared-tooltip-container></shared-tooltip-container>

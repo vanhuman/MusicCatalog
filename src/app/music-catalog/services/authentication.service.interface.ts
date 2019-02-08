@@ -8,4 +8,6 @@ export abstract class AuthenticationServiceInterface {
     public abstract authenticate(username: string, password: string): Observable<AuthenticationResult>;
 
     public abstract getToken(): string;
+
+    public abstract removeSession(): void;
 }

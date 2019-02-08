@@ -51,7 +51,7 @@ export class AuthenticationService implements AuthenticationServiceInterface {
                 observable.next({succes: true});
             },
             error: (error: HttpErrorResponse) => {
-                delete this.session;
+                this.removeSession();
                 observable.next({
                     succes: false,
                     error: error.error.message,
@@ -63,5 +63,9 @@ export class AuthenticationService implements AuthenticationServiceInterface {
 
     public getToken(): string {
         return this.session.getToken();
+    }
+
+    public removeSession(): void {
+        delete this.session;
     }
 }

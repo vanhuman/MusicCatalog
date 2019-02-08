@@ -13,7 +13,7 @@ import { Label } from '../models/label.model';
 import { Genre } from '../models/genre.model';
 import { DateUtility } from '../utilities/date.utility';
 import { Format } from '../models/format.model';
-import { ErrorResponse } from '../models/api-responses/error-api-response.model';
+import { errorCode, ErrorResponse } from '../models/api-responses/error-api-response.model';
 
 @Injectable()
 export class AlbumsFactory implements AlbumsFactoryInterface {
@@ -47,14 +47,15 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.next(albums);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
-                    .open();
-                // if ((<ErrorResponse>error.error).type === 'ERROR'
-                //     && (<ErrorResponse>error.error).reference === 'AuthenticationController') {
-                //     //
-                // }
-                observable.error([]);
+                if ((<ErrorResponse>error.error).type === 'ERROR'
+                    && (<ErrorResponse>error.error).reference === 'AuthenticationController') {
+                    observable.error(errorCode.authorisation);
+                } else {
+                    this.modalService.getModal('message-modal')
+                        .setMessage(error.error.message)
+                        .open();
+                    observable.error(errorCode.unknown);
+                }
             }
         });
         return observable;
