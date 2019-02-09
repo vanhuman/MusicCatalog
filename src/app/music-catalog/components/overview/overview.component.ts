@@ -1,4 +1,6 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { takeWhile } from 'rxjs/operators';
+
 import { AlbumsFactoryInterface } from '../../factories/albums.factory.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
@@ -10,7 +12,6 @@ import { errorCode } from '../../models/api-responses/error-api-response.model';
     styleUrls: ['./overview.component.css'],
 })
 export class OverviewComponent {
-    @Output() authorised: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     public albums: AlbumInterface[] = [];
     private loading = false;
@@ -61,7 +62,9 @@ export class OverviewComponent {
 
     private getAlbums(concat: boolean = true): void {
         this.loading = true;
-        this.albumsFactory.getAlbums(this.page).subscribe({
+        this.albumsFactory.getAlbums(this.page)
+            .pipe(takeWhile(() => this.loading))
+            .subscribe({
             next: (response) => {
                 this.loading = false;
                 if (concat) {
@@ -70,11 +73,8 @@ export class OverviewComponent {
                     this.albums = response;
                 }
             },
-            error: (code: errorCode) => {
+            error: () => {
                 this.loading = false;
-                if (code === errorCode.authorisation) {
-                    this.authorised.emit(false);
-                }
             }
         });
     }

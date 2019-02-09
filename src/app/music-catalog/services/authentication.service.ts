@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+
 import { AuthenticateApiResponse } from '../models/api-responses/authenticate-api-response.model';
-import { Observable, of, Subject } from 'rxjs';
 import { SessionInterface } from '../models/session.model.interface';
 import { Session } from '../models/session.model';
-import { ApiRequestServiceInterface } from './api-request.service.interface';
 import { AuthenticationServiceInterface } from './authentication.service.interface';
+import { ApiRequestService } from './api-request.service';
 
 export interface AuthenticationResult {
     succes: boolean;
@@ -14,11 +15,11 @@ export interface AuthenticationResult {
 
 @Injectable()
 export class AuthenticationService implements AuthenticationServiceInterface {
-
+    private isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
     private session: SessionInterface;
 
     public constructor(
-        private apiRequestService: ApiRequestServiceInterface,
+        private httpClient: HttpClient,
     ) {
         //
     }
@@ -36,22 +37,24 @@ export class AuthenticationService implements AuthenticationServiceInterface {
         let body = new HttpParams();
         body = body.set('username', username);
         body = body.set('password', password);
-        this.apiRequestService.post<AuthenticateApiResponse>(
-            '/authenticate',
+        this.httpClient.post<AuthenticateApiResponse>(
+            ApiRequestService.API_BASE_DOMAIN + '/authenticate',
             body,
-            headers
+            {headers}
         ).subscribe({
             next: (response) => {
                 this.session = new Session(
-                    response.body.session.id,
-                    response.body.session.token,
-                    response.body.session.time_out,
-                    response.body.session.user_id
+                    response.session.id,
+                    response.session.token,
+                    response.session.time_out,
+                    response.session.user_id
                 );
+                this.isLoggedIn.next(true);
                 observable.next({succes: true});
             },
             error: (error: HttpErrorResponse) => {
                 this.removeSession();
+                this.isLoggedIn.next(false);
                 observable.next({
                     succes: false,
                     error: error.error.message,
@@ -61,11 +64,20 @@ export class AuthenticationService implements AuthenticationServiceInterface {
         return observable;
     }
 
+    public monitorLogin(): Observable<boolean> {
+        return this.isLoggedIn;
+    }
+
+    public logOut(): void {
+        this.removeSession();
+        this.isLoggedIn.next(false);
+    }
+
     public getToken(): string {
         return this.session.getToken();
     }
 
-    public removeSession(): void {
+    private removeSession(): void {
         delete this.session;
     }
 }

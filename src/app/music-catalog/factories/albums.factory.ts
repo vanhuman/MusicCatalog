@@ -1,17 +1,18 @@
 import { AlbumsFactoryInterface, AlbumsMetaData } from './albums.factory.interface';
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+
+import { DateUtility } from '../utilities/date.utility';
 import { AlbumApiResponse, AlbumsApiResponse } from '../models/api-responses/albums-api-response.model';
 import { AuthenticationServiceInterface } from '../services/authentication.service.interface';
 import { ApiRequestServiceInterface } from '../services/api-request.service.interface';
 import { ModalServiceInterface } from '../services/modal.service.interface';
-import { Observable, Subject } from 'rxjs';
 import { AlbumInterface } from '../models/album.model.interface';
 import { Album } from '../models/album.model';
 import { Artist } from '../models/artist.model';
 import { Label } from '../models/label.model';
 import { Genre } from '../models/genre.model';
-import { DateUtility } from '../utilities/date.utility';
 import { Format } from '../models/format.model';
 import { errorCode, ErrorResponse } from '../models/api-responses/error-api-response.model';
 
@@ -47,15 +48,12 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.next(albums);
             },
             error: (error: HttpErrorResponse) => {
-                if ((<ErrorResponse>error.error).type === 'ERROR'
-                    && (<ErrorResponse>error.error).reference === 'AuthenticationController') {
-                    observable.error(errorCode.authorisation);
-                } else {
+                // if ((<ErrorResponse>error.error).code !== errorCode.authorisation) {
                     this.modalService.getModal('message-modal')
                         .setMessage(error.error.message)
                         .open();
-                    observable.error(errorCode.unknown);
-                }
+                // }
+                observable.error([]);
             }
         });
         return observable;

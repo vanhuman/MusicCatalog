@@ -4,8 +4,7 @@
     </music-catalog-header>
     <music-catalog-overview
             *ngIf="loggedIn"
-            [mcCommunication]="outputToOverview"
-            (authorised)="processInputFromOverview($event)">
+            [mcCommunication]="outputToOverview">
     </music-catalog-overview>
     <music-catalog-login
             *ngIf="!loggedIn"

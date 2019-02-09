@@ -1,5 +1,7 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
 import { AuthenticationResult } from '../../services/authentication.service';
 import { KeyCode, KeyStrokeUtility } from '../../utilities/key-stroke.utility';
 import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
@@ -9,7 +11,7 @@ import { AuthenticationServiceInterface } from '../../services/authentication.se
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
     @Output() loggedIn: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     public loginForm = new FormGroup({
@@ -21,6 +23,7 @@ export class LoginComponent implements OnInit {
 
     private element: any;
     private loggingIn = false;
+    private authenticationSubscription: Subscription;
 
     public constructor(
         private el: ElementRef,
@@ -50,6 +53,10 @@ export class LoginComponent implements OnInit {
         KeyStrokeUtility.addListener(keyHandlings);
     }
 
+    public ngOnDestroy(): void {
+        this.authenticationSubscription.unsubscribe();
+    }
+
     public cancel(): void {
         this.error = 'Please login to continue.';
     }
@@ -64,15 +71,16 @@ export class LoginComponent implements OnInit {
             this.loggingIn = true;
             const username = this.loginForm.controls['username'].value;
             const password = this.loginForm.controls['password'].value;
-            this.authenticationService.login(username, password).subscribe((loginResult: AuthenticationResult) => {
-                if (loginResult.succes) {
-                    this.loggedIn.emit(true);
-                    this.close();
-                } else {
-                    this.error = loginResult.error;
-                }
-                this.loggingIn = false;
-            });
+            this.authenticationSubscription = this.authenticationService.login(username, password)
+                .subscribe((loginResult: AuthenticationResult) => {
+                    if (loginResult.succes) {
+                        this.loggedIn.emit(true);
+                        this.close();
+                    } else {
+                        this.error = loginResult.error;
+                    }
+                    this.loggingIn = false;
+                });
         }
     }
 }

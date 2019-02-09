@@ -12,4 +12,5 @@ export interface ErrorResponse {
     reference: ErrorReference;
     status: number;
     type: ErrorType;
+    code: errorCode;
 }
