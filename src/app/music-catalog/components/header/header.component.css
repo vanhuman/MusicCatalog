@@ -95,6 +95,7 @@ form.header input {
   font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
   font-size: 12px;
 }
-form.header div.offset input {
-  width: 30px;
+form.header input.page {
+  width: 25px;
+  margin-right: 10px;
 }

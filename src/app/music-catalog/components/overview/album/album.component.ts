@@ -29,7 +29,7 @@ export class AlbumComponent {
         }
         return {
             title,
-            topOffset: 10,
+            topOffset: 5,
         };
     }
 }

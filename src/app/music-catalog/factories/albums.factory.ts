@@ -1,4 +1,4 @@
-import { AlbumsFactoryInterface, AlbumsMetaData } from './albums.factory.interface';
+import { AlbumsFactoryInterface, AlbumsMetaData, GetAlbumsParams } from './albums.factory.interface';
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
@@ -14,6 +14,7 @@ import { Artist } from '../models/artist.model';
 import { Label } from '../models/label.model';
 import { Genre } from '../models/genre.model';
 import { Format } from '../models/format.model';
+import { SortField } from '../components/overview/overview.component';
 // import { errorCode, ErrorResponse } from '../models/api-responses/error-api-response.model';
 
 @Injectable()
@@ -28,13 +29,15 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         //
     }
 
-    public getAlbums(page: number = 1, keywords: string = ''): Observable<AlbumInterface[]> {
+    public getAlbums(getAlbumsParams: GetAlbumsParams): Observable<AlbumInterface[]> {
         const observable: Subject<AlbumInterface[]> = new Subject<AlbumInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
-        params = params.set('page', page.toString());
-        params = params.set('keywords', keywords);
+        params = params.set('page', getAlbumsParams.page.toString());
+        params = params.set('keywords', getAlbumsParams.keywords);
+        params = params.set('sortby', getAlbumsParams.sortby);
+        params = params.set('sortdirection', getAlbumsParams.sortdirection);
         this.apiRequestService.get<AlbumsApiResponse>('/albums', params).subscribe({
             next: (response) => {
                 const albums: Album[] = [];

@@ -1,5 +1,6 @@
 import { AlbumInterface } from '../models/album.model.interface';
 import { Observable } from 'rxjs';
+import { SortDirection, SortField } from '../components/overview/overview.component';
 
 export interface AlbumsMetaData {
     totalNumberOfRecords: number;
@@ -7,7 +8,14 @@ export interface AlbumsMetaData {
     pageSize: number;
 }
 
+export interface GetAlbumsParams {
+    page: number;
+    keywords: string;
+    sortby: SortField;
+    sortdirection: SortDirection;
+}
+
 export abstract class AlbumsFactoryInterface {
-    public abstract getAlbums(page: number, keywords: string): Observable<AlbumInterface[]>;
+    public abstract getAlbums(getAlbumsParams: GetAlbumsParams): Observable<AlbumInterface[]>;
     public abstract getAlbumsMetaData(): Observable<AlbumsMetaData>;
 }

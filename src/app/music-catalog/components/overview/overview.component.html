@@ -1,11 +1,13 @@
 <div class="overview-header">
-    <div class="artist">Artist</div>
-    <div class="title">Title</div>
-    <div class="year">Year</div>
-    <div class="format">Format</div>
-    <div class="label">Label</div>
-    <div class="genre">Genre</div>
-    <div class="date-added">Date Added</div>
+    <ng-container *ngFor="let column of columns">
+        <div class="{{column.class}}"
+             (click)="sortOn(column)"
+             [sharedTooltip]="getTooltipConfig(column)">
+            <span>{{column.title}}</span>
+            <img *ngIf="column.sortField === sortField" alt="arrow"
+                 src="assets/svg/arrow-left.png" [ngClass]="getArrowClass(column)"/>
+        </div>
+    </ng-container>
     <div class="icons"></div>
 </div>
 <div #musicCatalogOverview class="overview-body">

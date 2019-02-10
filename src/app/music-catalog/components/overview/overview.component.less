@@ -1,6 +1,13 @@
 @import '../../styles/defines';
 @import '../../styles/buttons';
 
+.transform(@transformation) {
+    -ms-transform: @transformation; /* IE 9 */
+    -moz-transform: @transformation; /* Firefox */
+    -webkit-transform: @transformation; /* Chrome, Safari, Opera */
+    transform: @transformation;
+}
+
 div.overview-header {
     position: fixed;
     top: @header-height;
@@ -14,6 +21,21 @@ div.overview-header {
 
     div {
         display: inline-block;
+        cursor: pointer;
+
+        span {
+            padding-right: 3px;
+        }
+        img {
+            width: 10px;
+
+            &.up {
+                .transform(rotate(270deg));
+            }
+            &.down {
+                .transform(rotate(90deg));
+            }
+        }
     }
     div.artist {
         width: @width-artist;
@@ -24,11 +46,9 @@ div.overview-header {
         padding-right: @padding-right-title;
     }
     div.year {
-        text-align: center;
         width: @width-year;
     }
     div.format {
-        text-align: center;
         width: @width-format;
     }
     div.label {
