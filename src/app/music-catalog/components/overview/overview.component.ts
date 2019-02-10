@@ -58,7 +58,7 @@ export class OverviewComponent {
         private element: ElementRef,
     ) {
         this.getAlbums();
-        this.createSortLinks();
+        this.defineColumns();
     }
 
     @HostListener('window:scroll')
@@ -81,7 +81,7 @@ export class OverviewComponent {
 
     public sortOn(clickedColumn: Column): void {
         this.columns.forEach((column) => {
-            if (column === clickedColumn && (column === this.prevClickedColumn || !this.prevClickedColumn)) {
+            if (column === clickedColumn && column === this.prevClickedColumn) {
                 switch (column.sortDirection) {
                     case 'ASC':
                         column.sortDirection = 'DESC';
@@ -148,7 +148,7 @@ export class OverviewComponent {
             });
     }
 
-    private createSortLinks(): void {
+    private defineColumns(): void {
         this.columns.push({
             title: 'Artist',
             sortField: 'artist_name',
@@ -191,6 +191,7 @@ export class OverviewComponent {
             sortDirection: 'DESC',
             class: 'date-added',
         });
+        this.prevClickedColumn = this.columns[this.columns.length - 1];
     }
 
 }
