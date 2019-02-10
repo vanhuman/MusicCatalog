@@ -4,7 +4,6 @@ import { takeWhile } from 'rxjs/operators';
 import { AlbumsFactoryInterface } from '../../factories/albums.factory.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
-import { errorCode } from '../../models/api-responses/error-api-response.model';
 
 @Component({
     selector: 'music-catalog-overview',
@@ -16,6 +15,7 @@ export class OverviewComponent {
     public albums: AlbumInterface[] = [];
     private loading = false;
     private page = 1;
+    private keywords = '';
 
     @ViewChild('musicCatalogOverview') musicCatalogOverview: ElementRef;
 
@@ -23,8 +23,9 @@ export class OverviewComponent {
     set mcCommunication(mcCommunication: McCommunication) {
         if (mcCommunication) {
             switch (mcCommunication.action) {
-                case 'goToPage':
+                case 'search':
                     this.page = mcCommunication.page;
+                    this.keywords = mcCommunication.keywords;
                     this.scrollUp(false);
                     this.getAlbums(false);
                     break;
@@ -62,7 +63,7 @@ export class OverviewComponent {
 
     private getAlbums(concat: boolean = true): void {
         this.loading = true;
-        this.albumsFactory.getAlbums(this.page)
+        this.albumsFactory.getAlbums(this.page, this.keywords)
             .pipe(takeWhile(() => this.loading))
             .subscribe({
             next: (response) => {

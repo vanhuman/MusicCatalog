@@ -43,11 +43,11 @@ export class LoginComponent implements OnInit, OnDestroy {
         const keyHandlings = [
             {
                 keyStroke: <KeyCode>'Enter',
-                function: (event) => this.login.apply(this),
+                function: () => this.login.apply(this),
             },
             {
                 keyStroke: <KeyCode>'Escape',
-                function: (event) => this.close.apply(this),
+                function: () => this.cancel.apply(this),
             },
         ];
         KeyStrokeUtility.addListener(keyHandlings);

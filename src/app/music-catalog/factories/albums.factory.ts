@@ -14,7 +14,7 @@ import { Artist } from '../models/artist.model';
 import { Label } from '../models/label.model';
 import { Genre } from '../models/genre.model';
 import { Format } from '../models/format.model';
-import { errorCode, ErrorResponse } from '../models/api-responses/error-api-response.model';
+// import { errorCode, ErrorResponse } from '../models/api-responses/error-api-response.model';
 
 @Injectable()
 export class AlbumsFactory implements AlbumsFactoryInterface {
@@ -28,12 +28,13 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         //
     }
 
-    public getAlbums(page: number = 1): Observable<AlbumInterface[]> {
+    public getAlbums(page: number = 1, keywords: string = ''): Observable<AlbumInterface[]> {
         const observable: Subject<AlbumInterface[]> = new Subject<AlbumInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
         params = params.set('page', page.toString());
+        params = params.set('keywords', keywords);
         this.apiRequestService.get<AlbumsApiResponse>('/albums', params).subscribe({
             next: (response) => {
                 const albums: Album[] = [];

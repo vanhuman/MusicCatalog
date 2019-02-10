@@ -6,25 +6,24 @@
         <label>Total albums:</label>
         {{ totalNumberOfAlbums }} ({{ totalNumberOfPages }} pages)
     </div>
-    <div class="offset">
-        <label for="{{id}}-offset">Page:</label>
-        <input type="text" id="{{id}}-offset"
-               placeholder="#"
-               formControlName="offset"
-        >
-        <button class="btn-primary" (click)="goToPage()">Go</button>
-    </div>
     <div class="search">
-        <input type="text"
+        <label for="{{id}}-page">Page:</label>
+        <input type="text" id="{{id}}-page" class="page"
+               placeholder="1"
+               formControlName="page"
+        >
+        <label for="{{id}}-keywords">Keywords:</label>
+        <input type="text" id="{{id}}-keywords"
                placeholder="Enter keywords"
                formControlName="keywords"
         >
-        <button class="btn-primary" (click)="search()">Search</button>
+        <button class="btn-primary" (click)="search()">Fetch</button>
+        <button class="btn-primary" (click)="clear()">Clear</button>
     </div>
     <div class="export">
         <button class="btn-primary">Export</button>
     </div>
-    <div class="add">
-        <button class="btn-primary">Add</button>
+    <div class="new">
+        <button class="btn-primary">New</button>
     </div>
 </form>

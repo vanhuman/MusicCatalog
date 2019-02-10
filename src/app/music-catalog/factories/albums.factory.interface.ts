@@ -8,6 +8,6 @@ export interface AlbumsMetaData {
 }
 
 export abstract class AlbumsFactoryInterface {
-    public abstract getAlbums(page: number): Observable<AlbumInterface[]>;
+    public abstract getAlbums(page: number, keywords: string): Observable<AlbumInterface[]>;
     public abstract getAlbumsMetaData(): Observable<AlbumsMetaData>;
 }

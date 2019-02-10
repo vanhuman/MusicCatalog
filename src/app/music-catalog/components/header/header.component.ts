@@ -20,8 +20,8 @@ export class HeaderComponent implements OnDestroy {
     public pageSize = 50;
     public totalNumberOfPages = 0;
     public headerForm = new FormGroup({
-        offset: new FormControl(),
-        keywords: new FormControl(),
+        page: new FormControl(1),
+        keywords: new FormControl(''),
     });
     public id = 'music-catalog-header';
 
@@ -42,23 +42,21 @@ export class HeaderComponent implements OnDestroy {
         this.metaDataSubscription.unsubscribe();
     }
 
-    public goToPage(): void {
-        const page = this.headerForm.controls['offset'].value;
+    public search(): void {
+        const page = this.headerForm.controls['page'].value;
+        const keywords = this.headerForm.controls['keywords'].value;
         if (NumberUtility.isInt(page)) {
             this.mcCommunication.emit({
-                action: 'goToPage',
+                action: 'search',
                 page: Number(page),
+                keywords,
             });
         }
     }
 
-    public search(): void {
-        const keywords = this.headerForm.controls['keywords'].value;
-        if (keywords) {
-            this.mcCommunication.emit({
-                action: 'search',
-                keywords,
-            });
-        }
+    public clear(): void {
+        this.headerForm.controls['page'].setValue(1);
+        this.headerForm.controls['keywords'].setValue('');
+        this.search();
     }
 }

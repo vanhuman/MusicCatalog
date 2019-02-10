@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
 import { ModalServiceInterface } from '../services/modal.service.interface';
+import { KeyCode, KeyStrokeUtility } from '../utilities/key-stroke.utility';
 
 @Component({
     selector: 'custom-modal',
@@ -35,6 +36,18 @@ export class CustomModalComponent implements OnInit, OnDestroy {
                 modal.close();
             }
         });
+
+        const keyHandlings = [
+            {
+                keyStroke: <KeyCode>'Enter',
+                function: () => this.close.apply(this),
+            },
+            {
+                keyStroke: <KeyCode>'Escape',
+                function: () => this.close.apply(this),
+            },
+        ];
+        KeyStrokeUtility.addListener(keyHandlings);
 
         this.modalService.add(this);
     }
