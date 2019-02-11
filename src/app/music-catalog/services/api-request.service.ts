@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpParams, HttpResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 
 import { ApiRequestServiceInterface } from './api-request.service.interface';
 import { errorCode, ErrorResponse } from '../models/api-responses/error-api-response.model';
-import { AuthenticationServiceInterface } from './authentication.service.interface';
 
 @Injectable()
 export class ApiRequestService implements ApiRequestServiceInterface {
     public static API_BASE_DOMAIN = 'http://moses.test/api';
+    private authorisationError: Subject<boolean> = new Subject<boolean>();
 
     public constructor(
         private httpClient: HttpClient,
-        private authenticationService: AuthenticationServiceInterface,
     ) {
     }
 
@@ -35,10 +34,14 @@ export class ApiRequestService implements ApiRequestServiceInterface {
             );
     }
 
-    public handleError(error: HttpErrorResponse) {
+    public monitorAuthorisationError(): Subject<boolean> {
+        return this.authorisationError;
+    }
+
+    private handleError(error: HttpErrorResponse) {
         if ((<ErrorResponse>error.error).type === 'ERROR'
             && (<ErrorResponse>error.error).reference === 'AuthenticationController') {
-            this.authenticationService.logOut();
+            this.authorisationError.next(true);
             (<ErrorResponse>error.error).code = errorCode.authorisation;
         }
         // handle standard errors here

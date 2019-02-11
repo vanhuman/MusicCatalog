@@ -9,8 +9,6 @@ export abstract class AuthenticationServiceInterface {
 
     public abstract getToken(): string;
 
-    public abstract logOut(): void;
-
     public abstract monitorLogin(): Observable<boolean>;
 }
 

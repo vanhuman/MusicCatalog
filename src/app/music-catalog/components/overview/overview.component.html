@@ -1,11 +1,10 @@
 <div class="overview-header">
     <ng-container *ngFor="let column of columns">
-        <div class="{{column.class}}"
-             (click)="sortOn(column)"
+        <div class="{{ column.class }}" (click)="sortOn(column)"
              [sharedTooltip]="getTooltipConfig(column)">
-            <span>{{column.title}}</span>
+            <span>{{ column.title }}</span>
             <img *ngIf="column.sortField === sortField" alt="arrow"
-                 src="assets/svg/arrow-left.png" [ngClass]="getArrowClass(column)"/>
+                 [src]="arrowImage" [ngClass]="getArrowClass(column)"/>
         </div>
     </ng-container>
     <div class="icons"></div>

@@ -5,6 +5,7 @@ import { AlbumsFactoryInterface, GetAlbumsParams } from '../../factories/albums.
 import { AlbumInterface } from '../../models/album.model.interface';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
 import { TooltipConfig } from '../../directives/tooltip/tooltip.directive';
+import { ImageUtility } from '../../utilities/image.utility';
 
 export type SortField = 'title' | 'year' | 'date_added'
     | 'artist_name' | 'format_name' | 'label_name' | 'genre_description';
@@ -26,6 +27,7 @@ interface Column {
 export class OverviewComponent {
     public albums: AlbumInterface[] = [];
     public columns: Column[] = [];
+    public arrowImage = ImageUtility.imagePath + 'arrow-left.png';
 
     private loading = false;
     private page = 1;

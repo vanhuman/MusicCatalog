@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { AlbumInterface } from '../../../models/album.model.interface';
 import { TooltipConfig } from '../../../directives/tooltip/tooltip.directive';
+import { ImageUtility } from '../../../utilities/image.utility';
 
 @Component({
     selector: 'music-catalog-album',
@@ -9,6 +10,9 @@ import { TooltipConfig } from '../../../directives/tooltip/tooltip.directive';
 })
 export class AlbumComponent {
     @Input() album: AlbumInterface;
+
+    public editImage = ImageUtility.imagePath + 'edit.svg';
+    public deleteImage = ImageUtility.imagePath + 'delete.svg';
 
     public constructor() {
         //
