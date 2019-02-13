@@ -1,6 +1,6 @@
-import { AlbumsFactoryInterface, AlbumsMetaData, GetAlbumsParams } from './albums.factory.interface';
+import { AlbumsFactoryInterface, AlbumsMetaData, GetAlbumsParams, ImageSize } from './albums.factory.interface';
 import { Injectable } from '@angular/core';
-import { HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 
 import { DateUtility } from '../utilities/date.utility';
@@ -14,8 +14,18 @@ import { Artist } from '../models/artist.model';
 import { Label } from '../models/label.model';
 import { Genre } from '../models/genre.model';
 import { Format } from '../models/format.model';
-import { SortField } from '../components/overview/overview.component';
-// import { errorCode, ErrorResponse } from '../models/api-responses/error-api-response.model';
+
+
+interface LastfmAlbumImage {
+    '#text': string;
+    size: string;
+}
+
+interface LastfmAlbumInfo {
+    album: {
+        image: LastfmAlbumImage[],
+    };
+}
 
 @Injectable()
 export class AlbumsFactory implements AlbumsFactoryInterface {
@@ -25,6 +35,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         private authenticationService: AuthenticationServiceInterface,
         private apiRequestService: ApiRequestServiceInterface,
         private modalService: ModalServiceInterface,
+        private httpClient: HttpClient,
     ) {
         //
     }
@@ -53,14 +64,38 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
             },
             error: (error: HttpErrorResponse) => {
                 // if ((<ErrorResponse>error.error).code !== errorCode.authorisation) {
-                    this.modalService.getModal('message-modal')
-                        .setMessage(error.error.message)
-                        .open();
+                this.modalService.getModal('message-modal')
+                    .setMessage(error.error.message)
+                    .open();
                 // }
                 observable.error([]);
             }
         });
         return observable;
+    }
+
+    public getImageFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>> {
+        return new Promise<Map<ImageSize, string>>((resolve, reject) => {
+            let params = new HttpParams();
+            params = params.set('method', 'album.getinfo');
+            params = params.set('api_key', '7582eb9c2d8036e2b57c1ce973467d14');
+            params = params.set('artist', album.getArtist().getFullName().trim());
+            params = params.set('album', album.getTitle());
+            params = params.set('format', 'json');
+            const url = 'https://ws.audioscrobbler.com/2.0/';
+            this.httpClient.get<LastfmAlbumInfo>(url, {params}).subscribe((result) => {
+                if (result.album) {
+                    const imageMap: Map<ImageSize, string> = new Map<ImageSize, string>();
+                    const images = result.album.image;
+                    images.forEach((img) => {
+                        imageMap.set(<ImageSize>img.size, img['#text']);
+                    });
+                    resolve(imageMap);
+                } else {
+                    reject();
+                }
+            });
+        });
     }
 
     public getAlbumsMetaData(): Observable<AlbumsMetaData> {

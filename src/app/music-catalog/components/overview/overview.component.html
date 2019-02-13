@@ -1,4 +1,5 @@
 <div class="overview-header">
+    <div class="image"></div>
     <ng-container *ngFor="let column of columns">
         <div class="{{ column.class }}" (click)="sortOn(column)"
              [sharedTooltip]="getTooltipConfig(column)">

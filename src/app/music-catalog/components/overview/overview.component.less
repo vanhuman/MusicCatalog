@@ -1,13 +1,6 @@
 @import '../../styles/defines';
 @import '../../styles/buttons';
 
-.transform(@transformation) {
-    -ms-transform: @transformation; /* IE 9 */
-    -moz-transform: @transformation; /* Firefox */
-    -webkit-transform: @transformation; /* Chrome, Safari, Opera */
-    transform: @transformation;
-}
-
 div.overview-header {
     position: fixed;
     top: @header-height;
@@ -18,6 +11,7 @@ div.overview-header {
     color: @label-color;
     padding: 5px @padding-side 0 @padding-side;
     background: @tertiary-color;
+    z-index: 1;
 
     div {
         display: inline-block;
@@ -36,6 +30,9 @@ div.overview-header {
                 .transform(rotate(90deg));
             }
         }
+    }
+    div.image {
+        width: @width-image;
     }
     div.artist {
         width: @width-artist;
@@ -72,7 +69,7 @@ div.overview-body {
     padding: 10px @padding-side 20px @padding-side;
 
     div.album-row {
-        &:nth-of-type(10n) {
+        &:nth-of-type(5n) {
             background: @tertiary-color;
         }
     }

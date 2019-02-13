@@ -15,7 +15,8 @@
 @padding-side: 20px;
 @header-height: 35px;
 @overview-labels-height: 20px;
-@width-artist: 250px;
+@width-image: 50px;
+@width-artist: 220px;
 @padding-right-artist: 5px;
 @width-year: 50px;
 @width-format: 65px;
@@ -26,13 +27,27 @@
 @width-date-added: 105px;
 @padding-right-title: 5px;
 @width-icons: 40px;
-@width-title: ~'calc(100% - @{width-artist} - @{width-year} - @{width-format} - @{width-label} - @{width-genre} - @{width-date-added} - @{padding-right-artist} - @{padding-right-title} - @{padding-right-genre} - @{padding-right-label} - @{width-icons})';
+@width-title: ~'calc(100% - @{width-artist} - @{width-year} - @{width-format} - @{width-label} - @{width-genre} - @{width-date-added} - @{padding-right-artist} - @{padding-right-title} - @{padding-right-genre} - @{padding-right-label} - @{width-icons} - @{width-image})';
 
 .ellipsis(@width: 100%) {
     overflow: hidden;
     text-overflow: ellipsis;
     width: @width;
     white-space: nowrap;
+}
+
+.transition(@property: opacity; @duration: .5s; @timing-function: ease-in) {
+    -moz-transition: @arguments;
+    -webkit-transition: @arguments;
+    -o-transition: @arguments;
+    transition: @arguments;
+}
+
+.transform(@transformation) {
+    -ms-transform: @transformation; /* IE 9 */
+    -moz-transform: @transformation; /* Firefox */
+    -webkit-transform: @transformation; /* Chrome, Safari, Opera */
+    transform: @transformation;
 }
 
 input, button, select, textarea {

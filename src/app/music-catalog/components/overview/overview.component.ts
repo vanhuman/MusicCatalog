@@ -152,16 +152,16 @@ export class OverviewComponent {
 
     private defineColumns(): void {
         this.columns.push({
-            title: 'Artist',
-            sortField: 'artist_name',
-            sortDirection: 'ASC',
-            class: 'artist',
-        });
-        this.columns.push({
             title: 'Title',
             sortField: 'title',
             sortDirection: 'ASC',
             class: 'title',
+        });
+        this.columns.push({
+            title: 'Artist',
+            sortField: 'artist_name',
+            sortDirection: 'ASC',
+            class: 'artist',
         });
         this.columns.push({
             title: 'Year',

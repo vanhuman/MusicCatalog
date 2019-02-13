@@ -4,6 +4,37 @@ div {
     display: inline-block;
     padding: 2px 0 1px 0;
 }
+div.image {
+    width: @width-image;
+    position: relative;
+
+    >img {
+        width: 20px;
+        padding-left: 5px;
+        margin-bottom: -2px;
+    }
+    div.popup-image {
+        width: 0;
+        overflow: hidden;
+        position: absolute;
+        top: 20px;
+        left: 45px;
+        z-index: 2;
+        opacity: 0;
+        .transition(opacity; .5s; ease-out);
+
+        img {
+            border: 2px solid @tertiary-color;
+        }
+    }
+    &:hover {
+        div.popup-image {
+            width: 500px;
+            overflow: auto;
+            opacity: 1;
+        }
+    }
+}
 div.artist {
     .ellipsis(@width-artist);
     padding-right: @padding-right-artist;

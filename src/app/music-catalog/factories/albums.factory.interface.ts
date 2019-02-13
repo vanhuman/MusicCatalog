@@ -15,7 +15,13 @@ export interface GetAlbumsParams {
     sortdirection: SortDirection;
 }
 
+export type ImageSize = 'small' | 'medium' | 'large' | 'extralarge' | 'mega';
+
 export abstract class AlbumsFactoryInterface {
     public abstract getAlbums(getAlbumsParams: GetAlbumsParams): Observable<AlbumInterface[]>;
+
     public abstract getAlbumsMetaData(): Observable<AlbumsMetaData>;
+
+    public abstract getImageFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>>;
 }
+

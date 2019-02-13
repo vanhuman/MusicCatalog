@@ -1,11 +1,17 @@
-<div class="artist">
-    <span [sharedTooltip]="getTooltipConfig('artist')">
-        {{ album.getArtist().getName() }}
-    </span>
+<div class="image">
+    <img [src]="imageSmall" alt="front cover" />
+    <div class="popup-image" *ngIf="imageExtralargeExists">
+        <img [src]="imageExtralarge" alt="front cover" />
+    </div>
 </div>
 <div class="title">
     <span [sharedTooltip]="getTooltipConfig('title')">
         {{ album.getTitle() }}
+    </span>
+</div>
+<div class="artist">
+    <span [sharedTooltip]="getTooltipConfig('artist')">
+        {{ album.getArtist().getName() }}
     </span>
 </div>
 <div class="year">
