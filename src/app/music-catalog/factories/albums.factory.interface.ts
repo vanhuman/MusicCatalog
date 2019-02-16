@@ -22,6 +22,6 @@ export abstract class AlbumsFactoryInterface {
 
     public abstract getAlbumsMetaData(): Observable<AlbumsMetaData>;
 
-    public abstract getImageFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>>;
+    public abstract getImagesFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>>;
 }
 

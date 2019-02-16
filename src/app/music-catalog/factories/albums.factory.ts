@@ -1,7 +1,7 @@
 import { AlbumsFactoryInterface, AlbumsMetaData, GetAlbumsParams, ImageSize } from './albums.factory.interface';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 
 import { DateUtility } from '../utilities/date.utility';
 import { AlbumApiResponse, AlbumsApiResponse } from '../models/api-responses/albums-api-response.model';
@@ -14,7 +14,7 @@ import { Artist } from '../models/artist.model';
 import { Label } from '../models/label.model';
 import { Genre } from '../models/genre.model';
 import { Format } from '../models/format.model';
-
+import { catchError } from 'rxjs/operators';
 
 interface LastfmAlbumImage {
     '#text': string;
@@ -29,6 +29,7 @@ interface LastfmAlbumInfo {
 
 @Injectable()
 export class AlbumsFactory implements AlbumsFactoryInterface {
+    public static SHOW_IMAGES = true;
     public albumsMetaData: Subject<AlbumsMetaData> = new Subject();
 
     public constructor(
@@ -63,43 +64,60 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.next(albums);
             },
             error: (error: HttpErrorResponse) => {
-                // if ((<ErrorResponse>error.error).code !== errorCode.authorisation) {
                 this.modalService.getModal('message-modal')
                     .setMessage(error.error.message)
                     .open();
-                // }
                 observable.error([]);
             }
         });
         return observable;
     }
 
-    public getImageFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>> {
+    public getImagesFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>> {
         return new Promise<Map<ImageSize, string>>((resolve, reject) => {
+            const artistName = this.removeBrackets(album.getArtist().getFullName());
+            const title = this.removeBrackets(album.getTitle());
             let params = new HttpParams();
             params = params.set('method', 'album.getinfo');
             params = params.set('api_key', '7582eb9c2d8036e2b57c1ce973467d14');
-            params = params.set('artist', album.getArtist().getFullName().trim());
-            params = params.set('album', album.getTitle());
+            params = params.set('artist', artistName);
+            params = params.set('album', title);
             params = params.set('format', 'json');
+            params = params.set('autocorrect', '1');
             const url = 'https://ws.audioscrobbler.com/2.0/';
-            this.httpClient.get<LastfmAlbumInfo>(url, {params}).subscribe((result) => {
-                if (result.album) {
-                    const imageMap: Map<ImageSize, string> = new Map<ImageSize, string>();
-                    const images = result.album.image;
-                    images.forEach((img) => {
-                        imageMap.set(<ImageSize>img.size, img['#text']);
-                    });
-                    resolve(imageMap);
-                } else {
-                    reject();
-                }
-            });
+            this.httpClient.get<LastfmAlbumInfo>(url, {params})
+                .subscribe({
+                    next: (result) => {
+                        if (result.album && result.album.image) {
+                            const imageMap: Map<ImageSize, string> = new Map<ImageSize, string>();
+                            const images = result.album.image;
+                            images.forEach((img) => {
+                                imageMap.set(<ImageSize>img.size, img['#text']);
+                            });
+                            resolve(imageMap);
+                        } else {
+                            reject();
+                        }
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                });
         });
     }
 
     public getAlbumsMetaData(): Observable<AlbumsMetaData> {
         return this.albumsMetaData;
+    }
+
+    private removeBrackets(value: string): string {
+        let returnValue = value;
+        if (value.indexOf('(') !== -1 && value.indexOf(')') !== -1) {
+            const start = value.indexOf('(');
+            const end = value.indexOf(')');
+            returnValue = value.substring(0, start) + value.substring(end + 1);
+        }
+        return returnValue.trim();
     }
 
     private newAlbum(albumApiResponse: AlbumApiResponse): Album {

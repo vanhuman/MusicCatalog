@@ -16,19 +16,26 @@ div.image {
     div.popup-image {
         width: 0;
         overflow: hidden;
-        position: absolute;
-        top: 20px;
-        left: 45px;
+        position: fixed;
+        top: 150px;
+        left: 200px;
         z-index: 2;
         opacity: 0;
-        .transition(opacity; .5s; ease-out);
+        .transition-property(opacity, width;);
+        .transition-duration(.5s, 0s;);
+        .transition-delay(0s, .5s;);
 
         img {
-            border: 2px solid @tertiary-color;
+            box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.4);
+            margin: 20px;
+            //border: 2px solid @tertiary-color;
         }
     }
     &:hover {
         div.popup-image {
+            .transition-property(opacity, width;);
+            .transition-duration(.5s, 0s;);
+            .transition-delay(0s, 0s;);
             width: 500px;
             overflow: auto;
             opacity: 1;

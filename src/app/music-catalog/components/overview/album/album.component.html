@@ -1,4 +1,4 @@
-<div class="image">
+<div class="image" *ngIf="showImages">
     <img [src]="imageSmall" alt="front cover" />
     <div class="popup-image" *ngIf="imageExtralargeExists">
         <img [src]="imageExtralarge" alt="front cover" />

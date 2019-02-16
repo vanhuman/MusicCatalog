@@ -3,6 +3,7 @@ import { AlbumInterface } from '../../../models/album.model.interface';
 import { TooltipConfig } from '../../../directives/tooltip/tooltip.directive';
 import { ImageUtility } from '../../../utilities/image.utility';
 import { AlbumsFactoryInterface } from '../../../factories/albums.factory.interface';
+import { AlbumsFactory } from '../../../factories/albums.factory';
 
 @Component({
     selector: 'music-catalog-album',
@@ -17,6 +18,7 @@ export class AlbumComponent implements AfterViewInit {
     public imageSmall = ImageUtility.imagePath + 'transparant.png';
     public imageExtralargeExists = false;
     public imageExtralarge: string;
+    public showImages = AlbumsFactory.SHOW_IMAGES;
 
     public constructor(
         private albumsFactory: AlbumsFactoryInterface,
@@ -24,7 +26,7 @@ export class AlbumComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        this.albumsFactory.getImageFromLastfm(this.album).then(
+        this.albumsFactory.getImagesFromLastfm(this.album).then(
             (imageMap) => {
                 if (imageMap.has('small') && imageMap.get('small')) {
                     this.imageSmall = imageMap.get('small');
@@ -33,6 +35,9 @@ export class AlbumComponent implements AfterViewInit {
                     this.imageExtralargeExists = true;
                     this.imageExtralarge = imageMap.get('extralarge');
                 }
+            },
+            () => {
+                // just here to catch errors
             });
     }
 
