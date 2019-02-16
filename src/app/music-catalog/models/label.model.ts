@@ -11,4 +11,8 @@ export class Label implements LabelInterface {
     public getName(): string {
         return this.name;
     }
+
+    public setName(name: string): void {
+        this.name = name;
+    }
 }

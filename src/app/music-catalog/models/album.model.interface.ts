@@ -8,17 +8,33 @@ export interface AlbumInterface {
 
     getTitle(): string;
 
+    setTitle(title: string): void;
+
     getYear(): number;
+
+    setYear(year: number): void;
 
     getDateAdded(): string;
 
+    setDateAdded(dateAdded: Date): void;
+
     getNotes(): string;
+
+    setNotes(notes: string): void;
 
     getArtist(): ArtistInterface;
 
+    setArtist(artist: ArtistInterface): void;
+
+    getFormat(): FormatInterface;
+
+    setFormat(format: FormatInterface): void;
+
     getLabel(): LabelInterface;
+
+    setLabel(label: LabelInterface): void;
 
     getGenre(): GenreInterface;
 
-    getFormat(): FormatInterface;
+    setGenre(genre: GenreInterface): void;
 }

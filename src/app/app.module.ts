@@ -22,6 +22,7 @@ import { TooltipComponent } from './music-catalog/directives/tooltip/tooltip.com
 import { TooltipDirective } from './music-catalog/directives/tooltip/tooltip.directive';
 import { TooltipContainerComponent } from './music-catalog/directives/tooltip/tooltip-container';
 import { TooltipService } from './music-catalog/services/tooltipService';
+import { AlbumsFactoryState } from './music-catalog/factories/albums.factory.state';
 
 @NgModule({
     declarations: [
@@ -45,6 +46,7 @@ import { TooltipService } from './music-catalog/services/tooltipService';
     providers: [
         HttpClient,
         TooltipService,
+        AlbumsFactoryState,
         { provide: ModalServiceInterface, useClass: ModalService },
         { provide: AuthenticationServiceInterface, useClass: AuthenticationService },
         { provide: ApiRequestServiceInterface, useClass: ApiRequestService },

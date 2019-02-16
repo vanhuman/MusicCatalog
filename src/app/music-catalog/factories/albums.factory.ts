@@ -1,7 +1,7 @@
 import { AlbumsFactoryInterface, AlbumsMetaData, GetAlbumsParams, ImageSize } from './albums.factory.interface';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, Subject, throwError } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { DateUtility } from '../utilities/date.utility';
 import { AlbumApiResponse, AlbumsApiResponse } from '../models/api-responses/albums-api-response.model';
@@ -14,7 +14,7 @@ import { Artist } from '../models/artist.model';
 import { Label } from '../models/label.model';
 import { Genre } from '../models/genre.model';
 import { Format } from '../models/format.model';
-import { catchError } from 'rxjs/operators';
+import { AlbumsFactoryState } from './albums.factory.state';
 
 interface LastfmAlbumImage {
     '#text': string;
@@ -37,6 +37,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         private apiRequestService: ApiRequestServiceInterface,
         private modalService: ModalServiceInterface,
         private httpClient: HttpClient,
+        private state: AlbumsFactoryState,
     ) {
         //
     }
@@ -52,14 +53,20 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         params = params.set('sortdirection', getAlbumsParams.sortdirection);
         this.apiRequestService.get<AlbumsApiResponse>('/albums', params).subscribe({
             next: (response) => {
-                const albums: Album[] = [];
+                const albums: AlbumInterface[] = [];
                 this.albumsMetaData.next({
                     totalNumberOfRecords: response.body.pagination.total_number_of_records,
                     currentPage: response.body.pagination.page,
                     pageSize: response.body.pagination.page_size,
                 });
                 response.body.albums.forEach((albumApiResponse) => {
-                    albums.push(this.newAlbum(albumApiResponse));
+                    if (this.state.cache[albumApiResponse.id]) {
+                        albums.push(this.updateAlbum(this.state.cache[albumApiResponse.id], albumApiResponse));
+                    } else {
+                        const newAlbum = this.newAlbum(albumApiResponse);
+                        albums.push(newAlbum);
+                        this.state.cache[newAlbum.getId()] = newAlbum;
+                    }
                 });
                 observable.next(albums);
             },
@@ -120,7 +127,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         return returnValue.trim();
     }
 
-    private newAlbum(albumApiResponse: AlbumApiResponse): Album {
+    private newAlbum(albumApiResponse: AlbumApiResponse): AlbumInterface {
         return new Album(
             albumApiResponse.id,
             albumApiResponse.title,
@@ -146,5 +153,19 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 albumApiResponse.genre.notes,
             )
         );
+    }
+
+    private updateAlbum(album: AlbumInterface, albumApiResponse: AlbumApiResponse): AlbumInterface {
+        album.setTitle(albumApiResponse.title);
+        album.setYear(albumApiResponse.year);
+        album.setDateAdded(DateUtility.parseDate(albumApiResponse.date_added));
+        album.setNotes(albumApiResponse.notes);
+        album.getArtist().setName(albumApiResponse.artist.name);
+        album.getFormat().setName(albumApiResponse.format.name);
+        album.getFormat().setDescription(albumApiResponse.format.description);
+        album.getLabel().setName(albumApiResponse.label.name);
+        album.getGenre().setDescription(albumApiResponse.genre.description);
+        album.getGenre().setNotes(albumApiResponse.genre.notes);
+        return album;
     }
 }

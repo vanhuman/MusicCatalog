@@ -28,31 +28,63 @@ export class Album implements AlbumInterface {
         return this.title;
     }
 
+    public setTitle(title: string): void {
+        this.title = title;
+    }
+
     public getYear(): number {
         return this.year;
+    }
+
+    public setYear(year: number): void {
+        this.year = year;
     }
 
     public getDateAdded(): string {
         return moment(this.dateAdded).format('DD-MM-YYYY');
     }
 
+    public setDateAdded(dateAdded: Date): void {
+        this.dateAdded = dateAdded;
+    }
+
     public getNotes(): string {
         return this.notes;
+    }
+
+    public setNotes(notes: string): void {
+        this.notes = notes;
     }
 
     public getArtist(): ArtistInterface {
         return this.artist;
     }
 
+    public setArtist(artist: ArtistInterface): void {
+        this.artist = artist;
+    }
+
     public getFormat(): FormatInterface {
         return this.format;
+    }
+
+    public setFormat(format: FormatInterface): void {
+        this.format = format;
     }
 
     public getLabel(): LabelInterface {
         return this.label;
     }
 
+    public setLabel(label: LabelInterface): void {
+        this.label = label;
+    }
+
     public getGenre(): GenreInterface {
         return this.genre;
+    }
+
+    public setGenre(genre: GenreInterface): void {
+        this.genre = genre;
     }
 }

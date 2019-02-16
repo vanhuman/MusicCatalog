@@ -12,6 +12,10 @@ export class Artist implements ArtistInterface {
         return this.name;
     }
 
+    public setName(name: string): void {
+        this.name = name;
+    }
+
     public getFullName(): string {
         const nameArray = this.name.split(',');
         let name = this.name;

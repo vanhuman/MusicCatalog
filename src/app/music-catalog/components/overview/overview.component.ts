@@ -69,7 +69,7 @@ export class OverviewComponent {
     public onScroll() {
         const element = <HTMLElement>this.element.nativeElement;
         if (element) {
-            if (!this.loading && window.scrollY >= (element.clientHeight - window.innerHeight) * 0.5) {
+            if (!this.loading && window.scrollY >= (element.clientHeight - window.innerHeight) * 0.9) {
                 this.page = this.page + 1;
                 this.getAlbums();
             }
