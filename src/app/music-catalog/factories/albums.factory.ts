@@ -82,15 +82,14 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
 
     public getImagesFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>> {
         return new Promise<Map<ImageSize, string>>((resolve, reject) => {
-            const artistName = this.removeBrackets(album.getArtist().getFullName());
-            const title = this.removeBrackets(album.getTitle());
+            const artistName = this.cleanUp(album.getArtist().getFullName());
+            const title = this.cleanUp(album.getTitle(), album.getArtist().getFullName());
             let params = new HttpParams();
             params = params.set('method', 'album.getinfo');
             params = params.set('api_key', '7582eb9c2d8036e2b57c1ce973467d14');
             params = params.set('artist', artistName);
             params = params.set('album', title);
             params = params.set('format', 'json');
-            params = params.set('autocorrect', '1');
             const url = 'https://ws.audioscrobbler.com/2.0/';
             this.httpClient.get<LastfmAlbumInfo>(url, {params})
                 .subscribe({
@@ -117,13 +116,24 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         return this.albumsMetaData;
     }
 
-    private removeBrackets(value: string): string {
+    private cleanUp(value: string, artistName: string = null): string {
         let returnValue = value;
+
+        // remove brackets
         if (value.indexOf('(') !== -1 && value.indexOf(')') !== -1) {
             const start = value.indexOf('(');
             const end = value.indexOf(')');
             returnValue = value.substring(0, start) + value.substring(end + 1);
         }
+
+        // replace s/t with artist name
+        if (artistName && value.trim() === 's/t') {
+            returnValue = artistName;
+        }
+
+        // remove entries separated by /
+        returnValue = returnValue.split('/')[0];
+
         return returnValue.trim();
     }
 
