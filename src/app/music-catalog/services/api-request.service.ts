@@ -7,7 +7,7 @@ import { ApiRequestServiceInterface } from './api-request.service.interface';
 
 @Injectable()
 export class ApiRequestService implements ApiRequestServiceInterface {
-    public static API_BASE_DOMAIN = 'http://moses.test/music-catalog-api';
+    public static API_BASE_DOMAIN = '/music-catalog-api';
     private authorisationError: Subject<boolean> = new Subject<boolean>();
 
     public constructor(
