@@ -12,6 +12,7 @@ import { AuthenticationServiceInterface } from './services/authentication.servic
 export class MusicCatalogComponent implements OnDestroy {
     public loggedIn = false;
     public outputToOverview: McCommunication;
+    public outputToHeader: McCommunication;
     private authenticationSubscription: Subscription;
 
     public constructor(
@@ -33,5 +34,9 @@ export class MusicCatalogComponent implements OnDestroy {
 
     public processInputFromLogin(loggedIn: boolean): void {
         this.loggedIn = loggedIn;
+    }
+
+    public processInputFromOverview(mcCommunication: McCommunication): void {
+        this.outputToHeader = mcCommunication;
     }
 }

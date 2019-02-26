@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -13,7 +13,7 @@ import { McCommunication } from '../../models/music-catalog-communication.interf
     styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnDestroy {
-    @Output() mcCommunication: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
+    @Output() mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
 
     public title = 'Sutton Music Catalog';
     public totalNumberOfAlbums = 0;
@@ -24,6 +24,22 @@ export class HeaderComponent implements OnDestroy {
         keywords: new FormControl(''),
     });
     public id = 'music-catalog-header';
+
+    @Input()
+    set mcCommunication(mcCommunication: McCommunication) {
+        if (mcCommunication) {
+            switch (mcCommunication.action) {
+                case 'sort':
+                    if (mcCommunication.page != null) {
+                        this.headerForm.controls['page'].setValue(mcCommunication.page);
+                    }
+                    break;
+                default:
+                    //
+                    break;
+            }
+        }
+    }
 
     private metaDataSubscription: Subscription;
 
@@ -46,7 +62,7 @@ export class HeaderComponent implements OnDestroy {
         const page = this.headerForm.controls['page'].value;
         const keywords = this.headerForm.controls['keywords'].value;
         if (NumberUtility.isInt(page)) {
-            this.mcCommunication.emit({
+            this.mcCommunicationOut.emit({
                 action: 'search',
                 page: Number(page),
                 keywords,

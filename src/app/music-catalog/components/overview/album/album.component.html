@@ -11,22 +11,22 @@
 </div>
 <div class="artist">
     <span [sharedTooltip]="getTooltipConfig('artist')">
-        {{ album.getArtist().getName() }}
+        {{ album.getArtist() ? album.getArtist().getName() : '' }}
     </span>
 </div>
 <div class="year">
     {{ album.getYear() }}
 </div>
 <div class="format">
-    {{ album.getFormat().getName() }}
+    {{ album.getFormat() ? album.getFormat().getName() : '' }}
 </div>
 <div class="label">
     <span [sharedTooltip]="getTooltipConfig('label')">
-        {{ album.getLabel().getName() }}
+        {{ album.getLabel() ? album.getLabel().getName() : '' }}
     </span>
 </div>
 <div class="genre">
-    {{ album.getGenre().getDescription() }}
+    {{ album.getGenre() ? album.getGenre().getDescription() : '' }}
 </div>
 <div class="date-added">
     {{ album.getDateAdded() }}

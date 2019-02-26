@@ -138,30 +138,46 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
     }
 
     private newAlbum(albumApiResponse: AlbumApiResponse): AlbumInterface {
+        let artist;
+        if (albumApiResponse.artist) {
+            artist = new Artist(
+                albumApiResponse.artist.id,
+                albumApiResponse.artist.name,
+            );
+        }
+        let format;
+        if (albumApiResponse.format) {
+            format = new Format(
+                albumApiResponse.format.id,
+                albumApiResponse.format.name,
+                albumApiResponse.format.description,
+            );
+        }
+        let label;
+        if (albumApiResponse.label) {
+            label = new Label(
+                albumApiResponse.label.id,
+                albumApiResponse.label.name,
+            );
+        }
+        let genre;
+        if (albumApiResponse.genre) {
+            genre = new Genre(
+                albumApiResponse.genre.id,
+                albumApiResponse.genre.description,
+                albumApiResponse.genre.notes,
+            );
+        }
         return new Album(
             albumApiResponse.id,
             albumApiResponse.title,
             albumApiResponse.year,
             DateUtility.parseDate(albumApiResponse.date_added),
             albumApiResponse.notes,
-            new Artist(
-                albumApiResponse.artist.id,
-                albumApiResponse.artist.name,
-            ),
-            new Format(
-                albumApiResponse.format.id,
-                albumApiResponse.format.name,
-                albumApiResponse.format.description,
-            ),
-            new Label(
-                albumApiResponse.label.id,
-                albumApiResponse.label.name,
-            ),
-            new Genre(
-                albumApiResponse.genre.id,
-                albumApiResponse.genre.description,
-                albumApiResponse.genre.notes,
-            )
+            artist,
+            format,
+            label,
+            genre
         );
     }
 

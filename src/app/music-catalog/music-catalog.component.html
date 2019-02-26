@@ -1,10 +1,12 @@
 <div class="music-catalog">
     <music-catalog-header
-            (mcCommunication)="processInputFromHeader($event)">
+            [mcCommunication]="outputToHeader"
+            (mcCommunicationOut)="processInputFromHeader($event)">
     </music-catalog-header>
     <music-catalog-overview
             *ngIf="loggedIn"
-            [mcCommunication]="outputToOverview">
+            [mcCommunication]="outputToOverview"
+            (mcCommunicationOut)="processInputFromOverview($event)">
     </music-catalog-overview>
     <music-catalog-login
             *ngIf="!loggedIn"

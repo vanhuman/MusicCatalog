@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { takeWhile } from 'rxjs/operators';
 
 import { AlbumsFactoryInterface, GetAlbumsParams } from '../../factories/albums.factory.interface';
@@ -26,6 +26,8 @@ interface Column {
     styleUrls: ['./overview.component.css'],
 })
 export class OverviewComponent {
+    @Output() public mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
+
     public albums: AlbumInterface[] = [];
     public columns: Column[] = [];
     public arrowImage = ImageUtility.imagePath + 'arrow-left.png';
@@ -104,6 +106,10 @@ export class OverviewComponent {
         this.sortDirection = clickedColumn.sortDirection;
         this.scrollUp(false);
         this.page = 1;
+        this.mcCommunicationOut.emit({
+            action: 'sort',
+            page: 1,
+        });
         this.getAlbums(false);
     }
 
