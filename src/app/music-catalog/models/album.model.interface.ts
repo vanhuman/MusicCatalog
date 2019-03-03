@@ -22,6 +22,14 @@ export interface AlbumInterface {
 
     setNotes(notes: string): void;
 
+    getImageThumb(): string;
+
+    setImageThumb(image: string): void;
+
+    getImage(): string;
+
+    setImage(image: string): void;
+
     getArtist(): ArtistInterface;
 
     setArtist(artist: ArtistInterface): void;

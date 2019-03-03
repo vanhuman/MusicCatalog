@@ -1,6 +1,7 @@
 import { AlbumInterface } from '../models/album.model.interface';
 import { Observable } from 'rxjs';
 import { SortDirection, SortField } from '../components/overview/overview.component';
+import { AlbumPostData } from '../models/api-post-data/album-api-post-data.interface';
 
 export interface AlbumsMetaData {
     totalNumberOfRecords: number;
@@ -23,5 +24,8 @@ export abstract class AlbumsFactoryInterface {
     public abstract getAlbumsMetaData(): Observable<AlbumsMetaData>;
 
     public abstract getImagesFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>>;
+
+    public abstract putAlbum(albumPostData: AlbumPostData, album: AlbumInterface): Observable<AlbumInterface>;
 }
+
 

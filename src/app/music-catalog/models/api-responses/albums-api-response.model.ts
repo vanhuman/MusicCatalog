@@ -8,12 +8,18 @@ export interface AlbumsApiResponse extends BaseApiResponse {
     albums: AlbumApiResponse[];
 }
 
+export interface AlbumApiResponseWrapper {
+    album: AlbumApiResponse;
+}
+
 export interface AlbumApiResponse {
     artist: ArtistApiResponse;
     date_added: string;
     format: FormatApiResponse;
     genre: GenreApiResponse;
     id: number;
+    image_thumb: string;
+    image: string;
     label: LabelApiResponse;
     notes: string;
     title: string;

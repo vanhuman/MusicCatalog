@@ -1,10 +1,12 @@
 import { AlbumsFactoryInterface, AlbumsMetaData, GetAlbumsParams, ImageSize } from './albums.factory.interface';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 
 import { DateUtility } from '../utilities/date.utility';
-import { AlbumApiResponse, AlbumsApiResponse } from '../models/api-responses/albums-api-response.model';
+import {
+    AlbumApiResponse, AlbumApiResponseWrapper, AlbumsApiResponse
+} from '../models/api-responses/albums-api-response.model';
 import { AuthenticationServiceInterface } from '../services/authentication.service.interface';
 import { ApiRequestServiceInterface } from '../services/api-request.service.interface';
 import { ModalServiceInterface } from '../services/modal.service.interface';
@@ -15,6 +17,7 @@ import { Label } from '../models/label.model';
 import { Genre } from '../models/genre.model';
 import { Format } from '../models/format.model';
 import { AlbumsFactoryState } from './albums.factory.state';
+import { AlbumPostData } from '../models/api-post-data/album-api-post-data.interface';
 
 interface LastfmAlbumImage {
     '#text': string;
@@ -91,12 +94,12 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
             params = params.set('album', title);
             params = params.set('format', 'json');
             const url = 'https://ws.audioscrobbler.com/2.0/';
-            this.httpClient.get<LastfmAlbumInfo>(url, {params})
+            this.apiRequestService.getThrottled<LastfmAlbumInfo>(url, params, true)
                 .subscribe({
                     next: (result) => {
-                        if (result.album && result.album.image) {
+                        if (result.body && result.body.album && result.body.album.image) {
                             const imageMap: Map<ImageSize, string> = new Map<ImageSize, string>();
-                            const images = result.album.image;
+                            const images = result.body.album.image;
                             images.forEach((img) => {
                                 imageMap.set(<ImageSize>img.size, img['#text']);
                             });
@@ -114,6 +117,63 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
 
     public getAlbumsMetaData(): Observable<AlbumsMetaData> {
         return this.albumsMetaData;
+    }
+
+    public putAlbum(albumPostData: AlbumPostData, album: AlbumInterface): Observable<AlbumInterface> {
+        const observable: Subject<AlbumInterface> = new Subject();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        const body = this.getHttpParams(albumPostData);
+        const token = this.authenticationService.getToken();
+        this.apiRequestService.put<AlbumApiResponseWrapper>(
+            '/albums/' + album.getId() + '?token=' + token,
+            body,
+            headers
+        ).subscribe({
+            next: (response) => {
+                this.updateAlbum(album, response.body.album);
+                observable.next(album);
+                observable.complete();
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('message-modal')
+                    .setMessage(error.error.message)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
+    private getHttpParams(albumPostData: AlbumPostData): HttpParams {
+        let body = new HttpParams();
+        if (albumPostData.title) {
+            body = body.set('title', albumPostData.title);
+        }
+        if (albumPostData.year) {
+            body = body.set('year', albumPostData.year.toString());
+        }
+        if (albumPostData.notes) {
+            body = body.set('notes', albumPostData.notes);
+        }
+        if (albumPostData.image_thumb) {
+            body = body.set('image_thumb', albumPostData.image_thumb);
+        }
+        if (albumPostData.image) {
+            body = body.set('image', albumPostData.image);
+        }
+        if (albumPostData.artist_id) {
+            body = body.set('artist_id', albumPostData.artist_id.toString());
+        }
+        if (albumPostData.format_id) {
+            body = body.set('format_id', albumPostData.format_id.toString());
+        }
+        if (albumPostData.label_id) {
+            body = body.set('label_id', albumPostData.label_id.toString());
+        }
+        if (albumPostData.genre_id) {
+            body = body.set('genre_id', albumPostData.genre_id.toString());
+        }
+        return body;
     }
 
     private cleanUp(value: string, artistName: string = null): string {
@@ -174,6 +234,8 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
             albumApiResponse.year,
             DateUtility.parseDate(albumApiResponse.date_added),
             albumApiResponse.notes,
+            albumApiResponse.image_thumb,
+            albumApiResponse.image,
             artist,
             format,
             label,
@@ -186,6 +248,8 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         album.setYear(albumApiResponse.year);
         album.setDateAdded(DateUtility.parseDate(albumApiResponse.date_added));
         album.setNotes(albumApiResponse.notes);
+        album.setImageThumb(albumApiResponse.image_thumb);
+        album.setImage(albumApiResponse.image);
         album.getArtist().setName(albumApiResponse.artist.name);
         album.getFormat().setName(albumApiResponse.format.name);
         album.getFormat().setDescription(albumApiResponse.format.description);

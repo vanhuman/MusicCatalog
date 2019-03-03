@@ -12,6 +12,8 @@ export class Album implements AlbumInterface {
         private year: number,
         private dateAdded: Date,
         private notes: string,
+        private imageThumb: string,
+        private image: string,
         private artist: ArtistInterface,
         private format: FormatInterface,
         private label: LabelInterface,
@@ -54,6 +56,22 @@ export class Album implements AlbumInterface {
 
     public setNotes(notes: string): void {
         this.notes = notes;
+    }
+
+    public getImageThumb(): string {
+        return this.imageThumb;
+    }
+
+    public setImageThumb(image: string): void {
+        this.imageThumb = image;
+    }
+
+    public getImage(): string {
+        return this.image;
+    }
+
+    public setImage(image: string): void {
+        this.image = image;
     }
 
     public getArtist(): ArtistInterface {

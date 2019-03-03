@@ -1,21 +1,22 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { AlbumInterface } from '../../../models/album.model.interface';
 import { TooltipConfig } from '../../../directives/tooltip/tooltip.directive';
 import { ImageUtility } from '../../../utilities/image.utility';
 import { AlbumsFactoryInterface } from '../../../factories/albums.factory.interface';
 import { AlbumsFactory } from '../../../factories/albums.factory';
+import { AlbumPostData } from '../../../models/api-post-data/album-api-post-data.interface';
 
 @Component({
     selector: 'music-catalog-album',
     templateUrl: './album.component.html',
     styleUrls: ['./album.component.css'],
 })
-export class AlbumComponent implements AfterViewInit {
+export class AlbumComponent implements OnInit {
     @Input() album: AlbumInterface;
 
     public editImage = ImageUtility.imagePath + 'edit.svg';
     public deleteImage = ImageUtility.imagePath + 'delete.svg';
-    public imageSmall = ImageUtility.imagePath + 'transparant.png';
+    public imageThumb = ImageUtility.imagePath + 'transparant.png';
     public imageExtralargeExists = false;
     public imageExtralarge: string;
     public showImages = AlbumsFactory.SHOW_IMAGES;
@@ -25,20 +26,31 @@ export class AlbumComponent implements AfterViewInit {
     ) {
     }
 
-    public ngAfterViewInit(): void {
-        this.albumsFactory.getImagesFromLastfm(this.album).then(
-            (imageMap) => {
-                if (imageMap.has('small') && imageMap.get('small')) {
-                    this.imageSmall = imageMap.get('small');
-                }
-                if (imageMap.has('extralarge') && imageMap.get('extralarge')) {
-                    this.imageExtralargeExists = true;
-                    this.imageExtralarge = imageMap.get('extralarge');
-                }
-            },
-            () => {
-                // just here to catch errors
-            });
+    public ngOnInit(): void {
+        if (this.album.getImageThumb() && this.album.getImageThumb()) {
+            this.imageThumb = this.album.getImageThumb();
+            this.imageExtralarge = this.album.getImage();
+            this.imageExtralargeExists = true;
+        } else {
+            this.albumsFactory.getImagesFromLastfm(this.album).then(
+                (imageMap) => {
+                    if (imageMap.has('small') && imageMap.get('small')) {
+                        this.imageThumb = imageMap.get('small');
+                        if (imageMap.has('extralarge') && imageMap.get('extralarge')) {
+                            this.imageExtralargeExists = true;
+                            this.imageExtralarge = imageMap.get('extralarge');
+                            // save the image locations in the database
+                            const albumPostData: AlbumPostData = {
+                                image_thumb: this.imageThumb,
+                                image: this.imageExtralarge,
+                            };
+                            this.albumsFactory.putAlbum(albumPostData, this.album);
+                        }
+                    }
+                },
+                () => {}
+            );
+        }
     }
 
     public getTooltipConfig(field: string): TooltipConfig {
