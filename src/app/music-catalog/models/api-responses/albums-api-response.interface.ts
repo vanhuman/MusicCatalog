@@ -1,8 +1,8 @@
-import { BaseApiResponse } from './base-api-response.model';
-import { FormatApiResponse } from './formats-api-response.model';
-import { ArtistApiResponse } from './artists-api-response.model';
-import { GenreApiResponse } from './genres-api-response.model';
-import { LabelApiResponse } from './labels-api-response.model';
+import { BaseApiResponse } from './base-api-response.interface';
+import { FormatApiResponse } from './formats-api-response.interface';
+import { ArtistApiResponse } from './artists-api-response.interface';
+import { GenreApiResponse } from './genres-api-response.interface';
+import { LabelApiResponse } from './labels-api-response.interface';
 
 export interface AlbumsApiResponse extends BaseApiResponse {
     albums: AlbumApiResponse[];

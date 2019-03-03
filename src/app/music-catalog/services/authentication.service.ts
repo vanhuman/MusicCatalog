@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 
-import { AuthenticateApiResponse } from '../models/api-responses/authenticate-api-response.model';
+import { AuthenticateApiResponse } from '../models/api-responses/authenticate-api-response.interface';
 import { SessionInterface } from '../models/session.model.interface';
 import { Session } from '../models/session.model';
 import { AuthenticationServiceInterface } from './authentication.service.interface';

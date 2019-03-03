@@ -6,7 +6,7 @@ import { Observable, Subject } from 'rxjs';
 import { DateUtility } from '../utilities/date.utility';
 import {
     AlbumApiResponse, AlbumApiResponseWrapper, AlbumsApiResponse
-} from '../models/api-responses/albums-api-response.model';
+} from '../models/api-responses/albums-api-response.interface';
 import { AuthenticationServiceInterface } from '../services/authentication.service.interface';
 import { ApiRequestServiceInterface } from '../services/api-request.service.interface';
 import { ModalServiceInterface } from '../services/modal.service.interface';
