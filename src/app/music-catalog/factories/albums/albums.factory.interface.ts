@@ -1,7 +1,7 @@
-import { AlbumInterface } from '../models/album.model.interface';
+import { AlbumInterface } from '../../models/album.model.interface';
 import { Observable } from 'rxjs';
-import { SortDirection, SortField } from '../components/overview/overview.component';
-import { AlbumPostData } from '../models/api-post-data/album-api-post-data.interface';
+import { SortDirection, SortField } from '../../components/overview/overview.component';
+import { AlbumPostData } from '../../models/api-post-data/album-api-post-data.interface';
 
 export interface AlbumsMetaData {
     totalNumberOfRecords: number;

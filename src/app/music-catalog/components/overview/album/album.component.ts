@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AlbumInterface } from '../../../models/album.model.interface';
 import { TooltipConfig } from '../../../directives/tooltip/tooltip.directive';
 import { ImageUtility } from '../../../utilities/image.utility';
-import { AlbumsFactoryInterface } from '../../../factories/albums.factory.interface';
-import { AlbumsFactory } from '../../../factories/albums.factory';
+import { AlbumsFactoryInterface } from '../../../factories/albums/albums.factory.interface';
+import { AlbumsFactory } from '../../../factories/albums/albums.factory';
 import { AlbumPostData } from '../../../models/api-post-data/album-api-post-data.interface';
+import { McCommunication } from '../../../models/music-catalog-communication.interface';
 
 @Component({
     selector: 'music-catalog-album',
@@ -13,6 +14,7 @@ import { AlbumPostData } from '../../../models/api-post-data/album-api-post-data
 })
 export class AlbumComponent implements OnInit {
     @Input() album: AlbumInterface;
+    @Output() mcCommunication: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
 
     public editImage = ImageUtility.imagePath + 'edit.svg';
     public deleteImage = ImageUtility.imagePath + 'delete.svg';
@@ -48,7 +50,8 @@ export class AlbumComponent implements OnInit {
                         }
                     }
                 },
-                () => {}
+                () => {
+                }
             );
         }
     }
@@ -70,5 +73,12 @@ export class AlbumComponent implements OnInit {
             title,
             topOffset: 5,
         };
+    }
+
+    public edit(): void {
+        this.mcCommunication.emit({
+           item: this.album,
+           action: 'edit',
+        });
     }
 }

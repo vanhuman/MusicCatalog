@@ -3,9 +3,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { NumberUtility } from '../../utilities/number.utility';
-import { AlbumsFactoryInterface } from '../../factories/albums.factory.interface';
-import { AlbumsMetaData } from '../../factories/albums.factory.interface';
+import { AlbumsFactoryInterface } from '../../factories/albums/albums.factory.interface';
+import { AlbumsMetaData } from '../../factories/albums/albums.factory.interface';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
+import { StaticTextUtility } from '../../utilities/static-text.utility';
 
 @Component({
     selector: 'music-catalog-header',
@@ -15,7 +16,7 @@ import { McCommunication } from '../../models/music-catalog-communication.interf
 export class HeaderComponent implements OnDestroy {
     @Output() mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
 
-    public title = 'Sutton Music Catalog';
+    public title = StaticTextUtility.APPLICATION_TITLE;
     public totalNumberOfAlbums = 0;
     public pageSize = 50;
     public totalNumberOfPages = 0;

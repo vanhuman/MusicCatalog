@@ -3,21 +3,21 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 
-import { DateUtility } from '../utilities/date.utility';
+import { DateUtility } from '../../utilities/date.utility';
 import {
     AlbumApiResponse, AlbumApiResponseWrapper, AlbumsApiResponse
-} from '../models/api-responses/albums-api-response.interface';
-import { AuthenticationServiceInterface } from '../services/authentication.service.interface';
-import { ApiRequestServiceInterface } from '../services/api-request.service.interface';
-import { ModalServiceInterface } from '../services/modal.service.interface';
-import { AlbumInterface } from '../models/album.model.interface';
-import { Album } from '../models/album.model';
-import { Artist } from '../models/artist.model';
-import { Label } from '../models/label.model';
-import { Genre } from '../models/genre.model';
-import { Format } from '../models/format.model';
+} from '../../models/api-responses/albums-api-response.interface';
+import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
+import { ApiRequestServiceInterface } from '../../services/api-request.service.interface';
+import { ModalServiceInterface } from '../../services/modal.service.interface';
+import { AlbumInterface } from '../../models/album.model.interface';
+import { Album } from '../../models/album.model';
+import { Artist } from '../../models/artist.model';
+import { Label } from '../../models/label.model';
+import { Genre } from '../../models/genre.model';
+import { Format } from '../../models/format.model';
 import { AlbumsFactoryState } from './albums.factory.state';
-import { AlbumPostData } from '../models/api-post-data/album-api-post-data.interface';
+import { AlbumPostData } from '../../models/api-post-data/album-api-post-data.interface';
 
 interface LastfmAlbumImage {
     '#text': string;

@@ -12,7 +12,15 @@
 </div>
 <div #musicCatalogOverview class="overview-body">
     <div class="album-row" *ngFor="let album of albums">
-        <music-catalog-album [album]="album"></music-catalog-album>
+        <music-catalog-album
+                (mcCommunication)="processInputFromAlbumRow($event)"
+                [album]="album">
+        </music-catalog-album>
     </div>
     <button class="btn-primary scroll-up" (click)="scrollUp()">To top</button>
 </div>
+<music-catalog-album-edit *ngIf="albumToEdit"
+                          [album]="albumToEdit"
+                          (mcCommunication)="processInputFromAlbumEdit($event)">
+</music-catalog-album-edit>
+

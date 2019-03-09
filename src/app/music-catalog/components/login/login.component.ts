@@ -55,15 +55,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.authenticationSubscription.unsubscribe();
+        KeyStrokeUtility.removeListener();
     }
 
     public cancel(): void {
         this.error = 'Please login to continue.';
-    }
-
-    public close(): void {
-        KeyStrokeUtility.removeListener();
-        this.element.style.display = 'none';
     }
 
     public login(): void {
@@ -75,7 +71,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                 .subscribe((loginResult: AuthenticationResult) => {
                     if (loginResult.succes) {
                         this.loggedIn.emit(true);
-                        this.close();
                     } else {
                         this.error = loginResult.error;
                     }

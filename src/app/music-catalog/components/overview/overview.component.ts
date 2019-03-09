@@ -1,12 +1,12 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { takeWhile } from 'rxjs/operators';
 
-import { AlbumsFactoryInterface, GetAlbumsParams } from '../../factories/albums.factory.interface';
+import { AlbumsFactoryInterface, GetAlbumsParams } from '../../factories/albums/albums.factory.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
 import { TooltipConfig } from '../../directives/tooltip/tooltip.directive';
 import { ImageUtility } from '../../utilities/image.utility';
-import { AlbumsFactory } from '../../factories/albums.factory';
+import { AlbumsFactory } from '../../factories/albums/albums.factory';
 
 export type SortField = 'title' | 'year' | 'date_added'
     | 'artist_name' | 'format_name' | 'label_name' | 'genre_description';
@@ -32,6 +32,7 @@ export class OverviewComponent {
     public columns: Column[] = [];
     public arrowImage = ImageUtility.imagePath + 'arrow-left.png';
     public showImages = AlbumsFactory.SHOW_IMAGES;
+    public albumToEdit: AlbumInterface;
 
     private loading = false;
     private page = 1;
@@ -131,6 +132,39 @@ export class OverviewComponent {
             arrowClass = 'down';
         }
         return arrowClass;
+    }
+
+    public processInputFromAlbumRow(mcCommunication: McCommunication): void {
+        if (mcCommunication.action === 'edit') {
+            this.albumToEdit = mcCommunication.item;
+        }
+    }
+
+    public processInputFromAlbumEdit(mcCommunication: McCommunication): void {
+        let index: number;
+        switch (mcCommunication.action) {
+            case 'cancel':
+                this.albumToEdit = null;
+                break;
+            case 'previous':
+                index = this.albums.indexOf(this.albumToEdit);
+                if (index > 0) {
+                    this.albumToEdit = this.albums[index - 1];
+                }
+                break;
+            case 'next':
+                index = this.albums.indexOf(this.albumToEdit);
+                if (this.albums.length < index + 10) {
+                    this.page = this.page + 1;
+                    this.getAlbums();
+                }
+                if (index < this.albums.length - 1) {
+                    this.albumToEdit = this.albums[index + 1];
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     private getAlbums(concat: boolean = true): void {

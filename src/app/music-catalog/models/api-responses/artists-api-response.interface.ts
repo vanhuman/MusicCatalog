@@ -1,5 +1,5 @@
 export interface ArtistsApiResponse {
-    artists: ArtistApiResponse;
+    artists: ArtistApiResponse[];
 }
 
 export interface ArtistApiResponse {

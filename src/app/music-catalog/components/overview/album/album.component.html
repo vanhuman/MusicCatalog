@@ -1,5 +1,5 @@
 <div class="image" *ngIf="showImages">
-    <img [src]="imageThumb" alt="front cover" />
+    <img [src]="imageThumb" alt="" />
     <div class="popup-image" *ngIf="imageExtralargeExists">
         <img [src]="imageExtralarge" alt="front cover" />
     </div>
@@ -32,6 +32,6 @@
     {{ album.getDateAdded() }}
 </div>
 <div class="icons">
-    <img alt="edit" [src]="editImage" [sharedTooltip]="{title: 'Edit'}"/>
+    <img alt="edit" [src]="editImage" (click)="edit()" [sharedTooltip]="{title: 'Edit'}"/>
     <img alt="delete" [src]="deleteImage" [sharedTooltip]="{title: 'Delete'}"/>
 </div>

@@ -8,6 +8,14 @@ export class Artist implements ArtistInterface {
         //
     }
 
+    public getId(): number {
+        return this.id;
+    }
+
+    public setId(id: number) {
+        this.id = id;
+    }
+
     public getName(): string {
         return this.name;
     }

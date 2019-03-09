@@ -1,0 +1,58 @@
+<div class="album-edit">
+    <div class="image">
+        <img [src]="album.getImage()" alt="" *ngIf="album.getImage()"/>
+        <div class="no-image" *ngIf="!album.getImage()">
+            <div>no image available</div>
+        </div>
+    </div>
+    <form class="album-edit" [formGroup]="albumEditForm">
+        <fieldset>
+            <div class="field">
+                <label for="{{id}}-title">Title</label>
+                <input id="{{id}}-title"
+                       type="text"
+                       formControlName="title">
+            </div>
+            <div class="field">
+                <label for="{{id}}-artist">Artist</label>
+                <input #artist id="{{id}}-artist"
+                       type="text"
+                       formControlName="artist"
+                       [placeholder]="albumFields.get('artist').placeholder"
+                       (keyup)="processKeyupOnArtist(artist.value, $event)">
+                <ul class="artists-list" #artistsList [style.display]="displayArtistsList ? 'block' : 'none'">
+                    <li *ngFor="let artist of artists; let index = index"
+                        (click)="selectArtist(artist)"
+                        [ngClass]="index === selectedArtistNumber ? 'selected' : ''">
+                        {{ artist.getName() }}
+                    </li>
+                </ul>
+            </div>
+            <div class="field year">
+                <label for="{{id}}-year">Year</label>
+                <input #year id="{{id}}-year"
+                       type="text"
+                       formControlName="year"
+                       [placeholder]="albumFields.get('year').placeholder"
+                       (keyup)="processKeyupOnYear(year.value, $event)">
+            </div>
+            <div class="field notes">
+                <label for="{{id}}-notes">Notes</label>
+                <textarea id="{{id}}-notes"
+                          type="text"
+                          formControlName="notes">
+                </textarea>
+            </div>
+        </fieldset>
+        <div class="buttons">
+            <button class="btn-primary" (click)="save()">Save</button>
+            <button class="btn-secondary" (click)="cancel()">Cancel</button>
+            <div class="icons">
+                <img alt="previous" [src]="previousImage" (click)="previousAlbum()"
+                     [sharedTooltip]="{title: 'Previous'}"/>
+                <img alt="next" [src]="nextImage" (click)="nextAlbum()" [sharedTooltip]="{title: 'Next'}"/>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="album-edit-background"></div>
