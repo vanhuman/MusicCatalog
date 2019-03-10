@@ -20,10 +20,10 @@
                        formControlName="artist"
                        [placeholder]="albumFields.get('artist').placeholder"
                        (keyup)="processKeyupOnArtist(artist.value, $event)">
-                <ul class="artists-list" #artistsList [style.display]="displayArtistsList ? 'block' : 'none'">
+                <ul class="artists-list" [style.display]="entityPopup === 'artist' ? 'block' : 'none'">
                     <li *ngFor="let artist of artists; let index = index"
                         (click)="selectArtist(artist)"
-                        [ngClass]="index === selectedArtistNumber ? 'selected' : ''">
+                        [ngClass]="index === selectedEntityNumber ? 'selected' : ''">
                         {{ artist.getName() }}
                     </li>
                 </ul>
@@ -43,9 +43,17 @@
                           formControlName="notes">
                 </textarea>
             </div>
+            <div class="field">
+                <div class="error">
+                    {{ error }}
+                </div>
+            </div>
         </fieldset>
         <div class="buttons">
-            <button class="btn-primary" (click)="save()">Save</button>
+            <button class="btn-primary" (click)="save()"
+                    [disabled]="entityPopup !== 'none'">
+                Save
+            </button>
             <button class="btn-secondary" (click)="cancel()">Cancel</button>
             <div class="icons">
                 <img alt="previous" [src]="previousImage" (click)="previousAlbum()"

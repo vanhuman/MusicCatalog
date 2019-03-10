@@ -10,11 +10,14 @@ import { ArtistsFactoryInterface } from '../../factories/artists/artists.factory
 import { KeyCode, KeyStrokeUtility } from '../../utilities/key-stroke.utility';
 import { ImageUtility } from '../../utilities/image.utility';
 import { NumberUtility } from '../../utilities/number.utility';
+import { StringUtility } from '../../utilities/string.utility';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
     placeholder?: string;
 }
+
+type Entities = 'none' | 'artist' | 'label' | 'genre' | 'format';
 
 @Component({
     selector: 'music-catalog-album-edit',
@@ -23,7 +26,6 @@ interface AlbumFieldSettings {
 })
 export class AlbumEditComponent implements OnInit, OnDestroy {
     @Output() mcCommunication: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
-    @ViewChild('artistsList') artistsList: ElementRef;
 
     public id = 'music-catalog-album-edit';
     public albumEditForm = new FormGroup({});
@@ -32,12 +34,14 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     public labels: LabelInterface[] = [];
     public formats: FormatInterface[] = [];
     public genre: GenreInterface[] = [];
-    public displayArtistsList = false;
+    public entityPopup: Entities = 'none';
     public previousImage = ImageUtility.imagePath + 'previous.png';
     public nextImage = ImageUtility.imagePath + 'next.png';
+    public error = '';
 
-    private selectedArtistNumber = -1;
+    private selectedEntityNumber = -1;
     private _album: AlbumInterface;
+    private originalFormData: any;
 
     @Input()
     public set album(album: AlbumInterface) {
@@ -60,31 +64,44 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.displayAlbumInForm();
 
-        // const keyHandlings = [
-        //     {
-        //         keyStroke: <KeyCode>'Enter',
-        //         function: () => this.save.apply(this),
-        //     },
-        //     {
-        //         keyStroke: <KeyCode>'Escape',
-        //         function: () => this.cancel.apply(this),
-        //     },
-        // ];
-        // KeyStrokeUtility.addListener(keyHandlings);
+        const keyHandlings = [
+            {
+                keyStroke: <KeyCode>'Escape',
+                function: () => this.cancel.apply(this, [true]),
+            },
+        ];
+        KeyStrokeUtility.addListener(keyHandlings);
     }
 
     public ngOnDestroy(): void {
-        // KeyStrokeUtility.removeListener();
+        KeyStrokeUtility.removeListener();
     }
 
     public save(): void {
-        // set date_added
+        if (this.entityPopup === 'none') {
+            console.log(this.albumEditForm.valid);
+            if (!this.albumEditForm.valid) {
+                let errors = 'Error:';
+                for (const key of Object.keys(this.albumEditForm.controls)) {
+                    if (this.albumEditForm.controls[key].errors) {
+                        errors = errors + ' ' + this.getValidationMessage(key);
+                    }
+                }
+                this.error = errors;
+            }
+            // set date_added
+            //
+        }
     }
 
-    public cancel(): void {
-        this.mcCommunication.emit({
-            action: 'cancel',
-        });
+    public cancel(checkPopupVisible: boolean = false): void {
+        // check form changed
+        //
+        if (!checkPopupVisible || this.entityPopup === 'none') {
+            this.mcCommunication.emit({
+                action: 'cancel',
+            });
+        }
     }
 
     public previousAlbum(): void {
@@ -102,30 +119,40 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     }
 
     public processKeyupOnArtist(input: string, event: KeyboardEvent): void {
+        if (this.entityPopup !== 'artist') {
+            this.entityPopup = 'artist';
+            this.selectedEntityNumber = -1;
+        }
         if (event.key === 'ArrowDown') {
-            this.selectedArtistNumber = (this.selectedArtistNumber + 1) % this.artists.length;
+            this.selectedEntityNumber = (this.selectedEntityNumber + 1) % this.artists.length;
         } else if (event.key === 'ArrowUp') {
-            this.selectedArtistNumber = (this.selectedArtistNumber - 1) % this.artists.length;
-            if (this.selectedArtistNumber < 0) {
-                this.selectedArtistNumber = this.selectedArtistNumber + this.artists.length;
+            this.selectedEntityNumber = (this.selectedEntityNumber - 1) % this.artists.length;
+            if (this.selectedEntityNumber < 0) {
+                this.selectedEntityNumber = this.selectedEntityNumber + this.artists.length;
             }
         } else if (event.key === 'Enter') {
-            if (this.selectedArtistNumber > -1) {
-                this.selectArtist(this.artists[this.selectedArtistNumber]);
+            if (this.selectedEntityNumber > -1) {
+                this.selectArtist(this.artists[this.selectedEntityNumber]);
             }
         } else if (event.key === 'Escape') {
             this.artists = [];
-            this.displayArtistsList = false;
-            this.selectedArtistNumber = -1;
+            this.entityPopup = 'none';
+            this.selectedEntityNumber = -1;
         } else if (input.length > 2) {
-            this.selectedArtistNumber = -1;
+            this.selectedEntityNumber = -1;
             this.artists = this.artistsFactory.searchArtists(input);
-            this.displayArtistsList = this.artists.length > 0;
+            this.entityPopup = this.artists.length > 0 ? 'artist' : 'none';
         } else {
-            this.displayArtistsList = false;
-            this.selectedArtistNumber = -1;
+            this.entityPopup = 'none';
+            this.selectedEntityNumber = -1;
             this.artists = [];
         }
+    }
+
+    public selectArtist(artist: ArtistInterface): void {
+        this.entityPopup = 'none';
+        this.selectedEntityNumber = -1;
+        this.albumEditForm.controls['artist'].setValue(artist.getName());
     }
 
     public processKeyupOnYear(input: string, event: KeyboardEvent): void {
@@ -141,26 +168,16 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         }
     }
 
-    public selectArtist(artist: ArtistInterface): void {
-        this.displayArtistsList = false;
-        this.albumEditForm.controls['artist'].setValue(artist.getName());
-    }
-
-    public fieldError(fieldKey: string): boolean {
-        return this.albumFields.get(fieldKey) &&
-            this.albumEditForm.controls[fieldKey].errors && this.albumEditForm.controls[fieldKey].touched;
-    }
-
     public getValidationMessage(fieldKey: string): string {
         if (this.albumEditForm.controls[fieldKey].errors.required) {
-            return 'This is a mandatory field.';
+            return StringUtility.capitalize(fieldKey + ' is a mandatory field.');
         } else if (this.albumEditForm.controls[fieldKey].errors.maxlength) {
             const maxLength = this.albumEditForm.controls[fieldKey].errors.maxlength.requiredLength;
-            return 'The maximum length is' + maxLength + '.';
+            return 'The maximum length for field ' + fieldKey + ' is ' + maxLength + '.';
         } else if (this.albumEditForm.controls[fieldKey].errors.pattern) {
-            return 'The format should be yyyy.';
+            return 'The format for field ' + fieldKey + ' should be yyyy.';
         }
-        return 'Unknown validation error.';
+        return 'Unknown validation error for field ' + fieldKey;
     }
 
     private getRelatedEntities(): void {
@@ -172,6 +189,8 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         this.albumEditForm.controls['year'].setValue(this.album.getYear());
         this.albumEditForm.controls['notes'].setValue(this.album.getNotes());
         this.albumEditForm.controls['artist'].setValue(this.album.getArtist().getName());
+        this.originalFormData = this.albumEditForm.value;
+        this.error = '';
     }
 
     private defineAlbumFields(): void {
@@ -209,4 +228,23 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
             this.albumEditForm.controls[name].setValidators(albumFieldSettings.validators);
         });
     }
+
+    private formHasChanged(): boolean {
+        for (const formKey of Object.keys(this.albumEditForm.value)) {
+            let value = this.albumEditForm.value[formKey];
+            for (const orignalFormKey of Object.keys(this.originalFormData)) {
+                if (formKey === orignalFormKey) {
+                    let originalValue = this.originalFormData[orignalFormKey];
+                    // regard '' as null
+                    originalValue = originalValue === '' ? null : originalValue;
+                    value = value === '' ? null : value;
+                    if (originalValue !== value) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 }
