@@ -32,7 +32,6 @@ interface LastfmAlbumInfo {
 
 @Injectable()
 export class AlbumsFactory implements AlbumsFactoryInterface {
-    public static SHOW_IMAGES = true;
     public albumsMetaData: Subject<AlbumsMetaData> = new Subject();
 
     public constructor(

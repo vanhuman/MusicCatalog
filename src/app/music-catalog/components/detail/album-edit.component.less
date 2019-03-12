@@ -1,4 +1,5 @@
 @import '../../styles/buttons';
+@input-width: 300px;
 
 div.album-edit {
     z-index: 1;
@@ -16,8 +17,8 @@ div.album-edit {
     div.image {
         display: inline-block;
         padding-right: 30px;
-        width: 300px;
-        height: 300px;
+        width: @input-width;
+        height: @input-width;
 
         div.no-image {
             font-size: 8px;
@@ -42,7 +43,7 @@ div.album-edit {
             margin: 0;
 
             div.field {
-                padding: 10px 0;
+                padding: 12px 0;
                 position: relative;
 
                 &.year {
@@ -55,6 +56,17 @@ div.album-edit {
                         vertical-align: top;
                     }
                 }
+                div.input-with-error {
+                    white-space: normal;
+                    width: @input-width;
+
+                    div.error {
+                        position: absolute;
+                        padding-top: 3px;
+                        color: @red;
+                        font-size: 10px;
+                    }
+                }
                 label {
                     display: inline-block;
                     color: @label-color;
@@ -63,18 +75,13 @@ div.album-edit {
                 input {
                     padding: 0 5px;
                     height: @input-height;
-                    width: 300px;
+                    width: @input-width;
                     font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
                     font-size: 12px;
                 }
                 textarea {
-                    width: 305px;
+                    width: @input-width + 5px;
                     height: 50px;
-                }
-                div.error {
-                    color: red;
-                    white-space: normal;
-                    width: 350px;
                 }
                 ul.artists-list {
                     display: none;
@@ -85,7 +92,7 @@ div.album-edit {
                     background: @secondary-color;
                     top: 26px;
                     left: 45px;
-                    min-width: 330px;
+                    min-width: @input-width + 30px;
                     overflow: hidden;
                     cursor: pointer;
                     padding-left: 0;

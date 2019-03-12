@@ -6,7 +6,7 @@ import { NumberUtility } from '../../utilities/number.utility';
 import { AlbumsFactoryInterface } from '../../factories/albums/albums.factory.interface';
 import { AlbumsMetaData } from '../../factories/albums/albums.factory.interface';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
-import { StaticTextUtility } from '../../utilities/static-text.utility';
+import { Configuration } from '../../configuration';
 
 @Component({
     selector: 'music-catalog-header',
@@ -16,7 +16,7 @@ import { StaticTextUtility } from '../../utilities/static-text.utility';
 export class HeaderComponent implements OnDestroy {
     @Output() mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
 
-    public title = StaticTextUtility.APPLICATION_TITLE;
+    public title = Configuration.APPLICATION_TITLE;
     public totalNumberOfAlbums = 0;
     public pageSize = 50;
     public totalNumberOfPages = 0;

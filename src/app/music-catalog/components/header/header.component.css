@@ -41,6 +41,7 @@ button.btn-secondary:focus {
 }
 .btn-primary:disabled {
   background-color: #c2c2c2;
+  opacity: 0.5;
 }
 .btn-secondary {
   padding: 0 15px;

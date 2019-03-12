@@ -11,6 +11,7 @@ import { KeyCode, KeyStrokeUtility } from '../../utilities/key-stroke.utility';
 import { ImageUtility } from '../../utilities/image.utility';
 import { NumberUtility } from '../../utilities/number.utility';
 import { StringUtility } from '../../utilities/string.utility';
+import { Configuration } from '../../configuration';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
@@ -38,6 +39,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     public previousImage = ImageUtility.imagePath + 'previous.png';
     public nextImage = ImageUtility.imagePath + 'next.png';
     public error = '';
+    public showImages = Configuration.SHOW_IMAGES;
 
     private selectedEntityNumber = -1;
     private _album: AlbumInterface;
@@ -119,6 +121,9 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     }
 
     public processKeyupOnArtist(input: string, event: KeyboardEvent): void {
+        if (event.key === 'Tab') {
+            return;
+        }
         if (this.entityPopup !== 'artist') {
             this.entityPopup = 'artist';
             this.selectedEntityNumber = -1;
@@ -168,16 +173,21 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         }
     }
 
+    public fieldError(fieldKey: string): boolean {
+        return this.albumFields.get(fieldKey) &&
+            this.albumEditForm.controls[fieldKey].errors && this.albumEditForm.controls[fieldKey].touched;
+    }
+
     public getValidationMessage(fieldKey: string): string {
         if (this.albumEditForm.controls[fieldKey].errors.required) {
-            return StringUtility.capitalize(fieldKey + ' is a mandatory field.');
+            return 'This is a mandatory field.';
         } else if (this.albumEditForm.controls[fieldKey].errors.maxlength) {
             const maxLength = this.albumEditForm.controls[fieldKey].errors.maxlength.requiredLength;
-            return 'The maximum length for field ' + fieldKey + ' is ' + maxLength + '.';
+            return 'The maximum length is ' + maxLength + '.';
         } else if (this.albumEditForm.controls[fieldKey].errors.pattern) {
-            return 'The format for field ' + fieldKey + ' should be yyyy.';
+            return 'This should be a valid year.';
         }
-        return 'Unknown validation error for field ' + fieldKey;
+        return 'Unknown validation error.';
     }
 
     private getRelatedEntities(): void {

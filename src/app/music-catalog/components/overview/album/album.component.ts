@@ -3,9 +3,9 @@ import { AlbumInterface } from '../../../models/album.model.interface';
 import { TooltipConfig } from '../../../directives/tooltip/tooltip.directive';
 import { ImageUtility } from '../../../utilities/image.utility';
 import { AlbumsFactoryInterface } from '../../../factories/albums/albums.factory.interface';
-import { AlbumsFactory } from '../../../factories/albums/albums.factory';
 import { AlbumPostData } from '../../../models/api-post-data/album-api-post-data.interface';
 import { McCommunication } from '../../../models/music-catalog-communication.interface';
+import { Configuration } from '../../../configuration';
 
 @Component({
     selector: 'music-catalog-album',
@@ -21,7 +21,7 @@ export class AlbumComponent implements OnInit {
     public imageThumb = ImageUtility.imagePath + 'transparant.png';
     public imageExtralargeExists = false;
     public imageExtralarge: string;
-    public showImages = AlbumsFactory.SHOW_IMAGES;
+    public showImages = Configuration.SHOW_IMAGES;
 
     public constructor(
         private albumsFactory: AlbumsFactoryInterface,
