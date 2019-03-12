@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AlbumInterface } from '../../models/album.model.interface';
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
@@ -10,15 +10,18 @@ import { ArtistsFactoryInterface } from '../../factories/artists/artists.factory
 import { KeyCode, KeyStrokeUtility } from '../../utilities/key-stroke.utility';
 import { ImageUtility } from '../../utilities/image.utility';
 import { NumberUtility } from '../../utilities/number.utility';
-import { StringUtility } from '../../utilities/string.utility';
 import { Configuration } from '../../configuration';
+import { FormCloseService } from '../../services/form-close.service';
+import { BehaviorSubject } from 'rxjs';
+import { FormatsFactoryInterface } from '../../factories/formats/formats.factory.interface';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
     placeholder?: string;
 }
 
-type Entities = 'none' | 'artist' | 'label' | 'genre' | 'format';
+type EntityType = 'none' | 'artist' | 'label' | 'genre' | 'format';
+type Entity = ArtistInterface | FormatInterface | LabelInterface | GenreInterface;
 
 @Component({
     selector: 'music-catalog-album-edit',
@@ -34,8 +37,8 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     public artists: ArtistInterface[] = [];
     public labels: LabelInterface[] = [];
     public formats: FormatInterface[] = [];
-    public genre: GenreInterface[] = [];
-    public entityPopup: Entities = 'none';
+    public genres: GenreInterface[] = [];
+    public entityPopup: EntityType = 'none';
     public previousImage = ImageUtility.imagePath + 'previous.png';
     public nextImage = ImageUtility.imagePath + 'next.png';
     public error = '';
@@ -44,6 +47,12 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     private selectedEntityNumber = -1;
     private _album: AlbumInterface;
     private originalFormData: any;
+    private keyHandlings = [
+        {
+            keyStroke: <KeyCode>'Escape',
+            function: () => this.cancel.apply(this, [true]),
+        },
+    ];
 
     @Input()
     public set album(album: AlbumInterface) {
@@ -57,6 +66,8 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
 
     public constructor(
         private artistsFactory: ArtistsFactoryInterface,
+        private formatsFactory: FormatsFactoryInterface,
+        private formCloseService: FormCloseService,
     ) {
         this.getRelatedEntities();
         this.defineAlbumFields();
@@ -65,14 +76,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.displayAlbumInForm();
-
-        const keyHandlings = [
-            {
-                keyStroke: <KeyCode>'Escape',
-                function: () => this.cancel.apply(this, [true]),
-            },
-        ];
-        KeyStrokeUtility.addListener(keyHandlings);
+        KeyStrokeUtility.addListener(this.keyHandlings);
     }
 
     public ngOnDestroy(): void {
@@ -83,25 +87,22 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         if (this.entityPopup === 'none') {
             console.log(this.albumEditForm.valid);
             if (!this.albumEditForm.valid) {
-                let errors = 'Error:';
-                for (const key of Object.keys(this.albumEditForm.controls)) {
-                    if (this.albumEditForm.controls[key].errors) {
-                        errors = errors + ' ' + this.getValidationMessage(key);
-                    }
-                }
-                this.error = errors;
+
             }
             // set date_added
             //
+            this.formCloseService.reset();
         }
     }
 
     public cancel(checkPopupVisible: boolean = false): void {
-        // check form changed
-        //
         if (!checkPopupVisible || this.entityPopup === 'none') {
-            this.mcCommunication.emit({
-                action: 'cancel',
+            this.formCloseService.checkIfCanClose().then((canClose) => {
+                if (canClose) {
+                    this.mcCommunication.emit({
+                        action: 'cancel',
+                    });
+                }
             });
         }
     }
@@ -120,44 +121,65 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         });
     }
 
-    public processKeyupOnArtist(input: string, event: KeyboardEvent): void {
+    public processKeyupOnEntity(entityType: EntityType, input: string, event: KeyboardEvent): void {
         if (event.key === 'Tab') {
             return;
         }
-        if (this.entityPopup !== 'artist') {
-            this.entityPopup = 'artist';
+        let entities: Entity[];
+        let inputMinLength = 2;
+        switch (entityType) {
+            case 'artist':
+                entities = this.artists;
+                break;
+            case 'format':
+                entities = this.formats;
+                inputMinLength = 0;
+                break;
+            case 'label':
+                entities = this.labels;
+                break;
+            case 'genre':
+                entities = this.genres;
+                break;
+            default:
+                break;
+        }
+        if (this.entityPopup !== entityType) {
+            this.entityPopup = entityType;
             this.selectedEntityNumber = -1;
         }
         if (event.key === 'ArrowDown') {
-            this.selectedEntityNumber = (this.selectedEntityNumber + 1) % this.artists.length;
+            this.selectedEntityNumber = (this.selectedEntityNumber + 1) % entities.length;
         } else if (event.key === 'ArrowUp') {
-            this.selectedEntityNumber = (this.selectedEntityNumber - 1) % this.artists.length;
+            this.selectedEntityNumber = (this.selectedEntityNumber - 1) % entities.length;
             if (this.selectedEntityNumber < 0) {
-                this.selectedEntityNumber = this.selectedEntityNumber + this.artists.length;
+                this.selectedEntityNumber = this.selectedEntityNumber + entities.length;
             }
         } else if (event.key === 'Enter') {
             if (this.selectedEntityNumber > -1) {
-                this.selectArtist(this.artists[this.selectedEntityNumber]);
+                this.selectEntity(entityType, entities[this.selectedEntityNumber]);
+            } else if (entities.length === 1) {
+                this.selectEntity(entityType, entities[0]);
             }
         } else if (event.key === 'Escape') {
-            this.artists = [];
+            this.clearAllEntities();
             this.entityPopup = 'none';
             this.selectedEntityNumber = -1;
-        } else if (input.length > 2) {
+        } else if (input.length > inputMinLength) {
+            entities = this.searchEntity(entityType, input);
+            this.entityPopup = entities.length > 0 ? entityType : 'none';
             this.selectedEntityNumber = -1;
-            this.artists = this.artistsFactory.searchArtists(input);
-            this.entityPopup = this.artists.length > 0 ? 'artist' : 'none';
         } else {
+            this.clearAllEntities();
             this.entityPopup = 'none';
             this.selectedEntityNumber = -1;
-            this.artists = [];
         }
     }
 
-    public selectArtist(artist: ArtistInterface): void {
+    public selectEntity(entityType: EntityType, entity: Entity): void {
         this.entityPopup = 'none';
         this.selectedEntityNumber = -1;
-        this.albumEditForm.controls['artist'].setValue(artist.getName());
+        this.albumEditForm.controls[entityType].setValue(entity.getName());
     }
 
     public processKeyupOnYear(input: string, event: KeyboardEvent): void {
@@ -190,15 +212,46 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         return 'Unknown validation error.';
     }
 
+    public saveDisabled(): boolean {
+        return this.entityPopup !== 'none' || !this.albumEditForm.valid;
+    }
+
+    private clearAllEntities(): void {
+        this.artists = [];
+        this.formats = [];
+        this.labels = [];
+        this.genres = [];
+    }
+
+    private searchEntity(entityType: EntityType, input: string): Entity[] {
+        switch (entityType) {
+            case 'artist':
+                this.artists = this.artistsFactory.searchArtists(input);
+                return this.artists;
+            case 'format':
+                this.formats = this.formatsFactory.searchFormats(input);
+                return this.formats;
+            case 'label':
+                return null;
+            case 'genre':
+                return null;
+            default:
+                return null;
+        }
+    }
+
     private getRelatedEntities(): void {
         this.artistsFactory.getArtists(0);
+        this.formatsFactory.getFormats(0);
     }
 
     private displayAlbumInForm(): void {
+        this.configureFormCloseService();
         this.albumEditForm.controls['title'].setValue(this.album.getTitle());
         this.albumEditForm.controls['year'].setValue(this.album.getYear());
         this.albumEditForm.controls['notes'].setValue(this.album.getNotes());
         this.albumEditForm.controls['artist'].setValue(this.album.getArtist().getName());
+        this.albumEditForm.controls['format'].setValue(this.album.getFormat().getName());
         this.originalFormData = this.albumEditForm.value;
         this.error = '';
     }
@@ -220,14 +273,13 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         });
         this.albumFields.set('format', {
             validators: [Validators.required, Validators.maxLength(255)],
-            placeholder: 'Format',
         });
         this.albumFields.set('label', {
-            validators: [Validators.required, Validators.maxLength(255)],
+            // validators: [Validators.required, Validators.maxLength(255)],
             placeholder: 'Label',
         });
         this.albumFields.set('genre', {
-            validators: [Validators.required, Validators.maxLength(255)],
+            // validators: [Validators.required, Validators.maxLength(255)],
             placeholder: 'Genre',
         });
     }
@@ -257,4 +309,9 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         return false;
     }
 
+    private configureFormCloseService(): void {
+        this.formCloseService.configureOnClose({
+            formCanCloseCallback: () => new BehaviorSubject(<boolean>(!this.formHasChanged())),
+        });
+    }
 }

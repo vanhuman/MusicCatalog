@@ -9,6 +9,10 @@ export class Format implements FormatInterface {
         //
     }
 
+    public getId(): number {
+        return this.id;
+    }
+
     public getName(): string {
         return this.name;
     }

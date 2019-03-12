@@ -9,6 +9,10 @@ export class Genre implements GenreInterface {
         //
     }
 
+    public getName(): string {
+        return this.description;
+    }
+
     public getDescription(): string {
         return this.description;
     }

@@ -1,5 +1,7 @@
 @import '../../styles/buttons';
 @input-width: 300px;
+@input-width-small: 50px;
+@image-width: 300px;
 
 div.album-edit {
     z-index: 1;
@@ -17,8 +19,8 @@ div.album-edit {
     div.image {
         display: inline-block;
         padding-right: 30px;
-        width: @input-width;
-        height: @input-width;
+        width: @image-width;
+        height: @image-width;
 
         div.no-image {
             font-size: 8px;
@@ -46,9 +48,12 @@ div.album-edit {
                 padding: 12px 0;
                 position: relative;
 
-                &.year {
-                    input {
-                        width: 50px;
+                &.year, &.format {
+                    div.input-with-error input {
+                        width: @input-width-small;
+                    }
+                    ul.selection-list {
+                        min-width: @input-width-small + 30px;
                     }
                 }
                 &.notes {
@@ -57,9 +62,20 @@ div.album-edit {
                     }
                 }
                 div.input-with-error {
-                    white-space: normal;
                     width: @input-width;
+                    display: inline-block;
 
+                    input {
+                        padding: 0 5px;
+                        height: @input-height;
+                        width: @input-width;
+                        font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
+                        font-size: 12px;
+                    }
+                    textarea {
+                        width: @input-width + 5px;
+                        height: 50px;
+                    }
                     div.error {
                         position: absolute;
                         padding-top: 3px;
@@ -72,18 +88,7 @@ div.album-edit {
                     color: @label-color;
                     width: 55px;
                 }
-                input {
-                    padding: 0 5px;
-                    height: @input-height;
-                    width: @input-width;
-                    font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
-                    font-size: 12px;
-                }
-                textarea {
-                    width: @input-width + 5px;
-                    height: 50px;
-                }
-                ul.artists-list {
+                ul.selection-list {
                     display: none;
                     position: absolute;
                     list-style: none;

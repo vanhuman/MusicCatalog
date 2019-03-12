@@ -10,6 +10,7 @@ export class KeyStrokeUtility {
 
     public static addListener(keyHandlings: KeyHandling[]): void {
         this.keyHandlingFunction = (event: KeyboardEvent) => {
+            event.stopPropagation();
             const matchingKeyHandling = keyHandlings.find(keyHandling => keyHandling.keyStroke === event.key);
             if (matchingKeyHandling) {
                 matchingKeyHandling.function(event);

@@ -23,12 +23,12 @@
                            type="text"
                            formControlName="artist"
                            [placeholder]="albumFields.get('artist').placeholder"
-                           (keyup)="processKeyupOnArtist(artist.value, $event)">
+                           (keyup)="processKeyupOnEntity('artist', artist.value, $event)">
                     <div class="error" *ngIf="fieldError('artist')">{{ getValidationMessage('artist') }}</div>
                 </div>
-                <ul class="artists-list" [style.display]="entityPopup === 'artist' ? 'block' : 'none'">
+                <ul class="selection-list" [style.display]="entityPopup === 'artist' ? 'block' : 'none'">
                     <li *ngFor="let artist of artists; let index = index"
-                        (click)="selectArtist(artist)"
+                        (click)="selectEntity('artist', artist)"
                         [ngClass]="index === selectedEntityNumber ? 'selected' : ''">
                         {{ artist.getName() }}
                     </li>
@@ -45,6 +45,23 @@
                     <div class="error" *ngIf="fieldError('year')">{{ getValidationMessage('year') }}</div>
                 </div>
             </div>
+            <div class="field format">
+                <label for="{{id}}-format">Format</label>
+                <div class="input-with-error">
+                    <input #format id="{{id}}-format"
+                           type="text"
+                           formControlName="format"
+                           (keyup)="processKeyupOnEntity('format', format.value, $event)">
+                    <div class="error" *ngIf="fieldError('format')">{{ getValidationMessage('format') }}</div>
+                </div>
+                <ul class="selection-list" [style.display]="entityPopup === 'format' ? 'block' : 'none'">
+                    <li *ngFor="let format of formats; let index = index"
+                        (click)="selectEntity('format', format)"
+                        [ngClass]="index === selectedEntityNumber ? 'selected' : ''">
+                        {{ format.getName() }}
+                    </li>
+                </ul>
+            </div>
             <div class="field notes">
                 <label for="{{id}}-notes">Notes</label>
                 <div class="input-with-error">
@@ -57,10 +74,7 @@
             </div>
         </fieldset>
         <div class="buttons">
-            <button class="btn-primary" (click)="save()"
-                    [disabled]="entityPopup !== 'none'">
-                Save
-            </button>
+            <button class="btn-primary" (click)="save()" [disabled]="saveDisabled()">Save</button>
             <button class="btn-secondary" (click)="cancel()">Cancel</button>
             <div class="icons">
                 <img alt="previous" [src]="previousImage" (click)="previousAlbum()"

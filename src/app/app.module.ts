@@ -27,6 +27,10 @@ import { AlbumEditComponent } from './music-catalog/components/detail/album-edit
 import { ArtistsFactoryInterface } from './music-catalog/factories/artists/artists.factory.interface';
 import { ArtistsFactory } from './music-catalog/factories/artists/artists.factory';
 import { ArtistsFactoryState } from './music-catalog/factories/artists/artists.factory.state';
+import { FormCloseService } from './music-catalog/services/form-close.service';
+import { FormatsFactoryInterface } from './music-catalog/factories/formats/formats.factory.interface';
+import { FormatsFactory } from './music-catalog/factories/formats/formats.factory';
+import { FormatsFactoryState } from './music-catalog/factories/formats/formats.factory.state';
 
 @NgModule({
     declarations: [
@@ -53,11 +57,14 @@ import { ArtistsFactoryState } from './music-catalog/factories/artists/artists.f
         TooltipService,
         AlbumsFactoryState,
         ArtistsFactoryState,
+        FormatsFactoryState,
+        FormCloseService,
         { provide: ModalServiceInterface, useClass: ModalService },
         { provide: AuthenticationServiceInterface, useClass: AuthenticationService },
         { provide: ApiRequestServiceInterface, useClass: ApiRequestService },
         { provide: AlbumsFactoryInterface, useClass: AlbumsFactory },
         { provide: ArtistsFactoryInterface, useClass: ArtistsFactory },
+        { provide: FormatsFactoryInterface, useClass: FormatsFactory },
     ],
     bootstrap: [MusicCatalogComponent]
 })

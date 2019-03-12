@@ -4,7 +4,9 @@
             {{ message }}
         </div>
         <div class="buttons">
-            <button class="btn-primary" (click)="close()">Close</button>
+            <button class="btn-primary" (click)="close()" *ngIf="showCloseButton">Close</button>
+            <button class="btn-primary" (click)="yes()" *ngIf="showYesButton">Yes</button>
+            <button class="btn-secondary" (click)="no()" *ngIf="showNoButton">No</button>
         </div>
     </div>
 </div>

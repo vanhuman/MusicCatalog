@@ -11,7 +11,13 @@ import { KeyCode, KeyStrokeUtility } from '../utilities/key-stroke.utility';
 export class CustomModalComponent implements OnInit, OnDestroy {
     @Input() id: string;
     public message = '';
+    public showCloseButton = true;
+    public showYesButton = false;
+    public showNoButton = false;
+
     private element: any;
+    private yesFunction: () => void;
+    private noFunction: () => void;
 
     constructor(
         private modalService: ModalServiceInterface,
@@ -36,6 +42,7 @@ export class CustomModalComponent implements OnInit, OnDestroy {
                 modal.close();
             }
         });
+        this.modalService.add(this);
 
         const keyHandlings = [
             {
@@ -48,17 +55,29 @@ export class CustomModalComponent implements OnInit, OnDestroy {
             },
         ];
         KeyStrokeUtility.addListener(keyHandlings);
-
-        this.modalService.add(this);
     }
 
     public ngOnDestroy(): void {
         this.modalService.remove(this.id);
         this.element.remove();
+        KeyStrokeUtility.removeListener();
     }
 
     public setMessage(message: string): CustomModalComponent {
         this.message = message;
+        return this;
+    }
+
+    public addYesButton(callBack: () => void): CustomModalComponent {
+        this.showYesButton = true;
+        this.yesFunction = callBack;
+        return this;
+    }
+
+    public addNoButton(callBack: () => void): CustomModalComponent {
+        this.showNoButton = true;
+        this.showCloseButton = false;
+        this.noFunction = callBack;
         return this;
     }
 
@@ -70,5 +89,15 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     public close(): void {
         this.element.style.display = 'none';
         document.body.classList.remove('custom-modal-open');
+    }
+
+    public yes(): void {
+        this.yesFunction();
+        this.close();
+    }
+
+    public no(): void {
+        this.noFunction();
+        this.close();
     }
 }

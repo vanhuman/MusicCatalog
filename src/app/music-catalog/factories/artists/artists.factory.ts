@@ -8,9 +8,10 @@ import { ArtistsFactoryState } from './artists.factory.state';
 import { ArtistApiResponse, ArtistsApiResponse } from '../../models/api-responses/artists-api-response.interface';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Artist } from '../../models/artist.model';
+import { ArtistsFactoryInterface } from './artists.factory.interface';
 
 @Injectable()
-export class ArtistsFactory {
+export class ArtistsFactory implements ArtistsFactoryInterface {
 
     public constructor(
         private authenticationService: AuthenticationServiceInterface,
