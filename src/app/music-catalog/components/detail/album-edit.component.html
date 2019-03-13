@@ -62,6 +62,23 @@
                     </li>
                 </ul>
             </div>
+            <div class="field label">
+                <label for="{{id}}-label">Label</label>
+                <div class="input-with-error">
+                    <input #label id="{{id}}-label"
+                           type="text"
+                           formControlName="label"
+                           (keyup)="processKeyupOnEntity('label', label.value, $event)">
+                    <div class="error" *ngIf="fieldError('label')">{{ getValidationMessage('label') }}</div>
+                </div>
+                <ul class="selection-list" [style.display]="entityPopup === 'label' ? 'block' : 'none'">
+                    <li *ngFor="let label of labels; let index = index"
+                        (click)="selectEntity('label', label)"
+                        [ngClass]="index === selectedEntityNumber ? 'selected' : ''">
+                        {{ label.getName() }}
+                    </li>
+                </ul>
+            </div>
             <div class="field notes">
                 <label for="{{id}}-notes">Notes</label>
                 <div class="input-with-error">

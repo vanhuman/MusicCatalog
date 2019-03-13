@@ -8,6 +8,10 @@ export class Label implements LabelInterface {
         //
     }
 
+    public getId(): number {
+        return this.id;
+    }
+
     public getName(): string {
         return this.name;
     }

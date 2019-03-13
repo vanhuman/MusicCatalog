@@ -14,6 +14,7 @@ import { Configuration } from '../../configuration';
 import { FormCloseService } from '../../services/form-close.service';
 import { BehaviorSubject } from 'rxjs';
 import { FormatsFactoryInterface } from '../../factories/formats/formats.factory.interface';
+import { LabelsFactoryInterface } from '../../factories/labels/labels.factory.interface';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
@@ -67,6 +68,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     public constructor(
         private artistsFactory: ArtistsFactoryInterface,
         private formatsFactory: FormatsFactoryInterface,
+        private labelsFactory: LabelsFactoryInterface,
         private formCloseService: FormCloseService,
     ) {
         this.getRelatedEntities();
@@ -232,17 +234,19 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
                 this.formats = this.formatsFactory.searchFormats(input);
                 return this.formats;
             case 'label':
-                return null;
+                this.labels = this.labelsFactory.searchLabels(input);
+                return this.labels;
             case 'genre':
-                return null;
+                return [];
             default:
-                return null;
+                return [];
         }
     }
 
     private getRelatedEntities(): void {
         this.artistsFactory.getArtists(0);
         this.formatsFactory.getFormats(0);
+        this.labelsFactory.getLabels(0);
     }
 
     private displayAlbumInForm(): void {
@@ -252,6 +256,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         this.albumEditForm.controls['notes'].setValue(this.album.getNotes());
         this.albumEditForm.controls['artist'].setValue(this.album.getArtist().getName());
         this.albumEditForm.controls['format'].setValue(this.album.getFormat().getName());
+        this.albumEditForm.controls['label'].setValue(this.album.getLabel().getName());
         this.originalFormData = this.albumEditForm.value;
         this.error = '';
     }
