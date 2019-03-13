@@ -34,6 +34,9 @@ import { FormatsFactoryState } from './music-catalog/factories/formats/formats.f
 import { LabelsFactoryInterface } from './music-catalog/factories/labels/labels.factory.interface';
 import { LabelsFactory } from './music-catalog/factories/labels/labels.factory';
 import { LabelsFactoryState } from './music-catalog/factories/labels/labels.factory.state';
+import { GenresFactoryState } from './music-catalog/factories/genres/genres.factory.state';
+import { GenresFactoryInterface } from './music-catalog/factories/genres/genres.factory.interface';
+import { GenresFactory } from './music-catalog/factories/genres/genres.factory';
 
 @NgModule({
     declarations: [
@@ -62,6 +65,7 @@ import { LabelsFactoryState } from './music-catalog/factories/labels/labels.fact
         ArtistsFactoryState,
         FormatsFactoryState,
         LabelsFactoryState,
+        GenresFactoryState,
         FormCloseService,
         { provide: ModalServiceInterface, useClass: ModalService },
         { provide: AuthenticationServiceInterface, useClass: AuthenticationService },
@@ -70,6 +74,7 @@ import { LabelsFactoryState } from './music-catalog/factories/labels/labels.fact
         { provide: ArtistsFactoryInterface, useClass: ArtistsFactory },
         { provide: FormatsFactoryInterface, useClass: FormatsFactory },
         { provide: LabelsFactoryInterface, useClass: LabelsFactory },
+        { provide: GenresFactoryInterface, useClass: GenresFactory },
     ],
     bootstrap: [MusicCatalogComponent]
 })

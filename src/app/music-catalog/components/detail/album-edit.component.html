@@ -79,6 +79,23 @@
                     </li>
                 </ul>
             </div>
+            <div class="field genre">
+                <label for="{{id}}-genre">Genre</label>
+                <div class="input-with-error">
+                    <input #genre id="{{id}}-genre"
+                           type="text"
+                           formControlName="genre"
+                           (keyup)="processKeyupOnEntity('genre', genre.value, $event)">
+                    <div class="error" *ngIf="fieldError('genre')">{{ getValidationMessage('genre') }}</div>
+                </div>
+                <ul class="selection-list" [style.display]="entityPopup === 'genre' ? 'block' : 'none'">
+                    <li *ngFor="let genre of genres; let index = index"
+                        (click)="selectEntity('genre', genre)"
+                        [ngClass]="index === selectedEntityNumber ? 'selected' : ''">
+                        {{ genre.getDescription() }}
+                    </li>
+                </ul>
+            </div>
             <div class="field notes">
                 <label for="{{id}}-notes">Notes</label>
                 <div class="input-with-error">

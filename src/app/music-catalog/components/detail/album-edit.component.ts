@@ -15,6 +15,7 @@ import { FormCloseService } from '../../services/form-close.service';
 import { BehaviorSubject } from 'rxjs';
 import { FormatsFactoryInterface } from '../../factories/formats/formats.factory.interface';
 import { LabelsFactoryInterface } from '../../factories/labels/labels.factory.interface';
+import { GenresFactoryInterface } from '../../factories/genres/genres.factory.interface';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
@@ -69,6 +70,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         private artistsFactory: ArtistsFactoryInterface,
         private formatsFactory: FormatsFactoryInterface,
         private labelsFactory: LabelsFactoryInterface,
+        private genresFactory: GenresFactoryInterface,
         private formCloseService: FormCloseService,
     ) {
         this.getRelatedEntities();
@@ -237,7 +239,8 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
                 this.labels = this.labelsFactory.searchLabels(input);
                 return this.labels;
             case 'genre':
-                return [];
+                this.genres = this.genresFactory.searchGenres(input);
+                return this.genres;
             default:
                 return [];
         }
@@ -247,6 +250,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         this.artistsFactory.getArtists(0);
         this.formatsFactory.getFormats(0);
         this.labelsFactory.getLabels(0);
+        this.genresFactory.getGenres(0);
     }
 
     private displayAlbumInForm(): void {
@@ -257,6 +261,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         this.albumEditForm.controls['artist'].setValue(this.album.getArtist().getName());
         this.albumEditForm.controls['format'].setValue(this.album.getFormat().getName());
         this.albumEditForm.controls['label'].setValue(this.album.getLabel().getName());
+        this.albumEditForm.controls['genre'].setValue(this.album.getGenre().getDescription());
         this.originalFormData = this.albumEditForm.value;
         this.error = '';
     }
@@ -280,11 +285,11 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
             validators: [Validators.required, Validators.maxLength(255)],
         });
         this.albumFields.set('label', {
-            // validators: [Validators.required, Validators.maxLength(255)],
+            validators: [Validators.maxLength(255)],
             placeholder: 'Label',
         });
         this.albumFields.set('genre', {
-            // validators: [Validators.required, Validators.maxLength(255)],
+            validators: [Validators.maxLength(255)],
             placeholder: 'Genre',
         });
     }
