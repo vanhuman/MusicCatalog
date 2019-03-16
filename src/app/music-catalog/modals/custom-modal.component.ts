@@ -47,7 +47,7 @@ export class CustomModalComponent implements OnInit, OnDestroy {
         const keyHandlings = [
             {
                 keyStroke: <KeyCode>'Enter',
-                function: () => this.close.apply(this),
+                function: () => this.enter.apply(this),
             },
             {
                 keyStroke: <KeyCode>'Escape',
@@ -89,6 +89,8 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     public close(): void {
         this.element.style.display = 'none';
         document.body.classList.remove('custom-modal-open');
+        this.showYesButton = false;
+        this.showNoButton = false;
     }
 
     public yes(): void {
@@ -99,5 +101,13 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     public no(): void {
         this.noFunction();
         this.close();
+    }
+
+    private enter(): void {
+        if (this.showYesButton) {
+            this.yes();
+        } else {
+            this.close();
+        }
     }
 }

@@ -19,7 +19,7 @@
     </div>
     <button class="btn-primary scroll-up" (click)="scrollUp()">To top</button>
 </div>
-<music-catalog-album-edit *ngIf="albumToEdit"
+<music-catalog-album-edit *ngIf="showAlbumEdit"
                           [album]="albumToEdit"
                           (mcCommunication)="processInputFromAlbumEdit($event)">
 </music-catalog-album-edit>

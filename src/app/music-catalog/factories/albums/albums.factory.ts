@@ -143,6 +143,53 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         return observable;
     }
 
+    public postAlbum(albumPostData: AlbumPostData): Observable<AlbumInterface> {
+        const observable: Subject<AlbumInterface> = new Subject();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        const body = this.getHttpParams(albumPostData);
+        const token = this.authenticationService.getToken();
+        this.apiRequestService.post<AlbumApiResponseWrapper>(
+            '/albums' + '?token=' + token,
+            body,
+            headers
+        ).subscribe({
+            next: (response) => {
+                const album = this.newAlbum(response.body.album);
+                observable.next(album);
+                observable.complete();
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('message-modal')
+                    .setMessage(error.error.message)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
+    public deleteAlbum(album: AlbumInterface): Observable<boolean> {
+        const observable: Subject<boolean> = new Subject();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        const token = this.authenticationService.getToken();
+        this.apiRequestService.delete<AlbumApiResponseWrapper>(
+            '/albums/' + album.getId() + '?token=' + token,
+            headers
+        ).subscribe({
+            next: () => {
+                observable.next(true);
+                observable.complete();
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('message-modal')
+                    .setMessage(error.error.message)
+                    .open();
+                observable.error(false);
+            }
+        });
+        return observable;
+    }
+
     private getHttpParams(albumPostData: AlbumPostData): HttpParams {
         let body = new HttpParams();
         if (albumPostData.title) {
@@ -252,9 +299,13 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         album.getArtist().setName(albumApiResponse.artist.name);
         album.getFormat().setName(albumApiResponse.format.name);
         album.getFormat().setDescription(albumApiResponse.format.description);
-        album.getLabel().setName(albumApiResponse.label.name);
-        album.getGenre().setDescription(albumApiResponse.genre.description);
-        album.getGenre().setNotes(albumApiResponse.genre.notes);
+        if (album.getLabel()) {
+            album.getLabel().setName(albumApiResponse.label.name);
+        }
+        if (album.getGenre()) {
+            album.getGenre().setDescription(albumApiResponse.genre.description);
+            album.getGenre().setNotes(albumApiResponse.genre.notes);
+        }
         return album;
     }
 }

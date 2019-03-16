@@ -16,6 +16,7 @@
         <input type="text" id="{{id}}-keywords"
                placeholder="Enter keywords"
                formControlName="keywords"
+               (keyup)="trackEnter($event)"
         >
         <button class="btn-primary" (click)="search()">Fetch</button>
         <button class="btn-primary" (click)="clear()">Clear</button>
@@ -24,6 +25,6 @@
         <button class="btn-primary">Export</button>
     </div>
     <div class="new">
-        <button class="btn-primary">New</button>
+        <button class="btn-primary" (click)="addAlbum()">New</button>
     </div>
 </form>

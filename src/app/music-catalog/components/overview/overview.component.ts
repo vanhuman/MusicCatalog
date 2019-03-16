@@ -5,8 +5,8 @@ import { AlbumsFactoryInterface, GetAlbumsParams } from '../../factories/albums/
 import { AlbumInterface } from '../../models/album.model.interface';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
 import { TooltipConfig } from '../../directives/tooltip/tooltip.directive';
-import { ImageUtility } from '../../utilities/image.utility';
 import { Configuration } from '../../configuration';
+import { ModalServiceInterface } from '../../services/modal.service.interface';
 
 export type SortField = 'title' | 'year' | 'date_added'
     | 'artist_name' | 'format_name' | 'label_name' | 'genre_description';
@@ -30,9 +30,10 @@ export class OverviewComponent {
 
     public albums: AlbumInterface[] = [];
     public columns: Column[] = [];
-    public arrowImage = ImageUtility.imagePath + 'arrow-left.png';
+    public arrowImage = Configuration.IMAGE_PATH + 'arrow-left.png';
     public showImages = Configuration.SHOW_IMAGES;
     public albumToEdit: AlbumInterface;
+    public showAlbumEdit = false;
 
     private loading = false;
     private page = 1;
@@ -53,6 +54,10 @@ export class OverviewComponent {
                     this.scrollUp(false);
                     this.getAlbums(false);
                     break;
+                case 'addAlbum':
+                    this.albumToEdit = null;
+                    this.showAlbumEdit = true;
+                    break;
                 default:
                     //
                     break;
@@ -63,6 +68,7 @@ export class OverviewComponent {
     public constructor(
         private albumsFactory: AlbumsFactoryInterface,
         private element: ElementRef,
+        private modalService: ModalServiceInterface,
     ) {
         this.getAlbums();
         this.defineColumns();
@@ -135,16 +141,43 @@ export class OverviewComponent {
     }
 
     public processInputFromAlbumRow(mcCommunication: McCommunication): void {
-        if (mcCommunication.action === 'edit') {
+        if (mcCommunication.action === 'editAlbum') {
             this.albumToEdit = mcCommunication.item;
+            this.showAlbumEdit = true;
+        }
+        if (mcCommunication.action === 'deleteAlbum') {
+            const album: AlbumInterface = mcCommunication.item;
+            if (album) {
+                this.modalService.getModal('message-modal')
+                    .setMessage('Are you sure you want to delete the album ' + album.getTitle() + ' ?')
+                    .addYesButton(() => {
+                        this.albumsFactory.deleteAlbum(mcCommunication.item).subscribe({
+                            next: () => {
+                                this.getAlbums(false);
+                            },
+                        });
+                    })
+                    .addNoButton(() => {
+                    })
+                    .open();
+            }
         }
     }
 
     public processInputFromAlbumEdit(mcCommunication: McCommunication): void {
         let index: number;
         switch (mcCommunication.action) {
-            case 'cancel':
+            case 'close':
                 this.albumToEdit = null;
+                this.showAlbumEdit = false;
+                break;
+            case 'saved':
+                this.albumToEdit = null;
+                this.showAlbumEdit = false;
+                if (mcCommunication.item && this.albums.indexOf(mcCommunication.item) === -1) {
+                    this.albums.unshift(mcCommunication.item);
+                    this.getAlbums(false);
+                }
                 break;
             case 'previous':
                 index = this.albums.indexOf(this.albumToEdit);

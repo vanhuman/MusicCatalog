@@ -26,6 +26,8 @@ export class HeaderComponent implements OnDestroy {
     });
     public id = 'music-catalog-header';
 
+    private metaDataSubscription: Subscription;
+
     @Input()
     set mcCommunication(mcCommunication: McCommunication) {
         if (mcCommunication) {
@@ -42,8 +44,6 @@ export class HeaderComponent implements OnDestroy {
         }
     }
 
-    private metaDataSubscription: Subscription;
-
     public constructor(
         private albumsFactory: AlbumsFactoryInterface,
     ) {
@@ -53,6 +53,12 @@ export class HeaderComponent implements OnDestroy {
                 this.pageSize = albumsMetaData.pageSize;
                 this.totalNumberOfPages = Math.ceil(this.totalNumberOfAlbums / this.pageSize);
             });
+    }
+
+    public addAlbum(): void {
+        this.mcCommunicationOut.emit({
+            action: 'addAlbum',
+        });
     }
 
     public ngOnDestroy(): void {
@@ -75,5 +81,12 @@ export class HeaderComponent implements OnDestroy {
         this.headerForm.controls['page'].setValue(1);
         this.headerForm.controls['keywords'].setValue('');
         this.search();
+    }
+
+    public trackEnter(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            event.stopPropagation();
+            this.search();
+        }
     }
 }

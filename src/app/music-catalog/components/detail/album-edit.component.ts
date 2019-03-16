@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild
+} from '@angular/core';
 import { AlbumInterface } from '../../models/album.model.interface';
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
@@ -8,7 +10,6 @@ import { FormatInterface } from '../../models/format.model.interface';
 import { GenreInterface } from '../../models/genre.model.interface';
 import { ArtistsFactoryInterface } from '../../factories/artists/artists.factory.interface';
 import { KeyCode, KeyStrokeUtility } from '../../utilities/key-stroke.utility';
-import { ImageUtility } from '../../utilities/image.utility';
 import { NumberUtility } from '../../utilities/number.utility';
 import { Configuration } from '../../configuration';
 import { FormCloseService } from '../../services/form-close.service';
@@ -16,6 +17,8 @@ import { BehaviorSubject } from 'rxjs';
 import { FormatsFactoryInterface } from '../../factories/formats/formats.factory.interface';
 import { LabelsFactoryInterface } from '../../factories/labels/labels.factory.interface';
 import { GenresFactoryInterface } from '../../factories/genres/genres.factory.interface';
+import { AlbumPostData } from '../../models/api-post-data/album-api-post-data.interface';
+import { AlbumsFactoryInterface } from '../../factories/albums/albums.factory.interface';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
@@ -30,8 +33,9 @@ type Entity = ArtistInterface | FormatInterface | LabelInterface | GenreInterfac
     templateUrl: './album-edit.component.html',
     styleUrls: ['./album-edit.component.css']
 })
-export class AlbumEditComponent implements OnInit, OnDestroy {
+export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     @Output() mcCommunication: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
+    @ViewChild('title') public title: ElementRef;
 
     public id = 'music-catalog-album-edit';
     public albumEditForm = new FormGroup({});
@@ -41,8 +45,8 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     public formats: FormatInterface[] = [];
     public genres: GenreInterface[] = [];
     public entityPopup: EntityType = 'none';
-    public previousImage = ImageUtility.imagePath + 'previous.png';
-    public nextImage = ImageUtility.imagePath + 'next.png';
+    public previousImage = Configuration.IMAGE_PATH + 'previous.png';
+    public nextImage = Configuration.IMAGE_PATH + 'next.png';
     public error = '';
     public showImages = Configuration.SHOW_IMAGES;
 
@@ -59,7 +63,9 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     @Input()
     public set album(album: AlbumInterface) {
         this._album = album;
-        this.displayAlbumInForm();
+        if (this._album) {
+            this.displayAlbumInForm();
+        }
     }
 
     public get album(): AlbumInterface {
@@ -72,6 +78,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         private labelsFactory: LabelsFactoryInterface,
         private genresFactory: GenresFactoryInterface,
         private formCloseService: FormCloseService,
+        private albumFactory: AlbumsFactoryInterface,
     ) {
         this.getRelatedEntities();
         this.defineAlbumFields();
@@ -79,7 +86,9 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.displayAlbumInForm();
+        if (this._album) {
+            this.displayAlbumInForm();
+        }
         KeyStrokeUtility.addListener(this.keyHandlings);
     }
 
@@ -87,15 +96,40 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         KeyStrokeUtility.removeListener();
     }
 
+    public ngAfterViewInit(): void {
+        this.title.nativeElement.focus();
+    }
+
     public save(): void {
         if (this.entityPopup === 'none') {
-            console.log(this.albumEditForm.valid);
-            if (!this.albumEditForm.valid) {
-
+            if (this.albumEditForm.valid) {
+                const artistId = this.getRelatedId('artist');
+                const formatId = this.getRelatedId('format');
+                const labelId = this.getRelatedId('label');
+                const genreId = this.getRelatedId('genre');
+                const albumPostData: AlbumPostData = {
+                    title: this.albumEditForm.controls['title'].value,
+                    year: this.albumEditForm.controls['year'].value,
+                    notes: this.albumEditForm.controls['notes'].value,
+                    artist_id: artistId,
+                    format_id: formatId,
+                    label_id: labelId,
+                    genre_id: genreId,
+                };
+                let observable;
+                if (this.album) {
+                    observable = this.albumFactory.putAlbum(albumPostData, this.album);
+                } else {
+                    observable = this.albumFactory.postAlbum(albumPostData);
+                }
+                observable.subscribe((album: AlbumInterface) => {
+                    this.mcCommunication.emit({
+                        action: 'saved',
+                        item: album,
+                    });
+                    this.formCloseService.reset();
+                });
             }
-            // set date_added
-            //
-            this.formCloseService.reset();
         }
     }
 
@@ -104,7 +138,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
             this.formCloseService.checkIfCanClose().then((canClose) => {
                 if (canClose) {
                     this.mcCommunication.emit({
-                        action: 'cancel',
+                        action: 'close',
                     });
                 }
             });
@@ -112,21 +146,32 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
     }
 
     public previousAlbum(): void {
-        this.mcCommunication.emit({
-            item: this.album,
-            action: 'previous',
+        this.formCloseService.checkIfCanClose().then((canClose) => {
+            if (canClose) {
+                this.mcCommunication.emit({
+                    item: this.album,
+                    action: 'previous',
+                });
+            }
         });
     }
 
     public nextAlbum(): void {
-        this.mcCommunication.emit({
-            item: this.album,
-            action: 'next',
+        this.formCloseService.checkIfCanClose().then((canClose) => {
+            if (canClose) {
+                this.mcCommunication.emit({
+                    item: this.album,
+                    action: 'next',
+                });
+            }
         });
     }
 
     public processKeyupOnEntity(entityType: EntityType, input: string, event: KeyboardEvent): void {
         if (event.key === 'Tab') {
+            this.clearAllEntities();
+            this.entityPopup = 'none';
+            this.selectedEntityNumber = -1;
             return;
         }
         let entities: Entity[];
@@ -162,7 +207,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         } else if (event.key === 'Enter') {
             if (this.selectedEntityNumber > -1) {
                 this.selectEntity(entityType, entities[this.selectedEntityNumber]);
-            } else if (entities.length === 1) {
+            } else if (entities.length > 0) {
                 this.selectEntity(entityType, entities[0]);
             }
         } else if (event.key === 'Escape') {
@@ -225,6 +270,70 @@ export class AlbumEditComponent implements OnInit, OnDestroy {
         this.formats = [];
         this.labels = [];
         this.genres = [];
+    }
+
+    private getRelatedId(entityType: EntityType): number {
+        let value: string;
+        let array: any[];
+        switch (entityType) {
+            case 'artist':
+                value = this.albumEditForm.controls['artist'].value;
+                if (!value) {
+                    return null;
+                }
+                if (!this.album || this.album.getArtist().getName() !== value) {
+                    array = this.artistsFactory.searchArtists(value);
+                    if (array.length > 0) {
+                        return array[0].getId();
+                    }
+                } else {
+                    return this.album.getArtist().getId();
+                }
+                break;
+            case 'format':
+                value = this.albumEditForm.controls['format'].value;
+                if (!value) {
+                    return null;
+                }
+                if (!this.album || this.album.getFormat().getName() !== value) {
+                    array = this.formatsFactory.searchFormats(value);
+                    if (array.length > 0) {
+                        return array[0].getId();
+                    }
+                } else {
+                    return this.album.getFormat().getId();
+                }
+                break;
+            case 'label':
+                value = this.albumEditForm.controls['label'].value;
+                if (!value) {
+                    return null;
+                }
+                if (!this.album || this.album.getLabel().getName() !== value) {
+                    array = this.labelsFactory.searchLabels(value);
+                    if (array.length > 0) {
+                        return array[0].getId();
+                    }
+                } else {
+                    return this.album.getLabel().getId();
+                }
+                break;
+            case 'genre':
+                value = this.albumEditForm.controls['genre'].value;
+                if (!value) {
+                    return null;
+                }
+                if (!this.album || this.album.getGenre().getName() !== value) {
+                    array = this.genresFactory.searchGenres(value);
+                    if (array.length > 0) {
+                        return array[0].getId();
+                    }
+                } else {
+                    return this.album.getGenre().getId();
+                }
+                break;
+        }
+        return null;
     }
 
     private searchEntity(entityType: EntityType, input: string): Entity[] {

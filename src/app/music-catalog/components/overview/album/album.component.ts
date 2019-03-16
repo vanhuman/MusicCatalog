@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AlbumInterface } from '../../../models/album.model.interface';
 import { TooltipConfig } from '../../../directives/tooltip/tooltip.directive';
-import { ImageUtility } from '../../../utilities/image.utility';
 import { AlbumsFactoryInterface } from '../../../factories/albums/albums.factory.interface';
 import { AlbumPostData } from '../../../models/api-post-data/album-api-post-data.interface';
 import { McCommunication } from '../../../models/music-catalog-communication.interface';
@@ -16,9 +15,9 @@ export class AlbumComponent implements OnInit {
     @Input() album: AlbumInterface;
     @Output() mcCommunication: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
 
-    public editImage = ImageUtility.imagePath + 'edit.svg';
-    public deleteImage = ImageUtility.imagePath + 'delete.svg';
-    public imageThumb = ImageUtility.imagePath + 'transparant.png';
+    public editImage = Configuration.IMAGE_PATH + 'edit.svg';
+    public deleteImage = Configuration.IMAGE_PATH + 'delete.svg';
+    public imageThumb = Configuration.IMAGE_PATH + 'transparant.png';
     public imageExtralargeExists = false;
     public imageExtralarge: string;
     public showImages = Configuration.SHOW_IMAGES;
@@ -66,7 +65,7 @@ export class AlbumComponent implements OnInit {
                 title = this.album.getTitle();
                 break;
             case 'label':
-                title = this.album.getLabel().getName();
+                title = this.album.getLabel() ? this.album.getLabel().getName() : '';
                 break;
         }
         return {
@@ -78,7 +77,13 @@ export class AlbumComponent implements OnInit {
     public edit(): void {
         this.mcCommunication.emit({
            item: this.album,
-           action: 'edit',
+           action: 'editAlbum',
+        });
+    }
+    public delete(): void {
+        this.mcCommunication.emit({
+           item: this.album,
+           action: 'deleteAlbum',
         });
     }
 }

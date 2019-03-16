@@ -5,7 +5,9 @@ import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
 import { ApiRequestServiceInterface } from '../../services/api-request.service.interface';
 import { ArtistsFactoryState } from './artists.factory.state';
-import { ArtistApiResponse, ArtistsApiResponse } from '../../models/api-responses/artists-api-response.interface';
+import {
+    ArtistApiResponse, ArtistApiResponseWrapper, ArtistsApiResponse
+} from '../../models/api-responses/artists-api-response.interface';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Artist } from '../../models/artist.model';
 import { ArtistsFactoryInterface } from './artists.factory.interface';
@@ -53,6 +55,36 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
                     }
                 });
                 observable.next(this.sortArtists(artists));
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('message-modal')
+                    .setMessage(error.error.message)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
+    public getArtist(artistId: number): Observable<ArtistInterface> {
+        if (this.state.cache[artistId]) {
+            return of(this.state.cache[artistId]);
+        }
+        const observable: Subject<ArtistInterface> = new Subject<ArtistInterface>();
+        const token = this.authenticationService.getToken();
+        let params = new HttpParams();
+        params = params.set('token', token);
+        this.apiRequestService.get<ArtistApiResponseWrapper>('/artist/' + artistId, params).subscribe({
+            next: (response) => {
+                const artistApiResponse = response.body.artist;
+                let artist: ArtistInterface;
+                if (this.state.cache[artistApiResponse.id]) {
+                    artist = this.updateArtist(this.state.cache[artistApiResponse.id], artistApiResponse);
+                } else {
+                    artist = this.newArtist(artistApiResponse);
+                    this.state.cache[artist.getId()] = artist;
+                }
+                observable.next(artist);
             },
             error: (error: HttpErrorResponse) => {
                 this.modalService.getModal('message-modal')

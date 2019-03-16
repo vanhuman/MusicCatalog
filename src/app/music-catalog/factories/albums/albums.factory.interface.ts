@@ -20,12 +20,11 @@ export type ImageSize = 'small' | 'medium' | 'large' | 'extralarge' | 'mega';
 
 export abstract class AlbumsFactoryInterface {
     public abstract getAlbums(getAlbumsParams: GetAlbumsParams): Observable<AlbumInterface[]>;
-
     public abstract getAlbumsMetaData(): Observable<AlbumsMetaData>;
-
     public abstract getImagesFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>>;
-
     public abstract putAlbum(albumPostData: AlbumPostData, album: AlbumInterface): Observable<AlbumInterface>;
+    public abstract postAlbum(albumPostData: AlbumPostData): Observable<AlbumInterface>;
+    public abstract deleteAlbum(album: AlbumInterface): Observable<boolean>;
 }
 
 
