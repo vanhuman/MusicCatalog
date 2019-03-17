@@ -103,32 +103,37 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     public save(): void {
         if (this.entityPopup === 'none') {
             if (this.albumEditForm.valid) {
-                const artistId = this.getRelatedId('artist');
-                const formatId = this.getRelatedId('format');
-                const labelId = this.getRelatedId('label');
-                const genreId = this.getRelatedId('genre');
-                const albumPostData: AlbumPostData = {
-                    title: this.albumEditForm.controls['title'].value,
-                    year: this.albumEditForm.controls['year'].value,
-                    notes: this.albumEditForm.controls['notes'].value,
-                    artist_id: artistId,
-                    format_id: formatId,
-                    label_id: labelId,
-                    genre_id: genreId,
-                };
-                let observable;
-                if (this.album) {
-                    observable = this.albumFactory.putAlbum(albumPostData, this.album);
-                } else {
-                    observable = this.albumFactory.postAlbum(albumPostData);
-                }
-                observable.subscribe((album: AlbumInterface) => {
-                    this.mcCommunication.emit({
-                        action: 'saved',
-                        item: album,
-                    });
-                    this.formCloseService.reset();
-                });
+                Promise.all([
+                    this.getRelatedId('artist'),
+                    this.getRelatedId('format'),
+                    this.getRelatedId('label'),
+                    this.getRelatedId('genre'),
+                ]).then(
+                    ([artistId, formatId, labelId, genreId]) => {
+                        const albumPostData: AlbumPostData = {
+                            title: this.albumEditForm.controls['title'].value,
+                            year: this.albumEditForm.controls['year'].value,
+                            notes: this.albumEditForm.controls['notes'].value,
+                            artist_id: artistId,
+                            format_id: formatId,
+                            label_id: labelId,
+                            genre_id: genreId,
+                        };
+                        let observable;
+                        if (this.album) {
+                            observable = this.albumFactory.putAlbum(albumPostData, this.album);
+                        } else {
+                            observable = this.albumFactory.postAlbum(albumPostData);
+                        }
+                        observable.subscribe((album: AlbumInterface) => {
+                            this.mcCommunication.emit({
+                                action: 'saved',
+                                item: album,
+                            });
+                            this.formCloseService.reset();
+                        });
+                    }
+                );
             }
         }
     }
@@ -272,83 +277,90 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.genres = [];
     }
 
-    private getRelatedId(entityType: EntityType): number {
-        let value: string;
-        let array: any[];
-        switch (entityType) {
-            case 'artist':
-                value = this.albumEditForm.controls['artist'].value;
-                if (!value) {
-                    return null;
-                }
-                if (!this.album || this.album.getArtist().getName() !== value) {
-                    array = this.artistsFactory.searchArtists(value);
-                    if (array.length > 0) {
-                        return array[0].getId();
+    private getRelatedId(entityType: EntityType): Promise<number> {
+        return new Promise((resolve) => {
+            let value: string;
+            let array: any[];
+            switch (entityType) {
+                case 'artist':
+                    value = this.albumEditForm.controls['artist'].value;
+                    if (!value) {
+                        resolve(null);
                     }
-                } else {
-                    return this.album.getArtist().getId();
-                }
-                break;
-            case 'format':
-                value = this.albumEditForm.controls['format'].value;
-                if (!value) {
-                    return null;
-                }
-                if (!this.album || this.album.getFormat().getName() !== value) {
-                    array = this.formatsFactory.searchFormats(value);
-                    if (array.length > 0) {
-                        return array[0].getId();
+                    if (!this.album || this.album.getArtist().getName() !== value) {
+                        array = this.artistsFactory.searchArtistsInCache(value);
+                        if (array.length > 0) {
+                            resolve(array[0].getId());
+                        } else {
+                            this.artistsFactory.postArtist({name: value}).subscribe({
+                                next: (artist) => {
+                                    resolve(artist.getId());
+                                },
+                            });
+                        }
+                    } else {
+                        resolve(this.album.getArtist().getId());
                     }
-                } else {
-                    return this.album.getFormat().getId();
-                }
-                break;
-            case 'label':
-                value = this.albumEditForm.controls['label'].value;
-                if (!value) {
-                    return null;
-                }
-                if (!this.album || this.album.getLabel().getName() !== value) {
-                    array = this.labelsFactory.searchLabels(value);
-                    if (array.length > 0) {
-                        return array[0].getId();
+                    break;
+                case 'format':
+                    value = this.albumEditForm.controls['format'].value;
+                    if (!value) {
+                        resolve(null);
                     }
-                } else {
-                    return this.album.getLabel().getId();
-                }
-                break;
-            case 'genre':
-                value = this.albumEditForm.controls['genre'].value;
-                if (!value) {
-                    return null;
-                }
-                if (!this.album || this.album.getGenre().getName() !== value) {
-                    array = this.genresFactory.searchGenres(value);
-                    if (array.length > 0) {
-                        return array[0].getId();
+                    if (!this.album || this.album.getFormat().getName() !== value) {
+                        array = this.formatsFactory.searchFormatsInCache(value);
+                        if (array.length > 0) {
+                            resolve(array[0].getId());
+                        }
+                    } else {
+                        resolve(this.album.getFormat().getId());
                     }
-                } else {
-                    return this.album.getGenre().getId();
-                }
-                break;
-        }
-        return null;
+                    break;
+                case 'label':
+                    value = this.albumEditForm.controls['label'].value;
+                    if (!value) {
+                        resolve(null);
+                    }
+                    if (!this.album || this.album.getLabel().getName() !== value) {
+                        array = this.labelsFactory.searchLabelsInCache(value);
+                        if (array.length > 0) {
+                            resolve(array[0].getId());
+                        }
+                    } else {
+                        resolve(this.album.getLabel().getId());
+                    }
+                    break;
+                case 'genre':
+                    value = this.albumEditForm.controls['genre'].value;
+                    if (!value) {
+                        resolve(null);
+                    }
+                    if (!this.album || this.album.getGenre().getName() !== value) {
+                        array = this.genresFactory.searchGenresInCache(value);
+                        if (array.length > 0) {
+                            resolve(array[0].getId());
+                        }
+                    } else {
+                        resolve(this.album.getGenre().getId());
+                    }
+                    break;
+            }
+        });
     }
 
     private searchEntity(entityType: EntityType, input: string): Entity[] {
         switch (entityType) {
             case 'artist':
-                this.artists = this.artistsFactory.searchArtists(input);
+                this.artists = this.artistsFactory.searchArtistsInCache(input);
                 return this.artists;
             case 'format':
-                this.formats = this.formatsFactory.searchFormats(input);
+                this.formats = this.formatsFactory.searchFormatsInCache(input);
                 return this.formats;
             case 'label':
-                this.labels = this.labelsFactory.searchLabels(input);
+                this.labels = this.labelsFactory.searchLabelsInCache(input);
                 return this.labels;
             case 'genre':
-                this.genres = this.genresFactory.searchGenres(input);
+                this.genres = this.genresFactory.searchGenresInCache(input);
                 return this.genres;
             default:
                 return [];
@@ -356,10 +368,10 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private getRelatedEntities(): void {
-        this.artistsFactory.getArtists(0);
-        this.formatsFactory.getFormats(0);
-        this.labelsFactory.getLabels(0);
-        this.genresFactory.getGenres(0);
+        this.artistsFactory.getArtistsFromAPI(0);
+        this.formatsFactory.getFormatsFromAPI(0);
+        this.labelsFactory.getLabelsFromAPI(0);
+        this.genresFactory.getGenresFromAPI(0);
     }
 
     private displayAlbumInForm(): void {

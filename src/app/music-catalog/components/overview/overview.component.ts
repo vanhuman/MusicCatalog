@@ -34,6 +34,7 @@ export class OverviewComponent {
     public showImages = Configuration.SHOW_IMAGES;
     public albumToEdit: AlbumInterface;
     public showAlbumEdit = false;
+    public outputToAlbumRow: McCommunication;
 
     private loading = false;
     private page = 1;
@@ -142,8 +143,7 @@ export class OverviewComponent {
 
     public processInputFromAlbumRow(mcCommunication: McCommunication): void {
         if (mcCommunication.action === 'editAlbum') {
-            this.albumToEdit = mcCommunication.item;
-            this.showAlbumEdit = true;
+            this.edit(mcCommunication.item);
         }
         if (mcCommunication.action === 'deleteAlbum') {
             const album: AlbumInterface = mcCommunication.item;
@@ -178,6 +178,10 @@ export class OverviewComponent {
                     this.albums.unshift(mcCommunication.item);
                     this.getAlbums(false);
                 }
+                this.outputToAlbumRow = {
+                    action: 'getImage',
+                    item: mcCommunication.item,
+                };
                 break;
             case 'previous':
                 index = this.albums.indexOf(this.albumToEdit);
@@ -198,6 +202,11 @@ export class OverviewComponent {
             default:
                 break;
         }
+    }
+
+    public edit(album: AlbumInterface): void {
+        this.albumToEdit = album;
+        this.showAlbumEdit = true;
     }
 
     private getAlbums(concat: boolean = true): void {

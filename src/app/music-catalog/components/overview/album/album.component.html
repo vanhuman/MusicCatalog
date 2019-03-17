@@ -33,5 +33,5 @@
 </div>
 <div class="icons">
     <img alt="edit" [src]="editImage" (click)="edit()" [sharedTooltip]="{title: 'Edit'}"/>
-    <img alt="delete" [src]="deleteImage" (click)="delete()" [sharedTooltip]="{title: 'Delete'}"/>
+    <img alt="delete" [src]="deleteImage" (click)="delete($event)" [sharedTooltip]="{title: 'Delete'}"/>
 </div>

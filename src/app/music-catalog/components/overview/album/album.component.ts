@@ -13,7 +13,7 @@ import { Configuration } from '../../../configuration';
 })
 export class AlbumComponent implements OnInit {
     @Input() album: AlbumInterface;
-    @Output() mcCommunication: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
+    @Output() mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
 
     public editImage = Configuration.IMAGE_PATH + 'edit.svg';
     public deleteImage = Configuration.IMAGE_PATH + 'delete.svg';
@@ -27,7 +27,52 @@ export class AlbumComponent implements OnInit {
     ) {
     }
 
+    @Input()
+    set mcCommunication(mcCommunication: McCommunication) {
+        if (mcCommunication && mcCommunication.action === 'getImage' && mcCommunication.item === this.album) {
+            this.getImages();
+        }
+    }
+
     public ngOnInit(): void {
+        this.getImages();
+    }
+
+    public getTooltipConfig(field: string): TooltipConfig {
+        let title = '';
+        switch (field) {
+            case 'artist':
+                title = this.album.getArtist().getName();
+                break;
+            case 'title':
+                title = this.album.getTitle();
+                break;
+            case 'label':
+                title = this.album.getLabel() ? this.album.getLabel().getName() : '';
+                break;
+        }
+        return {
+            title,
+            topOffset: 5,
+        };
+    }
+
+    public edit(): void {
+        this.mcCommunicationOut.emit({
+            item: this.album,
+            action: 'editAlbum',
+        });
+    }
+
+    public delete(event: MouseEvent): void {
+        event.stopPropagation();
+        this.mcCommunicationOut.emit({
+            item: this.album,
+            action: 'deleteAlbum',
+        });
+    }
+
+    private getImages(): void {
         if (this.album.getImageThumb() && this.album.getImageThumb()) {
             this.imageThumb = this.album.getImageThumb();
             this.imageExtralarge = this.album.getImage();
@@ -53,37 +98,5 @@ export class AlbumComponent implements OnInit {
                 }
             );
         }
-    }
-
-    public getTooltipConfig(field: string): TooltipConfig {
-        let title = '';
-        switch (field) {
-            case 'artist':
-                title = this.album.getArtist().getName();
-                break;
-            case 'title':
-                title = this.album.getTitle();
-                break;
-            case 'label':
-                title = this.album.getLabel() ? this.album.getLabel().getName() : '';
-                break;
-        }
-        return {
-            title,
-            topOffset: 5,
-        };
-    }
-
-    public edit(): void {
-        this.mcCommunication.emit({
-           item: this.album,
-           action: 'editAlbum',
-        });
-    }
-    public delete(): void {
-        this.mcCommunication.emit({
-           item: this.album,
-           action: 'deleteAlbum',
-        });
     }
 }

@@ -22,14 +22,14 @@ export class FormatsFactory implements FormatsFactoryInterface {
         //
     }
 
-    public searchFormats(keyword: string): FormatInterface[] {
+    public searchFormatsInCache(keyword: string): FormatInterface[] {
         return this.state.getCacheAsArray()
             .filter((format) => {
                 return format.getName().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
             });
     }
 
-    public getFormats(page: number): Observable<FormatInterface[]> {
+    public getFormatsFromAPI(page: number): Observable<FormatInterface[]> {
         const observable: Subject<FormatInterface[]> = new Subject<FormatInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
@@ -61,6 +61,15 @@ export class FormatsFactory implements FormatsFactoryInterface {
             }
         });
         return observable;
+    }
+
+    public updateAndGetFormat(formatApiResponse: FormatApiResponse): FormatInterface {
+        if (this.state.cache[formatApiResponse.id]) {
+            this.updateFormat(this.state.cache[formatApiResponse.id], formatApiResponse);
+        } else {
+            this.state.cache[formatApiResponse.id] = this.newFormat(formatApiResponse);
+        }
+        return this.state.cache[formatApiResponse.id];
     }
 
     private sortFormats(formats: FormatInterface[]): FormatInterface[] {

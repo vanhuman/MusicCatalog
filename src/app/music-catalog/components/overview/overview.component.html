@@ -11,10 +11,12 @@
     <div class="icons"></div>
 </div>
 <div #musicCatalogOverview class="overview-body">
-    <div class="album-row" *ngFor="let album of albums">
+    <div class="album-row" *ngFor="let album of albums" (click)="edit(album)">
         <music-catalog-album
-                (mcCommunication)="processInputFromAlbumRow($event)"
-                [album]="album">
+                (mcCommunicationOut)="processInputFromAlbumRow($event)"
+                [album]="album"
+                [mcCommunication]="outputToAlbumRow"
+        >
         </music-catalog-album>
     </div>
     <button class="btn-primary scroll-up" (click)="scrollUp()">To top</button>

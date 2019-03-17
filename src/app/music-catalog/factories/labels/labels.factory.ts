@@ -9,6 +9,8 @@ import { LabelApiResponse, LabelsApiResponse } from '../../models/api-responses/
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Label } from '../../models/label.model';
 import { LabelsFactoryInterface } from './labels.factory.interface';
+import { ArtistApiResponse } from '../../models/api-responses/artists-api-response.interface';
+import { ArtistInterface } from '../../models/artist.model.interface';
 
 @Injectable()
 export class LabelsFactory implements LabelsFactoryInterface {
@@ -22,14 +24,14 @@ export class LabelsFactory implements LabelsFactoryInterface {
         //
     }
 
-    public searchLabels(keyword: string): LabelInterface[] {
+    public searchLabelsInCache(keyword: string): LabelInterface[] {
         return this.state.getCacheAsArray()
             .filter((label) => {
                 return label.getName().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
             });
     }
 
-    public getLabels(page: number): Observable<LabelInterface[]> {
+    public getLabelsFromAPI(page: number): Observable<LabelInterface[]> {
         const observable: Subject<LabelInterface[]> = new Subject<LabelInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
@@ -61,6 +63,15 @@ export class LabelsFactory implements LabelsFactoryInterface {
             }
         });
         return observable;
+    }
+
+    public updateAndGetLabel(labelApiResponse: LabelApiResponse): LabelInterface {
+        if (this.state.cache[labelApiResponse.id]) {
+            this.updateLabel(this.state.cache[labelApiResponse.id], labelApiResponse);
+        } else {
+            this.state.cache[labelApiResponse.id] = this.newLabel(labelApiResponse);
+        }
+        return this.state.cache[labelApiResponse.id];
     }
 
     private sortLabels(labels: LabelInterface[]): LabelInterface[] {

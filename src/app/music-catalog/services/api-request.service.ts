@@ -98,7 +98,7 @@ export class ApiRequestService implements ApiRequestServiceInterface {
             );
     }
 
-    public delete<T>(url: string, body, headers): Observable<HttpResponse<T>> {
+    public delete<T>(url: string, headers): Observable<HttpResponse<T>> {
         return this.httpClient.delete<T>(ApiRequestService.API_BASE_DOMAIN + url, {headers, observe: 'response'})
             .pipe(
                 catchError((error) => {

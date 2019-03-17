@@ -22,14 +22,14 @@ export class GenresFactory implements GenresFactoryInterface {
         //
     }
 
-    public searchGenres(keyword: string): GenreInterface[] {
+    public searchGenresInCache(keyword: string): GenreInterface[] {
         return this.state.getCacheAsArray()
             .filter((genre) => {
                 return genre.getDescription().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
             });
     }
 
-    public getGenres(page: number): Observable<GenreInterface[]> {
+    public getGenresFromAPI(page: number): Observable<GenreInterface[]> {
         const observable: Subject<GenreInterface[]> = new Subject<GenreInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
@@ -61,6 +61,15 @@ export class GenresFactory implements GenresFactoryInterface {
             }
         });
         return observable;
+    }
+
+    public updateAndGetGenre(genreApiResponse: GenreApiResponse): GenreInterface {
+        if (this.state.cache[genreApiResponse.id]) {
+            this.updateGenre(this.state.cache[genreApiResponse.id], genreApiResponse);
+        } else {
+            this.state.cache[genreApiResponse.id] = this.newGenre(genreApiResponse);
+        }
+        return this.state.cache[genreApiResponse.id];
     }
 
     private sortGenres(genres: GenreInterface[]): GenreInterface[] {

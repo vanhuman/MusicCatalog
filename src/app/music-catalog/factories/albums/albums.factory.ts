@@ -12,12 +12,15 @@ import { ApiRequestServiceInterface } from '../../services/api-request.service.i
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
 import { Album } from '../../models/album.model';
-import { Artist } from '../../models/artist.model';
 import { Label } from '../../models/label.model';
 import { Genre } from '../../models/genre.model';
 import { Format } from '../../models/format.model';
 import { AlbumsFactoryState } from './albums.factory.state';
 import { AlbumPostData } from '../../models/api-post-data/album-api-post-data.interface';
+import { ArtistsFactoryInterface } from '../artists/artists.factory.interface';
+import { FormatsFactoryInterface } from '../formats/formats.factory.interface';
+import { GenresFactoryInterface } from '../genres/genres.factory.interface';
+import { LabelsFactoryInterface } from '../labels/labels.factory.interface';
 
 interface LastfmAlbumImage {
     '#text': string;
@@ -40,6 +43,10 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         private modalService: ModalServiceInterface,
         private httpClient: HttpClient,
         private state: AlbumsFactoryState,
+        private artistsFactory: ArtistsFactoryInterface,
+        private formatsFactory: FormatsFactoryInterface,
+        private genresFactory: GenresFactoryInterface,
+        private labelsFactory: LabelsFactoryInterface,
     ) {
         //
     }
@@ -149,7 +156,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         const body = this.getHttpParams(albumPostData);
         const token = this.authenticationService.getToken();
         this.apiRequestService.post<AlbumApiResponseWrapper>(
-            '/albums' + '?token=' + token,
+            '/albums?token=' + token,
             body,
             headers
         ).subscribe({
@@ -246,33 +253,19 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
     private newAlbum(albumApiResponse: AlbumApiResponse): AlbumInterface {
         let artist;
         if (albumApiResponse.artist) {
-            artist = new Artist(
-                albumApiResponse.artist.id,
-                albumApiResponse.artist.name,
-            );
+            artist = this.artistsFactory.updateAndGetArtist(albumApiResponse.artist);
         }
         let format;
         if (albumApiResponse.format) {
-            format = new Format(
-                albumApiResponse.format.id,
-                albumApiResponse.format.name,
-                albumApiResponse.format.description,
-            );
+            format = this.formatsFactory.updateAndGetFormat(albumApiResponse.format);
         }
         let label;
         if (albumApiResponse.label) {
-            label = new Label(
-                albumApiResponse.label.id,
-                albumApiResponse.label.name,
-            );
+            label = this.labelsFactory.updateAndGetLabel(albumApiResponse.label);
         }
         let genre;
         if (albumApiResponse.genre) {
-            genre = new Genre(
-                albumApiResponse.genre.id,
-                albumApiResponse.genre.description,
-                albumApiResponse.genre.notes,
-            );
+            genre = this.genresFactory.updateAndGetGenre(albumApiResponse.genre);
         }
         return new Album(
             albumApiResponse.id,
@@ -296,15 +289,17 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         album.setNotes(albumApiResponse.notes);
         album.setImageThumb(albumApiResponse.image_thumb);
         album.setImage(albumApiResponse.image);
-        album.getArtist().setName(albumApiResponse.artist.name);
-        album.getFormat().setName(albumApiResponse.format.name);
-        album.getFormat().setDescription(albumApiResponse.format.description);
-        if (album.getLabel()) {
-            album.getLabel().setName(albumApiResponse.label.name);
+        if (albumApiResponse.artist) {
+            this.artistsFactory.updateAndGetArtist(albumApiResponse.artist);
         }
-        if (album.getGenre()) {
-            album.getGenre().setDescription(albumApiResponse.genre.description);
-            album.getGenre().setNotes(albumApiResponse.genre.notes);
+        if (albumApiResponse.format) {
+            this.formatsFactory.updateAndGetFormat(albumApiResponse.format);
+        }
+        if (albumApiResponse.label) {
+            this.labelsFactory.updateAndGetLabel(albumApiResponse.label);
+        }
+        if (albumApiResponse.genre) {
+            this.genresFactory.updateAndGetGenre(albumApiResponse.genre);
         }
         return album;
     }
