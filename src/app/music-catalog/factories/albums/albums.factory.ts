@@ -12,9 +12,6 @@ import { ApiRequestServiceInterface } from '../../services/api-request.service.i
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
 import { Album } from '../../models/album.model';
-import { Label } from '../../models/label.model';
-import { Genre } from '../../models/genre.model';
-import { Format } from '../../models/format.model';
 import { AlbumsFactoryState } from './albums.factory.state';
 import { AlbumPostData } from '../../models/api-post-data/album-api-post-data.interface';
 import { ArtistsFactoryInterface } from '../artists/artists.factory.interface';
@@ -290,16 +287,16 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         album.setImageThumb(albumApiResponse.image_thumb);
         album.setImage(albumApiResponse.image);
         if (albumApiResponse.artist) {
-            this.artistsFactory.updateAndGetArtist(albumApiResponse.artist);
+            album.setArtist(this.artistsFactory.updateAndGetArtist(albumApiResponse.artist));
         }
         if (albumApiResponse.format) {
-            this.formatsFactory.updateAndGetFormat(albumApiResponse.format);
+            album.setFormat(this.formatsFactory.updateAndGetFormat(albumApiResponse.format));
         }
         if (albumApiResponse.label) {
-            this.labelsFactory.updateAndGetLabel(albumApiResponse.label);
+            album.setLabel(this.labelsFactory.updateAndGetLabel(albumApiResponse.label));
         }
         if (albumApiResponse.genre) {
-            this.genresFactory.updateAndGetGenre(albumApiResponse.genre);
+            album.setGenre(this.genresFactory.updateAndGetGenre(albumApiResponse.genre));
         }
         return album;
     }

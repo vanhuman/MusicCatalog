@@ -68,9 +68,11 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
         let params = new HttpParams();
         params = params.set('token', token);
         params = params.set('page', page.toString());
-        // if the request is for all artists and we have some in cache, return the cache
-        if (page === 0 && this.state.getCacheAsArray().length > 0) {
+        if (page === 0 && this.state.retrievedAllArtists) {
             return of(this.sortArtists(this.state.getCacheAsArray()));
+        }
+        if (page === 0) {
+            this.state.retrievedAllArtists = true;
         }
         this.apiRequestService.get<ArtistsApiResponse>('/artists', params).subscribe({
             next: (response) => {
