@@ -20,6 +20,7 @@ export interface AlbumApiResponse {
     id: number;
     image_thumb: string;
     image: string;
+    image_fetch_timestamp: string;
     label: LabelApiResponse;
     notes: string;
     title: string;

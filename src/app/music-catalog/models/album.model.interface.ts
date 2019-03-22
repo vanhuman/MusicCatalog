@@ -30,6 +30,12 @@ export interface AlbumInterface {
 
     setImage(image: string): void;
 
+    getImageFetchTimestamp(): Date;
+
+    getImageFetchTimestampString(): string;
+
+    setImageFetchTimestamp(imageFetchTimestamp: Date): void;
+
     getArtist(): ArtistInterface;
 
     setArtist(artist: ArtistInterface): void;

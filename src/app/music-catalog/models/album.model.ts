@@ -14,6 +14,7 @@ export class Album implements AlbumInterface {
         private notes: string,
         private imageThumb: string,
         private image: string,
+        private imageFetchTimestamp: Date,
         private artist: ArtistInterface,
         private format: FormatInterface,
         private label: LabelInterface,
@@ -105,4 +106,18 @@ export class Album implements AlbumInterface {
     public setGenre(genre: GenreInterface): void {
         this.genre = genre;
     }
+
+    public getImageFetchTimestamp(): Date {
+        return this.imageFetchTimestamp;
+    }
+
+    public getImageFetchTimestampString(): string {
+        return moment(this.imageFetchTimestamp).format('DD-MM-YYYY');
+    }
+
+    public setImageFetchTimestamp(imageFetchTimestamp: Date): void {
+        this.imageFetchTimestamp = imageFetchTimestamp;
+    }
+
+
 }

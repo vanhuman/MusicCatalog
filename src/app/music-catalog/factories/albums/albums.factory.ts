@@ -211,6 +211,9 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         if (albumPostData.image) {
             body = body.set('image', albumPostData.image);
         }
+        if (albumPostData.image_fetch_timestamp) {
+            body = body.set('image_fetch_timestamp', albumPostData.image_fetch_timestamp);
+        }
         if (albumPostData.artist_id) {
             body = body.set('artist_id', albumPostData.artist_id.toString());
         }
@@ -272,6 +275,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
             albumApiResponse.notes,
             albumApiResponse.image_thumb,
             albumApiResponse.image,
+            DateUtility.parseDate(albumApiResponse.image_fetch_timestamp),
             artist,
             format,
             label,
@@ -285,6 +289,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         album.setDateAdded(DateUtility.parseDate(albumApiResponse.date_added));
         album.setNotes(albumApiResponse.notes);
         album.setImageThumb(albumApiResponse.image_thumb);
+        album.setImageFetchTimestamp(DateUtility.parseDate(albumApiResponse.image_fetch_timestamp));
         album.setImage(albumApiResponse.image);
         if (albumApiResponse.artist) {
             album.setArtist(this.artistsFactory.updateAndGetArtist(albumApiResponse.artist));

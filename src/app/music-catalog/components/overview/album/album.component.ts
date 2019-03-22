@@ -5,6 +5,7 @@ import { AlbumsFactoryInterface } from '../../../factories/albums/albums.factory
 import { AlbumPostData } from '../../../models/api-post-data/album-api-post-data.interface';
 import { McCommunication } from '../../../models/music-catalog-communication.interface';
 import { Configuration } from '../../../configuration';
+import * as moment from 'moment';
 
 @Component({
     selector: 'music-catalog-album',
@@ -78,25 +79,35 @@ export class AlbumComponent implements OnInit {
             this.imageExtralarge = this.album.getImage();
             this.imageExtralargeExists = true;
         } else {
-            this.albumsFactory.getImagesFromLastfm(this.album).then(
-                (imageMap) => {
-                    if (imageMap.has('small') && imageMap.get('small')) {
-                        this.imageThumb = imageMap.get('small');
-                        if (imageMap.has('extralarge') && imageMap.get('extralarge')) {
-                            this.imageExtralargeExists = true;
-                            this.imageExtralarge = imageMap.get('extralarge');
-                            // save the image locations in the database
-                            const albumPostData: AlbumPostData = {
-                                image_thumb: this.imageThumb,
-                                image: this.imageExtralarge,
-                            };
-                            this.albumsFactory.putAlbum(albumPostData, this.album);
+            const fetchInterval = new Date();
+            fetchInterval.setDate(fetchInterval.getDate() - Configuration.IMAGE_FETCH_INTERVAL);
+            if (!this.album.getImageFetchTimestamp() || this.album.getImageFetchTimestamp() < fetchInterval) {
+                let albumPostData: AlbumPostData;
+                this.albumsFactory.getImagesFromLastfm(this.album).then(
+                    (imageMap) => {
+                        if (imageMap.has('small') && imageMap.get('small')) {
+                            this.imageThumb = imageMap.get('small');
+                            if (imageMap.has('extralarge') && imageMap.get('extralarge')) {
+                                this.imageExtralargeExists = true;
+                                this.imageExtralarge = imageMap.get('extralarge');
+                                // save the image locations in the database
+                                albumPostData = {
+                                    image_thumb: this.imageThumb,
+                                    image: this.imageExtralarge,
+                                };
+                                this.albumsFactory.putAlbum(albumPostData, this.album);
+                            }
                         }
+                    },
+                    () => {
                     }
-                },
-                () => {
-                }
-            );
+                );
+                // save the image fetch timestamp in the database
+                albumPostData = {
+                    image_fetch_timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                };
+                this.albumsFactory.putAlbum(albumPostData, this.album);
+            }
         }
     }
 }
