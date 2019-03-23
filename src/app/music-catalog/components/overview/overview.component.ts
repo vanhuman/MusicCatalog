@@ -153,7 +153,7 @@ export class OverviewComponent {
                     .addYesButton(() => {
                         this.albumsFactory.deleteAlbum(mcCommunication.item).subscribe({
                             next: () => {
-                                this.getAlbums(false);
+                                // this.getAlbums(false);
                             },
                         });
                     })

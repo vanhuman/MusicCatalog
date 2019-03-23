@@ -181,6 +181,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
             headers
         ).subscribe({
             next: () => {
+                album.setDeleted(true);
                 observable.next(true);
                 observable.complete();
             },

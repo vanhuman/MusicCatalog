@@ -11,14 +11,16 @@
     <div class="icons"></div>
 </div>
 <div #musicCatalogOverview class="overview-body">
-    <div class="album-row" *ngFor="let album of albums" (click)="edit(album)">
-        <music-catalog-album
-                (mcCommunicationOut)="processInputFromAlbumRow($event)"
-                [album]="album"
-                [mcCommunication]="outputToAlbumRow"
-        >
-        </music-catalog-album>
-    </div>
+    <ng-container *ngFor="let album of albums">
+        <div class="album-row" *ngIf="!album.getDeleted()" (click)="edit(album)">
+            <music-catalog-album
+                    (mcCommunicationOut)="processInputFromAlbumRow($event)"
+                    [album]="album"
+                    [mcCommunication]="outputToAlbumRow"
+            >
+            </music-catalog-album>
+        </div>
+    </ng-container>
     <button class="btn-primary scroll-up" (click)="scrollUp()">To top</button>
 </div>
 <music-catalog-album-edit *ngIf="showAlbumEdit"

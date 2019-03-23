@@ -51,4 +51,8 @@ export interface AlbumInterface {
     getGenre(): GenreInterface;
 
     setGenre(genre: GenreInterface): void;
+
+    getDeleted(): boolean;
+
+    setDeleted(deleted: boolean): void;
 }

@@ -6,6 +6,8 @@ import { LabelInterface } from './label.model.interface';
 import { GenreInterface } from './genre.model.interface';
 
 export class Album implements AlbumInterface {
+    private deleted = false;
+
     public constructor(
         private id: number,
         private title: string,
@@ -119,5 +121,12 @@ export class Album implements AlbumInterface {
         this.imageFetchTimestamp = imageFetchTimestamp;
     }
 
+    public setDeleted(deleted: boolean): void {
+        this.deleted = deleted;
+    }
+
+    public getDeleted(): boolean {
+        return this.deleted;
+    }
 
 }
