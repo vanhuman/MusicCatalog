@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse, HttpParams, HttpResponse } from '@angula
 import { catchError } from 'rxjs/operators';
 
 import { ApiRequestServiceInterface } from './api-request.service.interface';
+import { Configuration } from '../configuration';
 
 interface HttpQueueItem {
     id: number;
@@ -12,9 +13,6 @@ interface HttpQueueItem {
 
 @Injectable()
 export class ApiRequestService implements ApiRequestServiceInterface {
-    public static API_BASE_DOMAIN = '/music-catalog-api';
-
-    private static THROTTLE_TIME = 250;
     private authorisationError: Subject<boolean> = new Subject<boolean>();
     private httpQueue: HttpQueueItem[] = [];
     private httpCalls: Map<number, Observable<HttpResponse<any>>> = new Map<number, Observable<HttpResponse<any>>>();
@@ -25,8 +23,12 @@ export class ApiRequestService implements ApiRequestServiceInterface {
     ) {
     }
 
+    public clearHttpQueue(): void {
+        this.httpQueue = [];
+    }
+
     public get<T>(url: string, params: HttpParams): Observable<HttpResponse<T>> {
-        return this.httpClient.get<T>(ApiRequestService.API_BASE_DOMAIN + url, {params, observe: 'response'})
+        return this.httpClient.get<T>(Configuration.API_BASE_DOMAIN + url, {params, observe: 'response'})
             .pipe(
                 catchError((error) => {
                     return this.handleError(error);
@@ -39,7 +41,7 @@ export class ApiRequestService implements ApiRequestServiceInterface {
         const httpGetRequest = new Subject<HttpResponse<T>>();
         const httpQueueItem = new Observable<HttpResponse<T>>((observer) => {
             this.httpClient.get<T>(
-                (!externalRequest ? ApiRequestService.API_BASE_DOMAIN : '') + url,
+                (!externalRequest ? Configuration.API_BASE_DOMAIN : '') + url,
                 {params, observe: 'response'}
             ).pipe(
                 catchError((error) => {
@@ -72,7 +74,7 @@ export class ApiRequestService implements ApiRequestServiceInterface {
             if (this.httpQueue.length > 0) {
                 const httpQueueItem = this.httpQueue.shift();
                 this.httpCalls.set(httpQueueItem.id, httpQueueItem.observable);
-                setTimeout(process, ApiRequestService.THROTTLE_TIME);
+                setTimeout(process, Configuration.API_THROTTLE_TIME);
             } else {
                 this.callProcessRunning = false;
             }
@@ -81,7 +83,7 @@ export class ApiRequestService implements ApiRequestServiceInterface {
     }
 
     public post<T>(url: string, body, headers): Observable<HttpResponse<T>> {
-        return this.httpClient.post<T>(ApiRequestService.API_BASE_DOMAIN + url, body, {headers, observe: 'response'})
+        return this.httpClient.post<T>(Configuration.API_BASE_DOMAIN + url, body, {headers, observe: 'response'})
             .pipe(
                 catchError((error) => {
                     return this.handleError(error);
@@ -90,7 +92,7 @@ export class ApiRequestService implements ApiRequestServiceInterface {
     }
 
     public put<T>(url: string, body, headers): Observable<HttpResponse<T>> {
-        return this.httpClient.put<T>(ApiRequestService.API_BASE_DOMAIN + url, body, {headers, observe: 'response'})
+        return this.httpClient.put<T>(Configuration.API_BASE_DOMAIN + url, body, {headers, observe: 'response'})
             .pipe(
                 catchError((error) => {
                     return this.handleError(error);
@@ -99,7 +101,7 @@ export class ApiRequestService implements ApiRequestServiceInterface {
     }
 
     public delete<T>(url: string, headers): Observable<HttpResponse<T>> {
-        return this.httpClient.delete<T>(ApiRequestService.API_BASE_DOMAIN + url, {headers, observe: 'response'})
+        return this.httpClient.delete<T>(Configuration.API_BASE_DOMAIN + url, {headers, observe: 'response'})
             .pipe(
                 catchError((error) => {
                     return this.handleError(error);

@@ -8,5 +8,6 @@ export abstract class ApiRequestServiceInterface {
     public abstract put<T>(url: string, body, headers): Observable<HttpResponse<T>>;
     public abstract delete<T>(url: string, headers): Observable<HttpResponse<T>>;
     public abstract monitorAuthorisationError(): Subject<boolean>;
+    public abstract clearHttpQueue(): void;
 }
 

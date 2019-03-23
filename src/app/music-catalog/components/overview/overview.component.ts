@@ -211,6 +211,9 @@ export class OverviewComponent {
 
     private getAlbums(concat: boolean = true): void {
         this.loading = true;
+        if (!concat) {
+            this.albumsFactory.clearThrottleQueue();
+        }
         const getAlbumsParams: GetAlbumsParams = {
             page: this.page,
             keywords: this.keywords,

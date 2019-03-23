@@ -118,6 +118,10 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         });
     }
 
+    public clearThrottleQueue(): void {
+        this.apiRequestService.clearHttpQueue();
+    }
+
     public getAlbumsMetaData(): Observable<AlbumsMetaData> {
         return this.albumsMetaData;
     }

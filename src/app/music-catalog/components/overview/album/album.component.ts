@@ -85,28 +85,29 @@ export class AlbumComponent implements OnInit {
                 let albumPostData: AlbumPostData;
                 this.albumsFactory.getImagesFromLastfm(this.album).then(
                     (imageMap) => {
-                        if (imageMap.has('small') && imageMap.get('small')) {
+                        if (imageMap.has('small') && imageMap.get('small')
+                            && imageMap.has('extralarge') && imageMap.get('extralarge')) {
                             this.imageThumb = imageMap.get('small');
-                            if (imageMap.has('extralarge') && imageMap.get('extralarge')) {
-                                this.imageExtralargeExists = true;
-                                this.imageExtralarge = imageMap.get('extralarge');
-                                // save the image locations in the database
-                                albumPostData = {
-                                    image_thumb: this.imageThumb,
-                                    image: this.imageExtralarge,
-                                };
-                                this.albumsFactory.putAlbum(albumPostData, this.album);
-                            }
+                            this.imageExtralargeExists = true;
+                            this.imageExtralarge = imageMap.get('extralarge');
+                            // save the image locations in the database
+                            albumPostData = {
+                                image_thumb: this.imageThumb,
+                                image: this.imageExtralarge,
+                                image_fetch_timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                            };
+                            this.albumsFactory.putAlbum(albumPostData, this.album);
+                        } else {
+                            // save the image fetch timestamp in the database
+                            albumPostData = {
+                                image_fetch_timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                            };
+                            this.albumsFactory.putAlbum(albumPostData, this.album);
                         }
                     },
                     () => {
                     }
                 );
-                // save the image fetch timestamp in the database
-                albumPostData = {
-                    image_fetch_timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-                };
-                this.albumsFactory.putAlbum(albumPostData, this.album);
             }
         }
     }

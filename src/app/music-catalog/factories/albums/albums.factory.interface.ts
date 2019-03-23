@@ -25,6 +25,7 @@ export abstract class AlbumsFactoryInterface {
     public abstract putAlbum(albumPostData: AlbumPostData, album: AlbumInterface): Observable<AlbumInterface>;
     public abstract postAlbum(albumPostData: AlbumPostData): Observable<AlbumInterface>;
     public abstract deleteAlbum(album: AlbumInterface): Observable<boolean>;
+    public abstract clearThrottleQueue(): void;
 }
 
 
