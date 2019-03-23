@@ -1,4 +1,4 @@
-<div class="album-edit">
+<div class="album-edit" [ngClass]="getClassForWidth()">
     <div class="image" *ngIf="showImages">
         <img [src]="album.getImage()" alt="" *ngIf="album && album.getImage()"/>
         <div class="no-image" *ngIf="!album || !album.getImage()">

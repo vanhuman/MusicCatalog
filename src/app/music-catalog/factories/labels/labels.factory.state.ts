@@ -4,6 +4,7 @@ import { LabelInterface } from '../../models/label.model.interface';
 @Injectable()
 export class LabelsFactoryState {
     public cache: { [id: number]: LabelInterface } = {};
+    public retrievedAllLabels = false;
 
     public getCacheAsArray(): LabelInterface[] {
         return Object.keys(this.cache).map(key => this.cache[key]);

@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
 import { ApiRequestServiceInterface } from '../../services/api-request.service.interface';
 import { GenreInterface } from '../../models/genre.model.interface';
 import { GenresFactoryState } from './genres.factory.state';
-import { GenreApiResponse, GenresApiResponse } from '../../models/api-responses/genres-api-response.interface';
+import {
+    GenreApiResponse, GenreApiResponseWrapper, GenresApiResponse
+} from '../../models/api-responses/genres-api-response.interface';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Genre } from '../../models/genre.model';
 import { GenresFactoryInterface } from './genres.factory.interface';
+import { GenreApiPostData } from '../../models/api-post-data/genre-api-post-data.interface';
 
 @Injectable()
 export class GenresFactory implements GenresFactoryInterface {
@@ -22,22 +25,17 @@ export class GenresFactory implements GenresFactoryInterface {
         //
     }
 
-    public searchGenresInCache(keyword: string): GenreInterface[] {
-        return this.state.getCacheAsArray()
-            .filter((genre) => {
-                return genre.getDescription().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
-            });
-    }
-
     public getGenresFromAPI(page: number): Observable<GenreInterface[]> {
         const observable: Subject<GenreInterface[]> = new Subject<GenreInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
         params = params.set('page', page.toString());
-        // if the request is for all genres and we have some in cache, return the cache
-        if (page === 0 && this.state.getCacheAsArray().length > 0) {
-            return of(this.sortGenres(this.state.getCacheAsArray()));
+        if (page === 0) {
+            if (this.state.retrievedAllGenres) {
+                return of(this.sortGenres(this.state.getCacheAsArray()));
+            }
+            this.state.retrievedAllGenres = true;
         }
         this.apiRequestService.get<GenresApiResponse>('/genres', params).subscribe({
             next: (response) => {
@@ -61,6 +59,52 @@ export class GenresFactory implements GenresFactoryInterface {
             }
         });
         return observable;
+    }
+
+    public postGenre(genreApiPostData: GenreApiPostData): Observable<GenreInterface> {
+        const observable: Subject<GenreInterface> = new Subject<GenreInterface>();
+        const token = this.authenticationService.getToken();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new HttpParams();
+        if (genreApiPostData.description) {
+            body = body.set('description', genreApiPostData.description);
+        }
+        if (genreApiPostData.notes) {
+            body = body.set('notes', genreApiPostData.notes);
+        }
+        this.apiRequestService.post<GenreApiResponseWrapper>(
+            '/genres?token=' + token,
+            body,
+            headers
+        ).subscribe({
+            next: (response) => {
+                const genreApiResponse: GenreApiResponse = response.body.genre;
+                const genre: GenreInterface = this.newGenre(genreApiResponse);
+                this.state.cache[genre.getId()] = genre;
+                observable.next(genre);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('message-modal')
+                    .setMessage(error.error.message)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
+    public searchGenresInCache(keyword: string): GenreInterface[] {
+        return this.state.getCacheAsArray()
+            .filter((genre) => {
+                return genre.getDescription().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
+            });
+    }
+
+    public matchGenreInCache(value: string): GenreInterface {
+        return this.state.getCacheAsArray()
+            .find((genre) => {
+                return genre.getDescription().toLowerCase() === value.toLowerCase();
+            });
     }
 
     public updateAndGetGenre(genreApiResponse: GenreApiResponse): GenreInterface {

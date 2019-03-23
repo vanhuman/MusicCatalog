@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
 import { ApiRequestServiceInterface } from '../../services/api-request.service.interface';
 import { LabelInterface } from '../../models/label.model.interface';
 import { LabelsFactoryState } from './labels.factory.state';
-import { LabelApiResponse, LabelsApiResponse } from '../../models/api-responses/labels-api-response.interface';
+import {
+    LabelApiResponse, LabelApiResponseWrapper, LabelsApiResponse
+} from '../../models/api-responses/labels-api-response.interface';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Label } from '../../models/label.model';
 import { LabelsFactoryInterface } from './labels.factory.interface';
-import { ArtistApiResponse } from '../../models/api-responses/artists-api-response.interface';
-import { ArtistInterface } from '../../models/artist.model.interface';
+import { LabelApiPostData } from '../../models/api-post-data/label-api-post-data.interface';
 
 @Injectable()
 export class LabelsFactory implements LabelsFactoryInterface {
@@ -24,22 +25,17 @@ export class LabelsFactory implements LabelsFactoryInterface {
         //
     }
 
-    public searchLabelsInCache(keyword: string): LabelInterface[] {
-        return this.state.getCacheAsArray()
-            .filter((label) => {
-                return label.getName().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
-            });
-    }
-
     public getLabelsFromAPI(page: number): Observable<LabelInterface[]> {
         const observable: Subject<LabelInterface[]> = new Subject<LabelInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
         params = params.set('page', page.toString());
-        // if the request is for all labels and we have some in cache, return the cache
-        if (page === 0 && this.state.getCacheAsArray().length > 0) {
-            return of(this.sortLabels(this.state.getCacheAsArray()));
+        if (page === 0) {
+            if (this.state.retrievedAllLabels) {
+                return of(this.sortLabels(this.state.getCacheAsArray()));
+            }
+            this.state.retrievedAllLabels = true;
         }
         this.apiRequestService.get<LabelsApiResponse>('/labels', params).subscribe({
             next: (response) => {
@@ -63,6 +59,49 @@ export class LabelsFactory implements LabelsFactoryInterface {
             }
         });
         return observable;
+    }
+
+    public postLabel(labelApiPostData: LabelApiPostData): Observable<LabelInterface> {
+        const observable: Subject<LabelInterface> = new Subject<LabelInterface>();
+        const token = this.authenticationService.getToken();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new HttpParams();
+        if (labelApiPostData.name) {
+            body = body.set('name', labelApiPostData.name);
+        }
+        this.apiRequestService.post<LabelApiResponseWrapper>(
+            '/labels?token=' + token,
+            body,
+            headers
+        ).subscribe({
+            next: (response) => {
+                const labelApiResponse: LabelApiResponse = response.body.label;
+                const label: LabelInterface = this.newLabel(labelApiResponse);
+                this.state.cache[label.getId()] = label;
+                observable.next(label);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('message-modal')
+                    .setMessage(error.error.message)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
+    public searchLabelsInCache(keyword: string): LabelInterface[] {
+        return this.state.getCacheAsArray()
+            .filter((label) => {
+                return label.getName().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
+            });
+    }
+
+    public matchLabelInCache(value: string): LabelInterface {
+        return this.state.getCacheAsArray()
+            .find((label) => {
+                return label.getName().toLowerCase() === value.toLowerCase();
+            });
     }
 
     public updateAndGetLabel(labelApiResponse: LabelApiResponse): LabelInterface {

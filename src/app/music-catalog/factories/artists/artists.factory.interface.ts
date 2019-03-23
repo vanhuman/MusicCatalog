@@ -9,6 +9,7 @@ export abstract class ArtistsFactoryInterface {
     public abstract postArtist(artistApiPostData: ArtistApiPostData): Observable<ArtistInterface>;
     public abstract searchArtistsInCache(keyword: string): ArtistInterface[];
     public abstract updateAndGetArtist(artistApiResponse: ArtistApiResponse): ArtistInterface;
+    public abstract matchArtistInCache(value: string): ArtistInterface;
 }
 
 

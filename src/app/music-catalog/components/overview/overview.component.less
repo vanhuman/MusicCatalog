@@ -41,6 +41,7 @@ div.overview-header {
     div.title {
         width: @width-title;
         padding-right: @padding-right-title;
+        padding-left: @padding-left-title;
     }
     div.year {
         width: @width-year;
@@ -69,13 +70,15 @@ div.overview-body {
     padding: 10px @padding-side 20px @padding-side;
 
     div.album-row {
-        height: 24px;
+        height: 25px;
+        .transition(background; 0.3s; ease-out);
 
         &:nth-of-type(5n) {
             background: @tertiary-color;
         }
         &:hover {
             background: @color4;
+            cursor: pointer;
         }
     }
     button.scroll-up {

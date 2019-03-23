@@ -110,6 +110,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.getRelatedId('genre'),
                 ]).then(
                     ([artistId, formatId, labelId, genreId]) => {
+                        console.log(labelId);
                         const albumPostData: AlbumPostData = {
                             title: this.albumEditForm.controls['title'].value,
                             year: this.albumEditForm.controls['year'].value,
@@ -270,6 +271,10 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.entityPopup !== 'none' || !this.albumEditForm.valid;
     }
 
+    public getClassForWidth(): string {
+        return !Configuration.SHOW_IMAGES ? 'small' : '';
+    }
+
     private clearAllEntities(): void {
         this.artists = [];
         this.formats = [];
@@ -280,7 +285,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     private getRelatedId(entityType: EntityType): Promise<number> {
         return new Promise((resolve) => {
             let value: string;
-            let array: any[];
+            let entity: Entity;
             switch (entityType) {
                 case 'artist':
                     value = this.albumEditForm.controls['artist'].value;
@@ -288,9 +293,9 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                         resolve(null);
                     }
                     if (!this.album || this.album.getArtist().getName() !== value) {
-                        array = this.artistsFactory.searchArtistsInCache(value);
-                        if (array.length > 0) {
-                            resolve(array[0].getId());
+                        entity = this.artistsFactory.matchArtistInCache(value);
+                        if (entity) {
+                            resolve(entity.getId());
                         } else {
                             this.artistsFactory.postArtist({name: value}).subscribe({
                                 next: (artist) => {
@@ -308,9 +313,15 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                         resolve(null);
                     }
                     if (!this.album || this.album.getFormat().getName() !== value) {
-                        array = this.formatsFactory.searchFormatsInCache(value);
-                        if (array.length > 0) {
-                            resolve(array[0].getId());
+                        entity = this.formatsFactory.matchFormatInCache(value);
+                        if (entity) {
+                            resolve(entity.getId());
+                        } else {
+                            this.formatsFactory.postFormat({name: value}).subscribe({
+                                next: (format) => {
+                                    resolve(format.getId());
+                                },
+                            });
                         }
                     } else {
                         resolve(this.album.getFormat().getId());
@@ -322,9 +333,15 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                         resolve(null);
                     }
                     if (!this.album || this.album.getLabel().getName() !== value) {
-                        array = this.labelsFactory.searchLabelsInCache(value);
-                        if (array.length > 0) {
-                            resolve(array[0].getId());
+                        entity = this.labelsFactory.matchLabelInCache(value);
+                        if (entity) {
+                            resolve(entity.getId());
+                        } else {
+                            this.labelsFactory.postLabel({name: value}).subscribe({
+                                next: (label) => {
+                                    resolve(label.getId());
+                                },
+                            });
                         }
                     } else {
                         resolve(this.album.getLabel().getId());
@@ -336,9 +353,15 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                         resolve(null);
                     }
                     if (!this.album || this.album.getGenre().getName() !== value) {
-                        array = this.genresFactory.searchGenresInCache(value);
-                        if (array.length > 0) {
-                            resolve(array[0].getId());
+                        entity = this.genresFactory.matchGenreInCache(value);
+                        if (entity) {
+                            resolve(entity.getId());
+                        } else {
+                            this.genresFactory.postGenre({description: value}).subscribe({
+                                next: (genre) => {
+                                    resolve(genre.getId());
+                                },
+                            });
                         }
                     } else {
                         resolve(this.album.getGenre().getId());

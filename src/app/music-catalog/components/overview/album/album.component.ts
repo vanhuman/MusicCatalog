@@ -31,7 +31,7 @@ export class AlbumComponent implements OnInit {
     @Input()
     set mcCommunication(mcCommunication: McCommunication) {
         if (mcCommunication && mcCommunication.action === 'getImage' && mcCommunication.item === this.album) {
-            this.getImages();
+            this.getImages(true);
         }
     }
 
@@ -73,7 +73,7 @@ export class AlbumComponent implements OnInit {
         });
     }
 
-    private getImages(): void {
+    private getImages(forced: boolean = false): void {
         if (this.album.getImageThumb() && this.album.getImageThumb()) {
             this.imageThumb = this.album.getImageThumb();
             this.imageExtralarge = this.album.getImage();
@@ -81,7 +81,7 @@ export class AlbumComponent implements OnInit {
         } else {
             const fetchInterval = new Date();
             fetchInterval.setDate(fetchInterval.getDate() - Configuration.IMAGE_FETCH_INTERVAL);
-            if (!this.album.getImageFetchTimestamp() || this.album.getImageFetchTimestamp() < fetchInterval) {
+            if (forced || !this.album.getImageFetchTimestamp() || this.album.getImageFetchTimestamp() < fetchInterval) {
                 let albumPostData: AlbumPostData;
                 this.albumsFactory.getImagesFromLastfm(this.album).then(
                     (imageMap) => {

@@ -25,53 +25,16 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
         //
     }
 
-    public postArtist(artistApiPostData: ArtistApiPostData): Observable<ArtistInterface> {
-        const observable: Subject<ArtistInterface> = new Subject<ArtistInterface>();
-        const token = this.authenticationService.getToken();
-        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-        let body = new HttpParams();
-        if (artistApiPostData.name) {
-            body = body.set('name', artistApiPostData.name);
-        }
-        this.apiRequestService.post<ArtistApiResponseWrapper>(
-            '/artists?token=' + token,
-            body,
-            headers
-        ).subscribe({
-            next: (response) => {
-                const artistApiResponse: ArtistApiResponse = response.body.artist;
-                const artist: ArtistInterface = this.newArtist(artistApiResponse);
-                this.state.cache[artist.getId()] = artist;
-                observable.next(artist);
-            },
-            error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
-                    .open();
-                observable.error([]);
-            }
-        });
-        return observable;
-    }
-
-    public searchArtistsInCache(keyword: string): ArtistInterface[] {
-        return this.state.getCacheAsArray()
-            .filter((artist) => {
-                return artist.getName().toLowerCase().indexOf(keyword.toLowerCase()) !== -1 ||
-                    artist.getFullName().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
-            });
-    }
-
     public getArtistsFromAPI(page: number): Observable<ArtistInterface[]> {
         const observable: Subject<ArtistInterface[]> = new Subject<ArtistInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
         params = params.set('page', page.toString());
-        if (page === 0 && this.state.retrievedAllArtists) {
-            return of(this.sortArtists(this.state.getCacheAsArray()));
-        }
         if (page === 0) {
+            if (this.state.retrievedAllArtists) {
+                return of(this.sortArtists(this.state.getCacheAsArray()));
+            }
             this.state.retrievedAllArtists = true;
         }
         this.apiRequestService.get<ArtistsApiResponse>('/artists', params).subscribe({
@@ -126,6 +89,50 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
             }
         });
         return observable;
+    }
+
+    public postArtist(artistApiPostData: ArtistApiPostData): Observable<ArtistInterface> {
+        const observable: Subject<ArtistInterface> = new Subject<ArtistInterface>();
+        const token = this.authenticationService.getToken();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new HttpParams();
+        if (artistApiPostData.name) {
+            body = body.set('name', artistApiPostData.name);
+        }
+        this.apiRequestService.post<ArtistApiResponseWrapper>(
+            '/artists?token=' + token,
+            body,
+            headers
+        ).subscribe({
+            next: (response) => {
+                const artistApiResponse: ArtistApiResponse = response.body.artist;
+                const artist: ArtistInterface = this.newArtist(artistApiResponse);
+                this.state.cache[artist.getId()] = artist;
+                observable.next(artist);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('message-modal')
+                    .setMessage(error.error.message)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
+    public searchArtistsInCache(keyword: string): ArtistInterface[] {
+        return this.state.getCacheAsArray()
+            .filter((artist) => {
+                return artist.getName().toLowerCase().indexOf(keyword.toLowerCase()) !== -1 ||
+                    artist.getFullName().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
+            });
+    }
+
+    public matchArtistInCache(value: string): ArtistInterface {
+        return this.state.getCacheAsArray()
+            .find((artist) => {
+                return artist.getName().toLowerCase() === value.toLowerCase();
+            });
     }
 
     public updateAndGetArtist(artistApiResponse: ArtistApiResponse): ArtistInterface {

@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
 import { ApiRequestServiceInterface } from '../../services/api-request.service.interface';
 import { FormatInterface } from '../../models/format.model.interface';
 import { FormatsFactoryState } from './formats.factory.state';
-import { FormatApiResponse, FormatsApiResponse } from '../../models/api-responses/formats-api-response.interface';
+import {
+    FormatApiResponse, FormatApiResponseWrapper, FormatsApiResponse
+} from '../../models/api-responses/formats-api-response.interface';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Format } from '../../models/format.model';
 import { FormatsFactoryInterface } from './formats.factory.interface';
+import { FormatApiPostData } from '../../models/api-post-data/format-api-post-data.interface';
 
 @Injectable()
 export class FormatsFactory implements FormatsFactoryInterface {
@@ -22,22 +25,17 @@ export class FormatsFactory implements FormatsFactoryInterface {
         //
     }
 
-    public searchFormatsInCache(keyword: string): FormatInterface[] {
-        return this.state.getCacheAsArray()
-            .filter((format) => {
-                return format.getName().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
-            });
-    }
-
     public getFormatsFromAPI(page: number): Observable<FormatInterface[]> {
         const observable: Subject<FormatInterface[]> = new Subject<FormatInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
         params = params.set('page', page.toString());
-        // if the request is for all formats and we have some in cache, return the cache
-        if (page === 0 && this.state.getCacheAsArray().length > 0) {
-            return of(this.sortFormats(this.state.getCacheAsArray()));
+        if (page === 0) {
+            if (this.state.retrievedAllFormats) {
+                return of(this.sortFormats(this.state.getCacheAsArray()));
+            }
+            this.state.retrievedAllFormats = true;
         }
         this.apiRequestService.get<FormatsApiResponse>('/formats', params).subscribe({
             next: (response) => {
@@ -61,6 +59,52 @@ export class FormatsFactory implements FormatsFactoryInterface {
             }
         });
         return observable;
+    }
+
+    public postFormat(formatApiPostData: FormatApiPostData): Observable<FormatInterface> {
+        const observable: Subject<FormatInterface> = new Subject<FormatInterface>();
+        const token = this.authenticationService.getToken();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new HttpParams();
+        if (formatApiPostData.name) {
+            body = body.set('name', formatApiPostData.name);
+        }
+        if (formatApiPostData.description) {
+            body = body.set('description', formatApiPostData.description);
+        }
+        this.apiRequestService.post<FormatApiResponseWrapper>(
+            '/formats?token=' + token,
+            body,
+            headers
+        ).subscribe({
+            next: (response) => {
+                const formatApiResponse: FormatApiResponse = response.body.format;
+                const format: FormatInterface = this.newFormat(formatApiResponse);
+                this.state.cache[format.getId()] = format;
+                observable.next(format);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('message-modal')
+                    .setMessage(error.error.message)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
+    public searchFormatsInCache(keyword: string): FormatInterface[] {
+        return this.state.getCacheAsArray()
+            .filter((format) => {
+                return format.getName().toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
+            });
+    }
+
+    public matchFormatInCache(value: string): FormatInterface {
+        return this.state.getCacheAsArray()
+            .find((format) => {
+                return format.getName().toLowerCase() === value.toLowerCase();
+            });
     }
 
     public updateAndGetFormat(formatApiResponse: FormatApiResponse): FormatInterface {
