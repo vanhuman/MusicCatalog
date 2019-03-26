@@ -1,6 +1,8 @@
 import { Component, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
 import { ModalServiceInterface } from '../services/modal.service.interface';
 import { KeyCode, KeyStrokeUtility } from '../utilities/key-stroke.utility';
+import { ErrorApiResponse } from '../models/api-responses/error-api-response.interface';
+import { errorTypeMap } from '../constants/error-type.map';
 
 @Component({
     selector: 'custom-modal',
@@ -11,6 +13,7 @@ import { KeyCode, KeyStrokeUtility } from '../utilities/key-stroke.utility';
 export class CustomModalComponent implements OnInit, OnDestroy {
     @Input() id: string;
     public message = '';
+    public caption = '';
     public showCloseButton = true;
     public showYesButton = false;
     public showNoButton = false;
@@ -68,6 +71,12 @@ export class CustomModalComponent implements OnInit, OnDestroy {
         return this;
     }
 
+    public setErrorMessage(errorMessage: ErrorApiResponse): CustomModalComponent {
+        this.message = errorMessage.message;
+        this.caption = errorTypeMap.get(errorMessage.error_type.id.toString());
+        return this;
+    }
+
     public addYesButton(callBack: () => void): CustomModalComponent {
         this.showYesButton = true;
         this.yesFunction = callBack;
@@ -89,8 +98,7 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     public close(): void {
         this.element.style.display = 'none';
         document.body.classList.remove('custom-modal-open');
-        this.showYesButton = false;
-        this.showNoButton = false;
+        this.reset();
     }
 
     public yes(): void {
@@ -101,6 +109,14 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     public no(): void {
         this.noFunction();
         this.close();
+    }
+
+    private reset(): void {
+        this.showYesButton = false;
+        this.showNoButton = false;
+        this.showCloseButton = true;
+        this.caption = '';
+        this.message = '';
     }
 
     private enter(): void {

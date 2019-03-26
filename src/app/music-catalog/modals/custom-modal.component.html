@@ -1,5 +1,8 @@
 <div class="custom-modal">
     <div class="custom-modal-body">
+        <h3 *ngIf="caption">
+            {{ caption }}
+        </h3>
         <div class="message">
             {{ message }}
         </div>

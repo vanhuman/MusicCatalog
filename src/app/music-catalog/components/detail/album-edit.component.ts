@@ -148,6 +148,9 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                     });
                 }
             });
+        } else {
+            this.clearAllEntities();
+            this.entityPopup = 'none';
         }
     }
 
