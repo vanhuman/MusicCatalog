@@ -31,14 +31,6 @@ export class CustomModalComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         const modal = this;
-
-        if (!this.id) {
-            console.error('The modal must have an id.');
-            return;
-        }
-
-        document.body.appendChild(this.element);
-
         this.element.addEventListener('click', function (element: any) {
             if (element.target.className === 'custom-modal'
                 || element.target.className === 'custom-modal-background') {

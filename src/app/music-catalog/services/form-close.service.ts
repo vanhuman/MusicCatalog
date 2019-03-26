@@ -26,7 +26,7 @@ export class FormCloseService {
                         // and canClose is actually okToClose
                         resolve(canClose);
                     } else if (!canClose) {
-                        this.modalService.getModal('message-modal')
+                        this.modalService.getModal('modal1')
                             .setMessage('Are you sure you want to cancel?')
                             .addYesButton(() => {
                                 resolve(true);

@@ -52,8 +52,8 @@ export class FormatsFactory implements FormatsFactoryInterface {
                 observable.next(this.sortFormats(formats));
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
             }
@@ -84,8 +84,8 @@ export class FormatsFactory implements FormatsFactoryInterface {
                 observable.next(format);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
             }

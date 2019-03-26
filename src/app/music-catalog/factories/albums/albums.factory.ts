@@ -77,7 +77,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.next(albums);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
+                this.modalService.getModal('modal1')
                     .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
@@ -142,7 +142,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.complete();
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
+                this.modalService.getModal('modal1')
                     .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
@@ -167,7 +167,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.complete();
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
+                this.modalService.getModal('modal1')
                     .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
@@ -190,7 +190,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.complete();
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
+                this.modalService.getModal('modal1')
                     .setErrorMessage(error.error)
                     .open();
                 observable.error(false);

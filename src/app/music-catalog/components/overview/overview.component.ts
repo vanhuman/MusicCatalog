@@ -148,7 +148,7 @@ export class OverviewComponent {
         if (mcCommunication.action === 'deleteAlbum') {
             const album: AlbumInterface = mcCommunication.item;
             if (album) {
-                this.modalService.getModal('message-modal')
+                this.modalService.getModal('modal1')
                     .setMessage('Are you sure you want to delete the album ' + album.getTitle() + ' ?')
                     .addYesButton(() => {
                         this.albumsFactory.deleteAlbum(mcCommunication.item).subscribe({

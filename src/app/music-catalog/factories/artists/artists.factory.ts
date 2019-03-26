@@ -52,8 +52,8 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
                 observable.next(this.sortArtists(artists));
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
             }
@@ -82,8 +82,8 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
                 observable.next(artist);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
             }
@@ -111,8 +111,8 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
                 observable.next(artist);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
             }

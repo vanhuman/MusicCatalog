@@ -52,8 +52,9 @@ export class GenresFactory implements GenresFactoryInterface {
                 observable.next(this.sortGenres(genres));
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
+                console.log(error);
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
             }
@@ -84,8 +85,8 @@ export class GenresFactory implements GenresFactoryInterface {
                 observable.next(genre);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
             }

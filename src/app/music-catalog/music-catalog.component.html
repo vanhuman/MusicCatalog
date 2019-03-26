@@ -12,6 +12,6 @@
             *ngIf="!loggedIn"
             (loggedIn)="processInputFromLogin($event)">
     </music-catalog-login>
-    <custom-modal id="message-modal"></custom-modal>
+    <custom-modal [id]="'modal1'"></custom-modal>
     <shared-tooltip-container></shared-tooltip-container>
 </div>

@@ -52,8 +52,8 @@ export class LabelsFactory implements LabelsFactoryInterface {
                 observable.next(this.sortLabels(labels));
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
             }
@@ -81,8 +81,8 @@ export class LabelsFactory implements LabelsFactoryInterface {
                 observable.next(label);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('message-modal')
-                    .setMessage(error.error.message)
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
                     .open();
                 observable.error([]);
             }
