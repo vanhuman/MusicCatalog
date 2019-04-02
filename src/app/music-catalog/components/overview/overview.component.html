@@ -10,19 +10,22 @@
     </ng-container>
     <div class="icons"></div>
 </div>
-<div #musicCatalogOverview class="overview-body">
-    <ng-container *ngFor="let album of albums">
-        <div class="album-row" *ngIf="!album.getDeleted()" (click)="edit(album)">
-            <music-catalog-album
-                    (mcCommunicationOut)="processInputFromAlbumRow($event)"
-                    [album]="album"
-                    [mcCommunication]="outputToAlbumRow"
-            >
-            </music-catalog-album>
-        </div>
-    </ng-container>
-    <button class="btn-primary scroll-up" (click)="scrollUp()">To top</button>
-</div>
+<cdk-virtual-scroll-viewport [itemSize]="25" class="viewport" (scroll)="onScroll()">
+    <div class="overview-body">
+        <ng-container *cdkVirtualFor="let album of albums">
+            <div class="album-row" *ngIf="!album.getDeleted()"
+                 [ngClass]="isSelected(album)" (click)="select(album)">
+                <music-catalog-album
+                        (mcCommunicationOut)="processInputFromAlbumRow($event)"
+                        [album]="album"
+                        [mcCommunication]="outputToAlbumRow"
+                >
+                </music-catalog-album>
+            </div>
+        </ng-container>
+    </div>
+</cdk-virtual-scroll-viewport>
+<button class="btn-primary scroll-up" (click)="scrollUp()">To top</button>
 <music-catalog-album-edit *ngIf="showAlbumEdit"
                           [album]="albumToEdit"
                           (mcCommunication)="processInputFromAlbumEdit($event)">

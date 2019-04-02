@@ -110,7 +110,6 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.getRelatedId('genre'),
                 ]).then(
                     ([artistId, formatId, labelId, genreId]) => {
-                        console.log(labelId);
                         const albumPostData: AlbumPostData = {
                             title: this.albumEditForm.controls['title'].value,
                             year: this.albumEditForm.controls['year'].value,
@@ -295,7 +294,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (!value) {
                         resolve(null);
                     }
-                    if (!this.album || this.album.getArtist().getName() !== value) {
+                    if (!this.album || !this.album.getArtist() || this.album.getArtist().getName() !== value) {
                         entity = this.artistsFactory.matchArtistInCache(value);
                         if (entity) {
                             resolve(entity.getId());
@@ -315,7 +314,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (!value) {
                         resolve(null);
                     }
-                    if (!this.album || this.album.getFormat().getName() !== value) {
+                    if (!this.album || !this.album.getFormat() || this.album.getFormat().getName() !== value) {
                         entity = this.formatsFactory.matchFormatInCache(value);
                         if (entity) {
                             resolve(entity.getId());
@@ -335,7 +334,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (!value) {
                         resolve(null);
                     }
-                    if (!this.album || this.album.getLabel().getName() !== value) {
+                    if (!this.album || !this.album.getLabel() || this.album.getLabel().getName() !== value) {
                         entity = this.labelsFactory.matchLabelInCache(value);
                         if (entity) {
                             resolve(entity.getId());
@@ -355,7 +354,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (!value) {
                         resolve(null);
                     }
-                    if (!this.album || this.album.getGenre().getName() !== value) {
+                    if (!this.album || !this.album.getGenre() || this.album.getGenre().getName() !== value) {
                         entity = this.genresFactory.matchGenreInCache(value);
                         if (entity) {
                             resolve(entity.getId());
@@ -405,10 +404,10 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.albumEditForm.controls['title'].setValue(this.album.getTitle());
         this.albumEditForm.controls['year'].setValue(this.album.getYear());
         this.albumEditForm.controls['notes'].setValue(this.album.getNotes());
-        this.albumEditForm.controls['artist'].setValue(this.album.getArtist().getName());
-        this.albumEditForm.controls['format'].setValue(this.album.getFormat().getName());
-        this.albumEditForm.controls['label'].setValue(this.album.getLabel().getName());
-        this.albumEditForm.controls['genre'].setValue(this.album.getGenre().getDescription());
+        this.albumEditForm.controls['artist'].setValue(this.album.getArtist() ? this.album.getArtist().getName() : '');
+        this.albumEditForm.controls['format'].setValue(this.album.getFormat() ? this.album.getFormat().getName() : '');
+        this.albumEditForm.controls['label'].setValue(this.album.getLabel() ? this.album.getLabel().getName() : '');
+        this.albumEditForm.controls['genre'].setValue(this.album.getGenre() ? this.album.getGenre().getDescription() : '');
         this.originalFormData = this.albumEditForm.value;
         this.error = '';
     }

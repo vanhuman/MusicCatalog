@@ -38,12 +38,10 @@ div.music-catalog music-catalog-header {
   z-index: 1;
 }
 div.music-catalog music-catalog-overview {
-  margin-top: 35px;
   width: 100%;
 }
 div.music-catalog music-catalog-login {
   position: fixed;
   top: 50px;
   width: 100%;
-  z-index: 1000;
 }

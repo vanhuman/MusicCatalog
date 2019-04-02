@@ -37,6 +37,7 @@ import { LabelsFactoryState } from './music-catalog/factories/labels/labels.fact
 import { GenresFactoryState } from './music-catalog/factories/genres/genres.factory.state';
 import { GenresFactoryInterface } from './music-catalog/factories/genres/genres.factory.interface';
 import { GenresFactory } from './music-catalog/factories/genres/genres.factory';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
     declarations: [
@@ -57,6 +58,7 @@ import { GenresFactory } from './music-catalog/factories/genres/genres.factory';
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
+        ScrollingModule,
     ],
     providers: [
         HttpClient,

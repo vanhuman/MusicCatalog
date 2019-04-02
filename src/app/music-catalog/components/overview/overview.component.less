@@ -39,7 +39,7 @@ div.overview-header {
         padding-right: @padding-right-artist;
     }
     div.title {
-        width: @width-title;
+        width: calc(@width-title - 17px);
         padding-right: @padding-right-title;
         padding-left: @padding-left-title;
     }
@@ -62,30 +62,35 @@ div.overview-header {
     }
     div.icons {
         width: @width-icons;
+        padding-right: @padding-right-icons;
     }
+}
+.viewport {
+    height: 100vh;
+    margin-top: @overview-labels-height + @header-height + 5px;
 }
 div.overview-body {
     width: ~'calc(100% - @{padding-side} - @{padding-side})';
-    margin-top: @overview-labels-height + @header-height;
     padding: 10px @padding-side 20px @padding-side;
 
     div.album-row {
         height: 25px;
         .transition(background; 0.3s; ease-out);
+        border: 1px solid transparent;
 
-        &:nth-of-type(5n) {
-            background: @tertiary-color;
-        }
         &:hover {
-            background: @color4;
-            cursor: pointer;
+            background: @tertiary-color;
+            border: 1px solid @primary-color;
+        }
+        &.selected {
+            border: 1px solid @primary-color;
         }
     }
-    button.scroll-up {
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-    }
+}
+button.scroll-up {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
 }
 music-catalog-album-edit {
     position: fixed;

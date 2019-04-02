@@ -1,4 +1,6 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import {
+    Component, ElementRef, EventEmitter, Input, Output, ViewChild
+} from '@angular/core';
 import { takeWhile } from 'rxjs/operators';
 
 import { AlbumsFactoryInterface, GetAlbumsParams } from '../../factories/albums/albums.factory.interface';
@@ -7,6 +9,7 @@ import { McCommunication } from '../../models/music-catalog-communication.interf
 import { TooltipConfig } from '../../directives/tooltip/tooltip.directive';
 import { Configuration } from '../../configuration';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 export type SortField = 'title' | 'year' | 'date_added'
     | 'artist_name' | 'format_name' | 'label_name' | 'genre_description';
@@ -27,6 +30,7 @@ interface Column {
 })
 export class OverviewComponent {
     @Output() public mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
+    @ViewChild(CdkVirtualScrollViewport) public scrollViewport: CdkVirtualScrollViewport;
 
     public albums: AlbumInterface[] = [];
     public columns: Column[] = [];
@@ -42,8 +46,7 @@ export class OverviewComponent {
     private sortField: SortField = 'date_added';
     private sortDirection: SortDirection = 'DESC';
     private prevClickedColumn: Column;
-
-    @ViewChild('musicCatalogOverview') musicCatalogOverview: ElementRef;
+    private selectedAlbum: AlbumInterface;
 
     @Input()
     set mcCommunication(mcCommunication: McCommunication) {
@@ -52,7 +55,7 @@ export class OverviewComponent {
                 case 'search':
                     this.page = mcCommunication.page;
                     this.keywords = mcCommunication.keywords;
-                    this.scrollUp(false);
+                    this.scrollUp();
                     this.getAlbums(false);
                     break;
                 case 'addAlbum':
@@ -75,22 +78,15 @@ export class OverviewComponent {
         this.defineColumns();
     }
 
-    @HostListener('window:scroll')
     public onScroll() {
-        const element = <HTMLElement>this.element.nativeElement;
-        if (element) {
-            if (!this.loading && window.scrollY >= (element.clientHeight - window.innerHeight) * 0.9) {
-                this.page = this.page + 1;
-                this.getAlbums();
-            }
+        if (!this.loading && this.scrollViewport.measureScrollOffset('bottom') < 100) {
+            this.page = this.page + 1;
+            this.getAlbums();
         }
     }
 
-    public scrollUp(smooth: boolean = true): void {
-        window.scrollTo({
-            top: 0,
-            behavior: smooth ? 'smooth' : 'auto',
-        });
+    public scrollUp(): void {
+        this.scrollViewport.scrollToIndex(0);
     }
 
     public sortOn(clickedColumn: Column): void {
@@ -112,7 +108,7 @@ export class OverviewComponent {
         this.prevClickedColumn = clickedColumn;
         this.sortField = clickedColumn.sortField;
         this.sortDirection = clickedColumn.sortDirection;
-        this.scrollUp(false);
+        this.scrollUp();
         this.page = 1;
         this.mcCommunicationOut.emit({
             action: 'sort',
@@ -207,6 +203,14 @@ export class OverviewComponent {
     public edit(album: AlbumInterface): void {
         this.albumToEdit = album;
         this.showAlbumEdit = true;
+    }
+
+    public isSelected(album: AlbumInterface): string {
+        return album === this.selectedAlbum ? 'selected' : '';
+    }
+
+    public select(album: AlbumInterface): void {
+        this.selectedAlbum = album;
     }
 
     private getAlbums(concat: boolean = true): void {

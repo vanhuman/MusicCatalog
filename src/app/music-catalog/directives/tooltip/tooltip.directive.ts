@@ -46,7 +46,7 @@ export class TooltipDirective implements OnDestroy, OnChanges {
                 this.tooltipConfig.element = this.element;
                 this.tooltipService.components.set(this.id, this.tooltipConfig);
             }
-        }, 500);
+        }, 200);
     }
 
     @HostListener('mouseleave')

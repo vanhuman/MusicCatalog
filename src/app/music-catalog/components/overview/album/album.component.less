@@ -3,23 +3,20 @@
 div {
     display: inline-block;
     position: relative;
+    top: 0;
 }
 div.image {
     width: @width-image;
-    position: relative;
+    min-height: 20px;
     top: 3px;
 
-    >img {
-        width: 20px;
-        padding-left: 5px;
-    }
     div.popup-image {
         width: 0;
         overflow: hidden;
-        position: fixed;
-        top: 150px;
+        position: absolute;
+        top: -30px;
         left: 200px;
-        z-index: 2;
+        z-index: 1;
         opacity: 0;
         .transition-property(opacity, width;);
         .transition-duration(.5s, 0s;);
@@ -28,8 +25,12 @@ div.image {
         img {
             box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.4);
             margin: 20px;
-            //border: 2px solid @tertiary-color;
         }
+    }
+    >img {
+        min-height: 20px;
+        width: 20px;
+        padding-left: 8px;
     }
     &:hover {
         div.popup-image {
@@ -45,10 +46,6 @@ div.image {
 div.artist {
     .ellipsis(@width-artist);
     padding-right: @padding-right-artist;
-
-    span {
-        cursor: pointer;
-    }
 }
 div.title {
     .ellipsis(@width-title);
@@ -68,10 +65,6 @@ div.format {
 div.label {
     .ellipsis(@width-label);
     padding-right: @padding-right-label;
-
-    span {
-        cursor: pointer;
-    }
 }
 div.genre {
     .ellipsis(@width-genre);
@@ -83,6 +76,7 @@ div.date-added {
 div.icons {
     width: @width-icons;
     text-align: center;
+    top: -1px;
 
     img {
         cursor: pointer;
