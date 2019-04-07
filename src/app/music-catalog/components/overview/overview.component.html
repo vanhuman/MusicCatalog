@@ -10,7 +10,7 @@
     </ng-container>
     <div class="icons"></div>
 </div>
-<cdk-virtual-scroll-viewport [itemSize]="25" class="viewport" (scroll)="onScroll()">
+<cdk-virtual-scroll-viewport [itemSize]="27" class="viewport" (scroll)="onScroll()">
     <div class="overview-body">
         <ng-container *cdkVirtualFor="let album of albums">
             <div class="album-row" *ngIf="!album.getDeleted()"

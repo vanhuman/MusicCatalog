@@ -183,6 +183,7 @@ export class OverviewComponent {
                 index = this.albums.indexOf(this.albumToEdit);
                 if (index > 0) {
                     this.albumToEdit = this.albums[index - 1];
+                    this.selectedAlbum = this.albumToEdit;
                 }
                 break;
             case 'next':
@@ -193,6 +194,7 @@ export class OverviewComponent {
                 }
                 if (index < this.albums.length - 1) {
                     this.albumToEdit = this.albums[index + 1];
+                    this.selectedAlbum = this.albumToEdit;
                 }
                 break;
             default:

@@ -9,7 +9,7 @@ div.music-catalog {
 
     music-catalog-header, music-catalog-overview {
         display: block;
-        min-width: 1024px;
+        min-width: @min-width;
     }
     music-catalog-header {
         position: fixed;
@@ -17,9 +17,10 @@ div.music-catalog {
         width: 100%;
         height: @header-height;
         background: @secondary-color;
-        padding: 0 @padding-side;
+        padding: 0 @padding-overview-body-side;
         border-bottom: 1px solid @primary-color;
         z-index: 1;
+        white-space: nowrap;
     }
     music-catalog-overview {
         width: 100%;
