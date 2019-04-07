@@ -55,6 +55,12 @@ export class HeaderComponent implements OnDestroy {
             });
     }
 
+    public getTotalAlbumsText(): string {
+        let text = this.totalNumberOfAlbums + ' (' + this.totalNumberOfPages;
+        text += this.totalNumberOfPages === 1 ? ' page)' : ' pages)';
+        return text;
+    }
+
     public addAlbum(): void {
         this.mcCommunicationOut.emit({
             action: 'addAlbum',

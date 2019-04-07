@@ -4,7 +4,7 @@
 <form class="header" [formGroup]="headerForm">
     <div class="number-of-records">
         <label>Total albums:</label>
-        {{ totalNumberOfAlbums }} ({{ totalNumberOfPages }} pages)
+        {{ getTotalAlbumsText() }}
     </div>
     <div class="search">
         <label for="{{id}}-page">Page:</label>
