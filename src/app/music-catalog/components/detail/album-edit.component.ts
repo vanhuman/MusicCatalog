@@ -143,9 +143,9 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
             if (changeAllRefs.length > 0) {
                 const modal = this.modalService.getModal('modal1')
                     .setMessage('Are you sure you want to change the following values')
-                    .setMessage(' on all albums?', ['red'])
-                    .setMessage('', ['new-line'])
-                    .setWidth(600)
+                    .setMessage(' on all albums?', ['alert'])
+                    .newLine()
+                    .setWidth(500)
                     .addYesButton(() => {
                         this.save();
                     })
@@ -156,7 +156,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                     modal.setMessage(change.oldValue, ['big']);
                     modal.setMessage(' to ');
                     modal.setMessage(change.newValue, ['big']);
-                    modal.setMessage('', ['new-line']);
+                    modal.newLine();
                 });
                 modal.open();
             } else {
@@ -390,6 +390,10 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.albumEditForm.controls['format'].setValue(this.album.getFormat() ? this.album.getFormat().getName() : '');
         this.albumEditForm.controls['label'].setValue(this.album.getLabel() ? this.album.getLabel().getName() : '');
         this.albumEditForm.controls['genre'].setValue(this.album.getGenre() ? this.album.getGenre().getDescription() : '');
+        this.albumEditForm.controls['artist-all-refs'].setValue(false);
+        this.albumEditForm.controls['format-all-refs'].setValue(false);
+        this.albumEditForm.controls['label-all-refs'].setValue(false);
+        this.albumEditForm.controls['genre-all-refs'].setValue(false);
         this.originalFormData = this.albumEditForm.value;
         this.error = '';
     }
@@ -438,12 +442,14 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
             let value = this.albumEditForm.value[formKey];
             for (const orignalFormKey of Object.keys(this.originalFormData)) {
                 if (formKey === orignalFormKey) {
-                    let originalValue = this.originalFormData[orignalFormKey];
-                    // regard '' as null
-                    originalValue = originalValue === '' ? null : originalValue;
-                    value = value === '' ? null : value;
-                    if (originalValue !== value) {
-                        return true;
+                    if (formKey.indexOf('all-refs') === -1) {
+                        let originalValue = this.originalFormData[orignalFormKey];
+                        // regard '' as null
+                        originalValue = originalValue === '' ? null : originalValue;
+                        value = value === '' ? null : value;
+                        if (originalValue !== value) {
+                            return true;
+                        }
                     }
                 }
             }

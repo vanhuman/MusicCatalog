@@ -145,10 +145,11 @@ export class OverviewComponent {
             const album: AlbumInterface = mcCommunication.item;
             if (album) {
                 this.modalService.getModal('modal1')
-                    .setMessage('Are you sure you want to delete this album?', ['new-line'])
-                    .setMessage(album.getTitle(), ['new-line', 'big'])
-                    .setMessage('by', ['new-line'])
-                    .setMessage(album.getArtist().getName(), ['new-line', 'big'])
+                    .setMessage('Are you sure you want to delete this album?')
+                    .newLine()
+                    .setMessage(album.getTitle(), ['big'])
+                    .setMessage(' by ')
+                    .setMessage(album.getArtist().getFullName(), ['big'])
                     .setWidth(400)
                     .addYesButton(() => {
                         this.albumsFactory.deleteAlbum(mcCommunication.item).subscribe({

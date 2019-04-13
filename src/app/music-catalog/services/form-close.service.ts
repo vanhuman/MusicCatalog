@@ -27,7 +27,8 @@ export class FormCloseService {
                         resolve(canClose);
                     } else if (!canClose) {
                         this.modalService.getModal('modal1')
-                            .setMessage('Are you sure you want to cancel?')
+                            .setMessage('Are you sure you want to discard your changes?')
+                            .setWidth(335)
                             .addYesButton(() => {
                                 resolve(true);
                                 this.reset();

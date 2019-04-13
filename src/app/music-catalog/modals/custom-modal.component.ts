@@ -4,7 +4,7 @@ import { KeyCode, KeyStrokeUtility } from '../utilities/key-stroke.utility';
 import { ErrorApiResponse } from '../models/api-responses/error-api-response.interface';
 import { errorTypeMap } from '../constants/error-type.map';
 
-export type MessageStyle = '' | 'bold' | 'italic' | 'big' | 'align-center' | 'new-line' | 'red';
+export type MessageStyle = '' | 'bold' | 'italic' | 'big' | 'align-center' | 'new-line' | 'alert';
 
 export interface ModalMessage {
     text: string;
@@ -82,6 +82,14 @@ export class CustomModalComponent implements OnInit, OnDestroy {
         this.messages.push({
             text,
             styles,
+        });
+        return this;
+    }
+
+    public newLine(): CustomModalComponent {
+        this.messages.push({
+            text: '',
+            styles: ['new-line'],
         });
         return this;
     }
