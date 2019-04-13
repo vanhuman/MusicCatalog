@@ -19,10 +19,18 @@ import { LabelsFactoryInterface } from '../../factories/labels/labels.factory.in
 import { GenresFactoryInterface } from '../../factories/genres/genres.factory.interface';
 import { AlbumPostData } from '../../models/api-post-data/album-api-post-data.interface';
 import { AlbumsFactoryInterface } from '../../factories/albums/albums.factory.interface';
+import { ModalServiceInterface } from '../../services/modal.service.interface';
+import { StringUtility } from '../../utilities/string.utility';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
     placeholder?: string;
+}
+
+interface ChangeAllRefs {
+    entity: EntityType;
+    oldValue: string;
+    newValue: string;
 }
 
 type EntityType = 'none' | 'artist' | 'label' | 'genre' | 'format';
@@ -79,6 +87,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         private genresFactory: GenresFactoryInterface,
         private formCloseService: FormCloseService,
         private albumFactory: AlbumsFactoryInterface,
+        private modalService: ModalServiceInterface,
     ) {
         this.getRelatedEntities();
         this.defineAlbumFields();
@@ -100,41 +109,103 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.title.nativeElement.focus();
     }
 
-    public save(): void {
+    public preSave(): void {
         if (this.entityPopup === 'none') {
-            if (this.albumEditForm.valid) {
-                Promise.all([
-                    this.getRelatedId('artist'),
-                    this.getRelatedId('format'),
-                    this.getRelatedId('label'),
-                    this.getRelatedId('genre'),
-                ]).then(
-                    ([artistId, formatId, labelId, genreId]) => {
-                        const albumPostData: AlbumPostData = {
-                            title: this.albumEditForm.controls['title'].value,
-                            year: this.albumEditForm.controls['year'].value,
-                            notes: this.albumEditForm.controls['notes'].value,
-                            artist_id: artistId,
-                            format_id: formatId,
-                            label_id: labelId,
-                            genre_id: genreId,
-                        };
-                        let observable;
-                        if (this.album) {
-                            observable = this.albumFactory.putAlbum(albumPostData, this.album);
-                        } else {
-                            observable = this.albumFactory.postAlbum(albumPostData);
-                        }
-                        observable.subscribe((album: AlbumInterface) => {
-                            this.mcCommunication.emit({
-                                action: 'saved',
-                                item: album,
-                            });
-                            this.formCloseService.reset();
-                        });
-                    }
-                );
+            const changeAllRefs: ChangeAllRefs[] = [];
+            if (this.album && this.album.getArtist() && this.albumEditForm.controls['artist-all-refs'].value) {
+                changeAllRefs.push({
+                    entity: 'artist',
+                    oldValue: this.album.getArtist().getName(),
+                    newValue: this.albumEditForm.controls['artist'].value,
+                });
             }
+            if (this.album && this.album.getFormat() && this.albumEditForm.controls['format-all-refs'].value) {
+                changeAllRefs.push({
+                    entity: 'format',
+                    oldValue: this.album.getFormat().getName(),
+                    newValue: this.albumEditForm.controls['format'].value,
+                });
+            }
+            if (this.album && this.album.getLabel() && this.albumEditForm.controls['label-all-refs'].value) {
+                changeAllRefs.push({
+                    entity: 'label',
+                    oldValue: this.album.getLabel().getName(),
+                    newValue: this.albumEditForm.controls['label'].value,
+                });
+            }
+            if (this.album && this.album.getGenre() && this.albumEditForm.controls['genre-all-refs'].value) {
+                changeAllRefs.push({
+                    entity: 'genre',
+                    oldValue: this.album.getGenre().getName(),
+                    newValue: this.albumEditForm.controls['genre'].value,
+                });
+            }
+            if (changeAllRefs.length > 0) {
+                const modal = this.modalService.getModal('modal1')
+                    .setMessage('Are you sure you want to change the following values')
+                    .setMessage(' on all albums?', ['red'])
+                    .setMessage('', ['new-line'])
+                    .setWidth(600)
+                    .addYesButton(() => {
+                        this.save();
+                    })
+                    .addNoButton(() => {
+                    });
+                changeAllRefs.forEach((change) => {
+                    modal.setMessage(StringUtility.capitalize(change.entity) + ' from ');
+                    modal.setMessage(change.oldValue, ['big']);
+                    modal.setMessage(' to ');
+                    modal.setMessage(change.newValue, ['big']);
+                    modal.setMessage('', ['new-line']);
+                });
+                modal.open();
+            } else {
+                this.save();
+            }
+        }
+    }
+
+    public save(): void {
+        if (this.albumEditForm.valid) {
+            Promise.all([
+                this.artistsFactory.getArtistIdFromValue(
+                    this.album, this.albumEditForm.controls['artist'].value,
+                    !!this.albumEditForm.controls['artist-all-refs'].value),
+                this.formatsFactory.getFormatIdFromValue(
+                    this.album, this.albumEditForm.controls['format'].value,
+                    !!this.albumEditForm.controls['format-all-refs'].value),
+                this.labelsFactory.getLabelIdFromValue(
+                    this.album, this.albumEditForm.controls['label'].value,
+                    !!this.albumEditForm.controls['label-all-refs'].value),
+                this.genresFactory.getGenreIdFromValue(
+                    this.album, this.albumEditForm.controls['genre'].value,
+                    !!this.albumEditForm.controls['genre-all-refs'].value),
+            ]).then(
+                ([artistId, formatId, labelId, genreId]) => {
+                    const albumPostData: AlbumPostData = {
+                        title: this.albumEditForm.controls['title'].value,
+                        year: this.albumEditForm.controls['year'].value,
+                        notes: this.albumEditForm.controls['notes'].value,
+                        artist_id: artistId,
+                        format_id: formatId,
+                        label_id: labelId,
+                        genre_id: genreId,
+                    };
+                    let observable;
+                    if (this.album) {
+                        observable = this.albumFactory.putAlbum(albumPostData, this.album);
+                    } else {
+                        observable = this.albumFactory.postAlbum(albumPostData);
+                    }
+                    observable.subscribe((album: AlbumInterface) => {
+                        this.mcCommunication.emit({
+                            action: 'saved',
+                            item: album,
+                        });
+                        this.formCloseService.reset();
+                    });
+                }
+            );
         }
     }
 
@@ -284,95 +355,6 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.genres = [];
     }
 
-    private getRelatedId(entityType: EntityType): Promise<number> {
-        return new Promise((resolve) => {
-            let value: string;
-            let entity: Entity;
-            switch (entityType) {
-                case 'artist':
-                    value = this.albumEditForm.controls['artist'].value;
-                    if (!value) {
-                        resolve(null);
-                    }
-                    if (!this.album || !this.album.getArtist() || this.album.getArtist().getName() !== value) {
-                        entity = this.artistsFactory.matchArtistInCache(value);
-                        if (entity) {
-                            resolve(entity.getId());
-                        } else {
-                            this.artistsFactory.postArtist({name: value}).subscribe({
-                                next: (artist) => {
-                                    resolve(artist.getId());
-                                },
-                            });
-                        }
-                    } else {
-                        resolve(this.album.getArtist().getId());
-                    }
-                    break;
-                case 'format':
-                    value = this.albumEditForm.controls['format'].value;
-                    if (!value) {
-                        resolve(null);
-                    }
-                    if (!this.album || !this.album.getFormat() || this.album.getFormat().getName() !== value) {
-                        entity = this.formatsFactory.matchFormatInCache(value);
-                        if (entity) {
-                            resolve(entity.getId());
-                        } else {
-                            this.formatsFactory.postFormat({name: value}).subscribe({
-                                next: (format) => {
-                                    resolve(format.getId());
-                                },
-                            });
-                        }
-                    } else {
-                        resolve(this.album.getFormat().getId());
-                    }
-                    break;
-                case 'label':
-                    value = this.albumEditForm.controls['label'].value;
-                    if (!value) {
-                        resolve(null);
-                    }
-                    if (!this.album || !this.album.getLabel() || this.album.getLabel().getName() !== value) {
-                        entity = this.labelsFactory.matchLabelInCache(value);
-                        if (entity) {
-                            resolve(entity.getId());
-                        } else {
-                            this.labelsFactory.postLabel({name: value}).subscribe({
-                                next: (label) => {
-                                    resolve(label.getId());
-                                },
-                            });
-                        }
-                    } else {
-                        resolve(this.album.getLabel().getId());
-                    }
-                    break;
-                case 'genre':
-                    value = this.albumEditForm.controls['genre'].value;
-                    if (!value) {
-                        resolve(null);
-                    }
-                    if (!this.album || !this.album.getGenre() || this.album.getGenre().getName() !== value) {
-                        entity = this.genresFactory.matchGenreInCache(value);
-                        if (entity) {
-                            resolve(entity.getId());
-                        } else {
-                            this.genresFactory.postGenre({description: value}).subscribe({
-                                next: (genre) => {
-                                    resolve(genre.getId());
-                                },
-                            });
-                        }
-                    } else {
-                        resolve(this.album.getGenre().getId());
-                    }
-                    break;
-            }
-        });
-    }
-
     private searchEntity(entityType: EntityType, input: string): Entity[] {
         switch (entityType) {
             case 'artist':
@@ -438,6 +420,10 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
             validators: [Validators.maxLength(255)],
             placeholder: 'Genre',
         });
+        this.albumFields.set('artist-all-refs', {});
+        this.albumFields.set('format-all-refs', {});
+        this.albumFields.set('label-all-refs', {});
+        this.albumFields.set('genre-all-refs', {});
     }
 
     private addFormControls(): void {

@@ -12,6 +12,7 @@ import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Genre } from '../../models/genre.model';
 import { GenresFactoryInterface } from './genres.factory.interface';
 import { GenreApiPostData } from '../../models/api-post-data/genre-api-post-data.interface';
+import { AlbumInterface } from '../../models/album.model.interface';
 
 @Injectable()
 export class GenresFactory implements GenresFactoryInterface {
@@ -94,6 +95,34 @@ export class GenresFactory implements GenresFactoryInterface {
         return observable;
     }
 
+    public putGenre(genre: GenreInterface, genreApiPostData: GenreApiPostData): Observable<GenreInterface> {
+        const observable: Subject<GenreInterface> = new Subject<GenreInterface>();
+        const token = this.authenticationService.getToken();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new HttpParams();
+        if (genreApiPostData.description) {
+            body = body.set('description', genreApiPostData.description);
+        }
+        this.apiRequestService.put<GenreApiResponseWrapper>(
+            '/genres/' + genre.getId() + '?token=' + token,
+            body,
+            headers
+        ).subscribe({
+            next: (response) => {
+                const genreApiResponse: GenreApiResponse = response.body.genre;
+                this.state.cache[genre.getId()] = this.updateGenre(genre, genreApiResponse);
+                observable.next(genre);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
     public searchGenresInCache(keyword: string): GenreInterface[] {
         return this.state.getCacheAsArray()
             .filter((genre) => {
@@ -115,6 +144,37 @@ export class GenresFactory implements GenresFactoryInterface {
             this.state.cache[genreApiResponse.id] = this.newGenre(genreApiResponse);
         }
         return this.state.cache[genreApiResponse.id];
+    }
+
+    public getGenreIdFromValue(album: AlbumInterface, value: string, allReferences: boolean = false): Promise<number> {
+        return new Promise((resolve) => {
+            let genre: GenreInterface;
+            if (!value) {
+                resolve(null);
+            }
+            if (!album || !album.getGenre() || album.getGenre().getName() !== value) {
+                genre = this.matchGenreInCache(value);
+                if (genre) {
+                    resolve(genre.getId());
+                } else {
+                    if (album && album.getGenre() && allReferences) {
+                        this.putGenre(album.getGenre(), {description: value}).subscribe({
+                            next: () => {
+                                resolve(album.getGenre().getId());
+                            },
+                        });
+                    } else {
+                        this.postGenre({description: value}).subscribe({
+                            next: (newGenre) => {
+                                resolve(newGenre.getId());
+                            },
+                        });
+                    }
+                }
+            } else {
+                resolve(album.getGenre().getId());
+            }
+        });
     }
 
     private sortGenres(genres: GenreInterface[]): GenreInterface[] {

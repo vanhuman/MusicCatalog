@@ -12,6 +12,7 @@ import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Format } from '../../models/format.model';
 import { FormatsFactoryInterface } from './formats.factory.interface';
 import { FormatApiPostData } from '../../models/api-post-data/format-api-post-data.interface';
+import { AlbumInterface } from '../../models/album.model.interface';
 
 @Injectable()
 export class FormatsFactory implements FormatsFactoryInterface {
@@ -93,6 +94,34 @@ export class FormatsFactory implements FormatsFactoryInterface {
         return observable;
     }
 
+    public putFormat(format: FormatInterface, formatApiPostData: FormatApiPostData): Observable<FormatInterface> {
+        const observable: Subject<FormatInterface> = new Subject<FormatInterface>();
+        const token = this.authenticationService.getToken();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new HttpParams();
+        if (formatApiPostData.name) {
+            body = body.set('name', formatApiPostData.name);
+        }
+        this.apiRequestService.put<FormatApiResponseWrapper>(
+            '/formats/' + format.getId() + '?token=' + token,
+            body,
+            headers
+        ).subscribe({
+            next: (response) => {
+                const formatApiResponse: FormatApiResponse = response.body.format;
+                this.state.cache[format.getId()] = this.updateFormat(format, formatApiResponse);
+                observable.next(format);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
     public searchFormatsInCache(keyword: string): FormatInterface[] {
         return this.state.getCacheAsArray()
             .filter((format) => {
@@ -114,6 +143,37 @@ export class FormatsFactory implements FormatsFactoryInterface {
             this.state.cache[formatApiResponse.id] = this.newFormat(formatApiResponse);
         }
         return this.state.cache[formatApiResponse.id];
+    }
+
+    public getFormatIdFromValue(album: AlbumInterface, value: string, allReferences: boolean = false): Promise<number> {
+        return new Promise((resolve) => {
+            let format: FormatInterface;
+            if (!value) {
+                resolve(null);
+            }
+            if (!album || !album.getFormat() || album.getFormat().getName() !== value) {
+                format = this.matchFormatInCache(value);
+                if (format) {
+                    resolve(format.getId());
+                } else {
+                    if (album && album.getFormat() && allReferences) {
+                        this.putFormat(album.getFormat(), {name: value}).subscribe({
+                            next: () => {
+                                resolve(album.getFormat().getId());
+                            },
+                        });
+                    } else {
+                        this.postFormat({name: value}).subscribe({
+                            next: (newFormat) => {
+                                resolve(newFormat.getId());
+                            },
+                        });
+                    }
+                }
+            } else {
+                resolve(album.getFormat().getId());
+            }
+        });
     }
 
     private sortFormats(formats: FormatInterface[]): FormatInterface[] {

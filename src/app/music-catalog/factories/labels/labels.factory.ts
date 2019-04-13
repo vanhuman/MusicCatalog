@@ -12,6 +12,7 @@ import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Label } from '../../models/label.model';
 import { LabelsFactoryInterface } from './labels.factory.interface';
 import { LabelApiPostData } from '../../models/api-post-data/label-api-post-data.interface';
+import { AlbumInterface } from '../../models/album.model.interface';
 
 @Injectable()
 export class LabelsFactory implements LabelsFactoryInterface {
@@ -90,6 +91,34 @@ export class LabelsFactory implements LabelsFactoryInterface {
         return observable;
     }
 
+    public putLabel(label: LabelInterface, labelApiPostData: LabelApiPostData): Observable<LabelInterface> {
+        const observable: Subject<LabelInterface> = new Subject<LabelInterface>();
+        const token = this.authenticationService.getToken();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new HttpParams();
+        if (labelApiPostData.name) {
+            body = body.set('name', labelApiPostData.name);
+        }
+        this.apiRequestService.put<LabelApiResponseWrapper>(
+            '/labels/' + label.getId() + '?token=' + token,
+            body,
+            headers
+        ).subscribe({
+            next: (response) => {
+                const labelApiResponse: LabelApiResponse = response.body.label;
+                this.state.cache[label.getId()] = this.updateLabel(label, labelApiResponse);
+                observable.next(label);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
     public searchLabelsInCache(keyword: string): LabelInterface[] {
         return this.state.getCacheAsArray()
             .filter((label) => {
@@ -111,6 +140,37 @@ export class LabelsFactory implements LabelsFactoryInterface {
             this.state.cache[labelApiResponse.id] = this.newLabel(labelApiResponse);
         }
         return this.state.cache[labelApiResponse.id];
+    }
+
+    public getLabelIdFromValue(album: AlbumInterface, value: string, allReferences: boolean = false): Promise<number> {
+        return new Promise((resolve) => {
+            let label: LabelInterface;
+            if (!value) {
+                resolve(null);
+            }
+            if (!album || !album.getLabel() || album.getLabel().getName() !== value) {
+                label = this.matchLabelInCache(value);
+                if (label) {
+                    resolve(label.getId());
+                } else {
+                    if (album && album.getLabel() && allReferences) {
+                        this.putLabel(album.getLabel(), {name: value}).subscribe({
+                            next: () => {
+                                resolve(album.getLabel().getId());
+                            },
+                        });
+                    } else {
+                        this.postLabel({name: value}).subscribe({
+                            next: (newLabel) => {
+                                resolve(newLabel.getId());
+                            },
+                        });
+                    }
+                }
+            } else {
+                resolve(album.getLabel().getId());
+            }
+        });
     }
 
     private sortLabels(labels: LabelInterface[]): LabelInterface[] {

@@ -1,10 +1,9 @@
 <div class="custom-modal">
-    <div class="custom-modal-body">
-        <h3 *ngIf="caption">
-            {{ caption }}
-        </h3>
+    <div class="custom-modal-body" [style.width.px]="getWidth()">
         <div class="message">
-            {{ message }}
+            <ng-container *ngFor="let message of messages">
+                <span [ngClass]="getStyle(message)">{{ message.text }}</span>
+            </ng-container>
         </div>
         <div class="buttons">
             <button class="btn-primary" (click)="close()" *ngIf="showCloseButton">Close</button>

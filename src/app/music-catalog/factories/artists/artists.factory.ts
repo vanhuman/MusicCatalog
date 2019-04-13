@@ -12,6 +12,7 @@ import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Artist } from '../../models/artist.model';
 import { ArtistsFactoryInterface } from './artists.factory.interface';
 import { ArtistApiPostData } from '../../models/api-post-data/artist-api-post-data.interface';
+import { AlbumInterface } from '../../models/album.model.interface';
 
 @Injectable()
 export class ArtistsFactory implements ArtistsFactoryInterface {
@@ -120,6 +121,34 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
         return observable;
     }
 
+    public putArtist(artist: ArtistInterface, artistApiPostData: ArtistApiPostData): Observable<ArtistInterface> {
+        const observable: Subject<ArtistInterface> = new Subject<ArtistInterface>();
+        const token = this.authenticationService.getToken();
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new HttpParams();
+        if (artistApiPostData.name) {
+            body = body.set('name', artistApiPostData.name);
+        }
+        this.apiRequestService.put<ArtistApiResponseWrapper>(
+            '/artists/' + artist.getId() + '?token=' + token,
+            body,
+            headers
+        ).subscribe({
+            next: (response) => {
+                const artistApiResponse: ArtistApiResponse = response.body.artist;
+                this.state.cache[artist.getId()] = this.updateArtist(artist, artistApiResponse);
+                observable.next(artist);
+            },
+            error: (error: HttpErrorResponse) => {
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error.error)
+                    .open();
+                observable.error([]);
+            }
+        });
+        return observable;
+    }
+
     public searchArtistsInCache(keyword: string): ArtistInterface[] {
         return this.state.getCacheAsArray()
             .filter((artist) => {
@@ -142,6 +171,37 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
             this.state.cache[artistApiResponse.id] = this.newArtist(artistApiResponse);
         }
         return this.state.cache[artistApiResponse.id];
+    }
+
+    public getArtistIdFromValue(album: AlbumInterface, value: string, allReferences: boolean = false): Promise<number> {
+        return new Promise((resolve) => {
+            let artist: ArtistInterface;
+            if (!value) {
+                resolve(null);
+            }
+            if (!album || !album.getArtist() || album.getArtist().getName() !== value) {
+                artist = this.matchArtistInCache(value);
+                if (artist) {
+                    resolve(artist.getId());
+                } else {
+                    if (album && album.getArtist() && allReferences) {
+                        this.putArtist(album.getArtist(), {name: value}).subscribe({
+                            next: () => {
+                                resolve(album.getArtist().getId());
+                            },
+                        });
+                    } else {
+                        this.postArtist({name: value}).subscribe({
+                            next: (newArtist) => {
+                                resolve(newArtist.getId());
+                            },
+                        });
+                    }
+                }
+            } else {
+                resolve(album.getArtist().getId());
+            }
+        });
     }
 
     private sortArtists(artists: ArtistInterface[]): ArtistInterface[] {

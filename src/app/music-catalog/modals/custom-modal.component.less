@@ -11,15 +11,35 @@
     .custom-modal-body {
         box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.4);
         padding: 20px;
-        width: 300px;
         min-height: 60px;
         margin: 40px auto;
         position: relative;
         background: #fff;
 
         div.message {
-            padding-bottom: 50px;
+            padding-bottom: 35px;
             word-break: break-word;
+
+            .bold {
+                font-weight: 600;
+            }
+            .italic {
+                font-style: italic;
+            }
+            .big {
+                font-size: 16px;
+                padding-top: 15px;
+                padding-bottom: 15px;
+            }
+            .new-line {
+                display: block;
+            }
+            .align-center {
+                text-align: center;
+            }
+            .red {
+                color: red;
+            }
         }
         div.buttons {
             position: absolute;

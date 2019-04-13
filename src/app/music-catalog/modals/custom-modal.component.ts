@@ -4,16 +4,21 @@ import { KeyCode, KeyStrokeUtility } from '../utilities/key-stroke.utility';
 import { ErrorApiResponse } from '../models/api-responses/error-api-response.interface';
 import { errorTypeMap } from '../constants/error-type.map';
 
+export type MessageStyle = '' | 'bold' | 'italic' | 'big' | 'align-center' | 'new-line' | 'red';
+
+export interface ModalMessage {
+    text: string;
+    styles: MessageStyle[];
+}
+
 @Component({
     selector: 'custom-modal',
     templateUrl: './custom-modal.component.html',
     styleUrls: ['./custom-modal.component.css'],
 })
-
 export class CustomModalComponent implements OnInit, OnDestroy {
     @Input() id: string;
-    public message = '';
-    public caption = '';
+    public messages: ModalMessage[] = [];
     public showCloseButton = true;
     public showYesButton = false;
     public showNoButton = false;
@@ -21,6 +26,8 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     private element: any;
     private yesFunction: () => void;
     private noFunction: () => void;
+    private defaultWidth = 300;
+    private width = this.defaultWidth;
 
     constructor(
         private modalService: ModalServiceInterface,
@@ -58,14 +65,36 @@ export class CustomModalComponent implements OnInit, OnDestroy {
         KeyStrokeUtility.removeListener();
     }
 
-    public setMessage(message: string): CustomModalComponent {
-        this.message = message;
+    public getWidth(): string {
+        return this.width.toString();
+    }
+
+    public setWidth(width: number): CustomModalComponent {
+        this.width = width;
+        return this;
+    }
+
+    public getStyle(message: ModalMessage): string {
+        return message.styles.join(' ');
+    }
+
+    public setMessage(text: string, styles: MessageStyle[] = []): CustomModalComponent {
+        this.messages.push({
+            text,
+            styles,
+        });
         return this;
     }
 
     public setErrorMessage(errorMessage: ErrorApiResponse): CustomModalComponent {
-        this.message = errorMessage.message;
-        this.caption = errorTypeMap.get(errorMessage.error_type.id.toString());
+        this.messages.push({
+            text: errorTypeMap.get(errorMessage.error_type.id.toString()),
+            styles: ['big', 'new-line'],
+        });
+        this.messages.push({
+            text: errorMessage.message,
+            styles: [],
+        });
         return this;
     }
 
@@ -107,8 +136,8 @@ export class CustomModalComponent implements OnInit, OnDestroy {
         this.showYesButton = false;
         this.showNoButton = false;
         this.showCloseButton = true;
-        this.caption = '';
-        this.message = '';
+        this.messages = [];
+        this.width = this.defaultWidth;
     }
 
     private enter(): void {
