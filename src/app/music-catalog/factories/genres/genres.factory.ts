@@ -151,8 +151,7 @@ export class GenresFactory implements GenresFactoryInterface {
             let genre: GenreInterface;
             if (!value) {
                 resolve(null);
-            }
-            if (!album || !album.getGenre() || album.getGenre().getName() !== value) {
+            } else if (!album || !album.getGenre() || album.getGenre().getName() !== value) {
                 genre = this.matchGenreInCache(value);
                 if (genre) {
                     resolve(genre.getId());

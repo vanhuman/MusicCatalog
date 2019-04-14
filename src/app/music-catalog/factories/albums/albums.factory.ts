@@ -225,10 +225,10 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         if (albumPostData.format_id) {
             body = body.set('format_id', albumPostData.format_id.toString());
         }
-        if (albumPostData.label_id) {
+        if (albumPostData.label_id != null) {
             body = body.set('label_id', albumPostData.label_id.toString());
         }
-        if (albumPostData.genre_id) {
+        if (albumPostData.genre_id != null) {
             body = body.set('genre_id', albumPostData.genre_id.toString());
         }
         return body;
@@ -304,9 +304,13 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         }
         if (albumApiResponse.label) {
             album.setLabel(this.labelsFactory.updateAndGetLabel(albumApiResponse.label));
+        } else {
+            album.setLabel(null);
         }
         if (albumApiResponse.genre) {
             album.setGenre(this.genresFactory.updateAndGetGenre(albumApiResponse.genre));
+        } else {
+            album.setGenre(null);
         }
         return album;
     }

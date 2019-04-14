@@ -147,8 +147,7 @@ export class LabelsFactory implements LabelsFactoryInterface {
             let label: LabelInterface;
             if (!value) {
                 resolve(null);
-            }
-            if (!album || !album.getLabel() || album.getLabel().getName() !== value) {
+            } else if (!album || !album.getLabel() || album.getLabel().getName() !== value) {
                 label = this.matchLabelInCache(value);
                 if (label) {
                     resolve(label.getId());

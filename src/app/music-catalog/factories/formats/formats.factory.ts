@@ -150,8 +150,7 @@ export class FormatsFactory implements FormatsFactoryInterface {
             let format: FormatInterface;
             if (!value) {
                 resolve(null);
-            }
-            if (!album || !album.getFormat() || album.getFormat().getName() !== value) {
+            } else if (!album || !album.getFormat() || album.getFormat().getName() !== value) {
                 format = this.matchFormatInCache(value);
                 if (format) {
                     resolve(format.getId());

@@ -178,8 +178,7 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
             let artist: ArtistInterface;
             if (!value) {
                 resolve(null);
-            }
-            if (!album || !album.getArtist() || album.getArtist().getName() !== value) {
+            } else if (!album || !album.getArtist() || album.getArtist().getName() !== value) {
                 artist = this.matchArtistInCache(value);
                 if (artist) {
                     resolve(artist.getId());

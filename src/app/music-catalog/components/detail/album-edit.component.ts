@@ -188,8 +188,8 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                         notes: this.albumEditForm.controls['notes'].value,
                         artist_id: artistId,
                         format_id: formatId,
-                        label_id: labelId,
-                        genre_id: genreId,
+                        label_id: labelId !== null ? labelId : 0,
+                        genre_id: genreId !== null ? genreId : 0,
                     };
                     let observable;
                     if (this.album) {
