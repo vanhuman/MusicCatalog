@@ -21,7 +21,11 @@
         <button class="btn-primary" (click)="search()">Fetch</button>
         <button class="btn-primary" (click)="clear()">Clear</button>
     </div>
-    <div class="new">
-        <button class="btn-primary" (click)="addAlbum()">New</button>
+    <div class="menu">
+        <img [src]="menuIcon">
+        <div class="menu">
+            <button class="btn-primary" (click)="addAlbum()">New</button>
+            <button class="btn-primary" (click)="cleanRelatedTables()">Clean-up</button>
+        </div>
     </div>
 </form>

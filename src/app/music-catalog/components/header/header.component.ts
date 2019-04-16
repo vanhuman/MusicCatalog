@@ -25,6 +25,7 @@ export class HeaderComponent implements OnDestroy {
         keywords: new FormControl(''),
     });
     public id = 'music-catalog-header';
+    public menuIcon = Configuration.IMAGE_PATH + 'menu.png';
 
     private metaDataSubscription: Subscription;
 
@@ -94,5 +95,9 @@ export class HeaderComponent implements OnDestroy {
             event.stopPropagation();
             this.search();
         }
+    }
+
+    public cleanRelatedTables(): void {
+        //
     }
 }

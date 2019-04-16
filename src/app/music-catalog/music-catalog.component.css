@@ -34,8 +34,7 @@ div.music-catalog music-catalog-header {
   height: 35px;
   background: #f9f9f9;
   padding: 0 20px;
-  border-bottom: 1px solid #ffa500;
-  z-index: 1;
+  white-space: nowrap;
 }
 div.music-catalog music-catalog-overview {
   width: 100%;

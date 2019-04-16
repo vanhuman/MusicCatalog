@@ -1,17 +1,16 @@
 @import '../../styles/defines';
 
 .tooltip-component-text {
-    min-width: 80px;
-    background-color: @primary-color;
-    color: #000;
+    min-width: 60px;
+    background-color: #000;
+    color: @primary-color;
     text-align: center;
-    border-radius: 6px;
-    padding: 5px 10px;
+    border-radius: 2px;
+    padding: 3px 5px;
     position: absolute;
     z-index: 5;
     margin-top: -10px;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px;
     display: table;
     opacity: 0;
     .transition(opacity; .2s; ease-out);
@@ -23,7 +22,7 @@
         left: 50%;
         margin-left: -5px;
         border: 5px solid transparent;
-        border-top-color: @primary-color;
+        border-top-color: #000;
         opacity: 0;
         .transition(opacity; .2s; ease-out);
     }
@@ -34,7 +33,7 @@
         right: 50%;
         margin-right: -5px;
         border: 5px solid transparent;
-        border-bottom-color: @primary-color;
+        border-bottom-color: #000;
         opacity: 0;
         .transition(opacity; .2s; ease-out);
     }

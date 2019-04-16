@@ -27,7 +27,8 @@
                     <div class="error" *ngIf="fieldError('artist')">{{ getValidationMessage('artist') }}</div>
                 </div>
                 <div class="all-refs" *ngIf="album">
-                    <input type="checkbox"
+                    <label for="{{id}}-artist-all-refs" class="e-reader">Update all artist references</label>
+                    <input type="checkbox" id="{{id}}-artist-all-refs"
                            formControlName="artist-all-refs"
                            [sharedTooltip]="{title: 'Update all references'}">
                 </div>
@@ -60,7 +61,8 @@
                     <div class="error" *ngIf="fieldError('format')">{{ getValidationMessage('format') }}</div>
                 </div>
                 <div class="all-refs" *ngIf="album">
-                    <input type="checkbox"
+                    <label for="{{id}}-format-all-refs" class="e-reader">Update all format references</label>
+                    <input type="checkbox" id="{{id}}-format-all-refs"
                            formControlName="format-all-refs"
                            [sharedTooltip]="{title: 'Update all references'}">
                 </div>
@@ -82,7 +84,8 @@
                     <div class="error" *ngIf="fieldError('label')">{{ getValidationMessage('label') }}</div>
                 </div>
                 <div class="all-refs" *ngIf="album">
-                    <input type="checkbox"
+                    <label for="{{id}}-label-all-refs" class="e-reader">Update all label references</label>
+                    <input type="checkbox" id="{{id}}-label-all-refs"
                            formControlName="label-all-refs"
                            [sharedTooltip]="{title: 'Update all references'}">
                 </div>
@@ -104,7 +107,8 @@
                     <div class="error" *ngIf="fieldError('genre')">{{ getValidationMessage('genre') }}</div>
                 </div>
                 <div class="all-refs" *ngIf="album">
-                    <input type="checkbox"
+                    <label for="{{id}}-genre-all-refs" class="e-reader">Update all genre references</label>
+                    <input type="checkbox" id="{{id}}-genre-all-refs"
                            formControlName="genre-all-refs"
                            [sharedTooltip]="{title: 'Update all references'}">
                 </div>
@@ -134,7 +138,7 @@
                 <img alt="next" [src]="nextImage" (click)="nextAlbum()" [sharedTooltip]="{title: 'Next'}"/>
             </div>
             <button class="btn-primary" (click)="preSave()" [disabled]="saveDisabled()">Save</button>
-            <button class="btn-secondary" (click)="cancel()">Cancel</button>
+            <button class="btn-secondary" (click)="cancel()">Close</button>
         </div>
     </form>
 </div>

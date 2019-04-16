@@ -107,6 +107,11 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public ngAfterViewInit(): void {
         this.title.nativeElement.focus();
+        const title = this.title.nativeElement.value;
+        this.title.nativeElement.value = '';
+        this.title.nativeElement.value = title;
+        this.title.nativeElement.selectionStart = 0;
+        this.title.nativeElement.selectionEnd = 0;
     }
 
     public preSave(): void {

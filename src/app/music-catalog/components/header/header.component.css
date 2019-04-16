@@ -98,3 +98,43 @@ form.header input.page {
   width: 25px;
   margin-right: 10px;
 }
+form.header div.menu {
+  margin-right: 0;
+  margin-left: -20px;
+  width: 60px;
+  text-align: center;
+}
+form.header div.menu:hover div.menu {
+  opacity: 1;
+  right: 100px;
+  width: 470px;
+}
+form.header div.menu img {
+  position: relative;
+  top: 2px;
+  width: 15px;
+  cursor: pointer;
+}
+form.header div.menu div.menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  padding: 0;
+  margin: 0;
+  width: 40px;
+  text-align: right;
+  -moz-transition-property: opacity, right, width;
+  -webkit-transition-property: opacity, right, width;
+  -o-transition-property: opacity, right, width;
+  transition-property: opacity, right, width;
+  -moz-transition-duration: 0.5s, 0.5s, 0.5s;
+  -webkit-transition-duration: 0.5s, 0.5s, 0.5s;
+  -o-transition-duration: 0.5s, 0.5s, 0.5s;
+  transition-duration: 0.5s, 0.5s, 0.5s;
+  -moz-transition-delay: 0s, 0s, 0s;
+  -webkit-transition-delay: 0s, 0s, 0s;
+  -o-transition-delay: 0s, 0s, 0s;
+  transition-delay: 0s, 0s, 0s;
+  background: #f9f9f9;
+}

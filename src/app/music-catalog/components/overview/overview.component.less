@@ -11,8 +11,8 @@ div.overview-header {
     color: @label-color;
     padding: 5px @padding-overview-header-right 0 @padding-overview-header-left;
     background: @tertiary-color;
-    z-index: 1;
     min-width: calc(@min-width - @padding-overview-header-left - @padding-overview-header-right);
+    z-index: -1;
 
     div {
         display: inline-block;
@@ -68,7 +68,7 @@ div.overview-header {
 }
 .viewport {
     height: 90vh;
-    margin-top: @overview-labels-height + @header-height + 5px;
+    margin-top: @overview-labels-height + @header-height + 6px;
 }
 div.overview-body {
     width: ~'calc(100% - @{padding-overview-body-side} - @{padding-overview-body-side})';
