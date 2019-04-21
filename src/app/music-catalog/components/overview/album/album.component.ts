@@ -5,6 +5,7 @@ import { AlbumPostData } from '../../../models/api-post-data/album-api-post-data
 import { McCommunication } from '../../../models/music-catalog-communication.interface';
 import { Configuration } from '../../../configuration';
 import * as moment from 'moment';
+import { AuthenticationServiceInterface } from '../../../services/authentication.service.interface';
 
 @Component({
     selector: 'music-catalog-album',
@@ -24,6 +25,7 @@ export class AlbumComponent {
     public constructor(
         private albumsFactory: AlbumsFactoryInterface,
         private elementRef: ElementRef,
+        private authenticationService: AuthenticationServiceInterface,
     ) {
     }
 

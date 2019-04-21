@@ -21,6 +21,7 @@ import { AlbumPostData } from '../../models/api-post-data/album-api-post-data.in
 import { AlbumsFactoryInterface } from '../../factories/albums/albums.factory.interface';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { StringUtility } from '../../utilities/string.utility';
+import { Entity, EntityType } from '../../models/entity.interface';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
@@ -32,9 +33,6 @@ interface ChangeAllRefs {
     oldValue: string;
     newValue: string;
 }
-
-type EntityType = 'none' | 'artist' | 'label' | 'genre' | 'format';
-type Entity = ArtistInterface | FormatInterface | LabelInterface | GenreInterface;
 
 @Component({
     selector: 'music-catalog-album-edit',
@@ -55,8 +53,11 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     public entityPopup: EntityType = 'none';
     public previousImage = Configuration.IMAGE_PATH + 'previous.png';
     public nextImage = Configuration.IMAGE_PATH + 'next.png';
+    public loaderImage = Configuration.IMAGE_PATH + 'loader.gif';
     public error = '';
     public showImages = Configuration.SHOW_IMAGES;
+    public waiting = false;
+    public saving = false;
 
     private selectedEntityNumber = -1;
     private _album: AlbumInterface;
@@ -116,6 +117,12 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public preSave(): void {
         if (this.entityPopup === 'none') {
+            this.saving = true;
+            setTimeout(() => {
+                if (this.saving) {
+                    this.waiting = true;
+                }
+            }, 500);
             const changeAllRefs: ChangeAllRefs[] = [];
             if (this.album && this.album.getArtist() && this.albumEditForm.controls['artist-all-refs'].value) {
                 changeAllRefs.push({
@@ -155,6 +162,8 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.save();
                     })
                     .addNoButton(() => {
+                        this.saving = false;
+                        this.waiting = false;
                     });
                 changeAllRefs.forEach((change) => {
                     modal.setMessage(StringUtility.capitalize(change.entity) + ' from ');
@@ -203,6 +212,8 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                         observable = this.albumFactory.postAlbum(albumPostData);
                     }
                     observable.subscribe((album: AlbumInterface) => {
+                        this.waiting = false;
+                        this.saving = false;
                         this.mcCommunication.emit({
                             action: 'saved',
                             item: album,
@@ -346,7 +357,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public saveDisabled(): boolean {
-        return this.entityPopup !== 'none' || !this.albumEditForm.valid;
+        return this.entityPopup !== 'none' || !this.albumEditForm.valid || this.saving;
     }
 
     public getClassForWidth(): string {

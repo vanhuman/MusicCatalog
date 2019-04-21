@@ -10,6 +10,7 @@ import { TooltipConfig } from '../../directives/tooltip/tooltip.directive';
 import { Configuration } from '../../configuration';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { CustomModalComponent } from '../../modals/custom-modal.component';
 
 export type SortField = 'title' | 'year' | 'date_added'
     | 'artist_name' | 'format_name' | 'label_name' | 'genre_description';
@@ -47,6 +48,7 @@ export class OverviewComponent {
     private sortDirection: SortDirection = 'DESC';
     private prevClickedColumn: Column;
     private selectedAlbum: AlbumInterface;
+    private modal: CustomModalComponent;
 
     @Input()
     set mcCommunication(mcCommunication: McCommunication) {
@@ -144,8 +146,9 @@ export class OverviewComponent {
         if (mcCommunication.action === 'deleteAlbum') {
             const album: AlbumInterface = mcCommunication.item;
             if (album) {
-                this.modalService.getModal('modal1')
+                this.modal = this.modalService.getModal('modal1')
                     .setMessage('Are you sure you want to delete this album?')
+                    .doCloseOnYes(false)
                     .newLine()
                     .setMessage(album.getTitle(), ['big'])
                     .setMessage(' by ')
@@ -154,13 +157,13 @@ export class OverviewComponent {
                     .addYesButton(() => {
                         this.albumsFactory.deleteAlbum(mcCommunication.item).subscribe({
                             next: () => {
-                                // this.getAlbums(false);
+                                this.modal.close();
                             },
                         });
                     })
                     .addNoButton(() => {
-                    })
-                    .open();
+                    });
+                this.modal.open();
             }
         }
     }
@@ -173,8 +176,8 @@ export class OverviewComponent {
                 this.showAlbumEdit = false;
                 break;
             case 'saved':
-                this.albumToEdit = null;
-                this.showAlbumEdit = false;
+                // this.albumToEdit = null;
+                // this.showAlbumEdit = false;
                 if (mcCommunication.item && this.albums.indexOf(mcCommunication.item) === -1) {
                     this.albums.unshift(mcCommunication.item);
                     this.getAlbums(false);

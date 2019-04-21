@@ -8,6 +8,7 @@ interface AuthenticateApiResponseSession {
 interface AuthenticateApiResponseUser {
     id: number;
     username: string;
+    admin: boolean;
 }
 
 export interface AuthenticateApiResponse {

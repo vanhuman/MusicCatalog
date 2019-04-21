@@ -38,6 +38,8 @@ import { GenresFactoryState } from './music-catalog/factories/genres/genres.fact
 import { GenresFactoryInterface } from './music-catalog/factories/genres/genres.factory.interface';
 import { GenresFactory } from './music-catalog/factories/genres/genres.factory';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { FactoryHelperInterface } from './music-catalog/factories/factory.helper.interface';
+import { FactoryHelper } from './music-catalog/factories/factory.helper';
 
 @NgModule({
     declarations: [
@@ -77,6 +79,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
         { provide: FormatsFactoryInterface, useClass: FormatsFactory },
         { provide: LabelsFactoryInterface, useClass: LabelsFactory },
         { provide: GenresFactoryInterface, useClass: GenresFactory },
+        { provide: FactoryHelperInterface, useClass: FactoryHelper },
     ],
     bootstrap: [MusicCatalogComponent]
 })

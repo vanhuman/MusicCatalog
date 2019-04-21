@@ -21,11 +21,11 @@
         <button class="btn-primary" (click)="search()">Fetch</button>
         <button class="btn-primary" (click)="clear()">Clear</button>
     </div>
-    <div class="menu">
-        <img [src]="menuIcon">
+    <div class="menu" *ngIf="authenticationService.isAdmin()">
+        <img [src]="menuIcon" alt="">
         <div class="menu">
             <button class="btn-primary" (click)="addAlbum()">New</button>
-            <button class="btn-primary" (click)="cleanRelatedTables()">Clean-up</button>
+            <button class="btn-primary" (click)="removeOphans()">Clean-up</button>
         </div>
     </div>
 </form>

@@ -125,7 +125,20 @@ div.album-edit {
                 }
             }
         }
+        div.icons {
+            display: inline-block;
+            position: relative;
+            left: -14px;
+
+            img {
+                cursor: pointer;
+                width: 15px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
         div.buttons {
+            display: inline-block;
             position: absolute;
             right: 30px;
             bottom: 30px;
@@ -133,17 +146,10 @@ div.album-edit {
             button.btn-primary, button.btn-secondary {
                 height: @button-height-extra;
             }
-            div.icons {
-                display: inline-block;
-                margin-right: 60px;
-                vertical-align: middle;
-
-                img {
-                    cursor: pointer;
-                    width: 15px;
-                    padding-left: 10px;
-                    padding-right: 10px;
-                }
+            img.loader {
+                width: 35px;
+                position: relative;
+                top: 15px;
             }
         }
     }

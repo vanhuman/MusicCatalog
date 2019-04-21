@@ -7,6 +7,10 @@ import { AlbumsFactoryInterface } from '../../factories/albums/albums.factory.in
 import { AlbumsMetaData } from '../../factories/albums/albums.factory.interface';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
 import { Configuration } from '../../configuration';
+import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
+import { FactoryHelperInterface } from '../../factories/factory.helper.interface';
+import { ModalServiceInterface } from '../../services/modal.service.interface';
+import { CustomModalComponent } from '../../modals/custom-modal.component';
 
 @Component({
     selector: 'music-catalog-header',
@@ -28,6 +32,7 @@ export class HeaderComponent implements OnDestroy {
     public menuIcon = Configuration.IMAGE_PATH + 'menu.png';
 
     private metaDataSubscription: Subscription;
+    private modal: CustomModalComponent;
 
     @Input()
     set mcCommunication(mcCommunication: McCommunication) {
@@ -47,6 +52,9 @@ export class HeaderComponent implements OnDestroy {
 
     public constructor(
         private albumsFactory: AlbumsFactoryInterface,
+        private authenticationService: AuthenticationServiceInterface,
+        private factoryHelper: FactoryHelperInterface,
+        private modalService: ModalServiceInterface,
     ) {
         this.metaDataSubscription = this.albumsFactory.getAlbumsMetaData()
             .subscribe((albumsMetaData: AlbumsMetaData) => {
@@ -97,7 +105,38 @@ export class HeaderComponent implements OnDestroy {
         }
     }
 
-    public cleanRelatedTables(): void {
-        //
+    public removeOphans(): void {
+        this.modal = this.modalService.getModal('modal1')
+            .setMessage('Are you sure you want to delete all artists, formats, labels and genres')
+            .setMessage(' that are not referenced on any albums?')
+            .doCloseOnYes(false)
+            .addYesButton(() => {
+                Promise.all([
+                    this.factoryHelper.removeOrphans('artist'),
+                    this.factoryHelper.removeOrphans('format'),
+                    this.factoryHelper.removeOrphans('label'),
+                    this.factoryHelper.removeOrphans('genre'),
+                ]).then(
+                    (responseArray) => {
+                        this.modal.close();
+                        const modal = this.modalService.getModal('modal1')
+                            .setMessage('Clean-up result', ['big'])
+                            .newLine();
+                        responseArray.forEach((response) => {
+                            modal.setMessage('Number of ' + response.entity + 's deleted: ' + response.deleted);
+                            modal.newLine();
+                        });
+                        modal.open();
+                    },
+                    (error) => {
+                        this.modalService.getModal('modal1')
+                            .setErrorMessage(error)
+                            .open();
+                    }
+                );
+            })
+            .addNoButton(() => {
+            });
+        this.modal.open();
     }
 }

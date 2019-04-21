@@ -3,6 +3,7 @@ import { ModalServiceInterface } from '../services/modal.service.interface';
 import { KeyCode, KeyStrokeUtility } from '../utilities/key-stroke.utility';
 import { ErrorApiResponse } from '../models/api-responses/error-api-response.interface';
 import { errorTypeMap } from '../constants/error-type.map';
+import { Configuration } from '../configuration';
 
 export type MessageStyle = '' | 'bold' | 'italic' | 'big' | 'align-center' | 'new-line' | 'alert';
 
@@ -22,12 +23,17 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     public showCloseButton = true;
     public showYesButton = false;
     public showNoButton = false;
+    public yesButtonDisabled = false;
+    public noButtonDisabled = false;
+    public waiting = false;
+    public loaderImage = Configuration.IMAGE_PATH + 'loader.gif';
 
     private element: any;
     private yesFunction: () => void;
     private noFunction: () => void;
     private defaultWidth = 300;
     private width = this.defaultWidth;
+    private closeOnYes = true;
 
     constructor(
         private modalService: ModalServiceInterface,
@@ -119,6 +125,11 @@ export class CustomModalComponent implements OnInit, OnDestroy {
         return this;
     }
 
+    public doCloseOnYes(value: boolean): CustomModalComponent {
+        this.closeOnYes = value;
+        return this;
+    }
+
     public open(): void {
         this.element.style.display = 'block';
         document.body.classList.add('custom-modal-open');
@@ -131,8 +142,17 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     }
 
     public yes(): void {
+        this.yesButtonDisabled = true;
+        this.noButtonDisabled = true;
         this.yesFunction();
-        this.close();
+        if (this.closeOnYes) {
+            this.close();
+        } else {
+            setTimeout(() => {
+                this.waiting = true;
+            }, 500);
+        }
+
     }
 
     public no(): void {
@@ -146,6 +166,10 @@ export class CustomModalComponent implements OnInit, OnDestroy {
         this.showCloseButton = true;
         this.messages = [];
         this.width = this.defaultWidth;
+        this.closeOnYes = true;
+        this.yesButtonDisabled = false;
+        this.noButtonDisabled = false;
+        this.waiting = false;
     }
 
     private enter(): void {

@@ -7,8 +7,11 @@
         </div>
         <div class="buttons">
             <button class="btn-primary" (click)="close()" *ngIf="showCloseButton">Close</button>
-            <button class="btn-primary" (click)="yes()" *ngIf="showYesButton">Yes</button>
-            <button class="btn-secondary" (click)="no()" *ngIf="showNoButton">No</button>
+            <img [src]="loaderImage" *ngIf="waiting" alt="">
+            <button class="btn-primary" [disabled]="yesButtonDisabled"
+                    (click)="yes()" *ngIf="showYesButton">Yes</button>
+            <button class="btn-secondary" [disabled]="noButtonDisabled"
+                    (click)="no()" *ngIf="showNoButton">No</button>
         </div>
     </div>
 </div>

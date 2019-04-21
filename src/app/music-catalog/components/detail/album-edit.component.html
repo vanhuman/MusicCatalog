@@ -131,14 +131,15 @@
                 </div>
             </div>
         </fieldset>
+        <div class="icons" *ngIf="album">
+            <img alt="previous" [src]="previousImage" (click)="previousAlbum()"
+                 [sharedTooltip]="{title: 'Previous'}"/>
+            <img alt="next" [src]="nextImage" (click)="nextAlbum()" [sharedTooltip]="{title: 'Next'}"/>
+        </div>
         <div class="buttons">
-            <div class="icons" *ngIf="album">
-                <img alt="previous" [src]="previousImage" (click)="previousAlbum()"
-                     [sharedTooltip]="{title: 'Previous'}"/>
-                <img alt="next" [src]="nextImage" (click)="nextAlbum()" [sharedTooltip]="{title: 'Next'}"/>
-            </div>
+            <img class="loader" [src]="loaderImage" *ngIf="waiting" alt="">
             <button class="btn-primary" (click)="preSave()" [disabled]="saveDisabled()">Save</button>
-            <button class="btn-secondary" (click)="cancel()">Close</button>
+            <button class="btn-secondary" (click)="cancel()" [disabled]="saving">Close</button>
         </div>
     </form>
 </div>

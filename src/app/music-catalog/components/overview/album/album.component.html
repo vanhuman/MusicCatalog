@@ -5,7 +5,11 @@
     </div>
 </div>
 <div class="title">
-    <span (click)="edit()" [sharedTooltip]="{title: 'Edit', topOffset: -3}">
+    <span *ngIf="authenticationService.isAdmin()" (click)="edit()"
+          [sharedTooltip]="{title: 'Edit', topOffset: -3}" class="edit">
+        {{ album.getTitle() }}
+    </span>
+    <span *ngIf="!authenticationService.isAdmin()">
         {{ album.getTitle() }}
     </span>
 </div>
@@ -31,7 +35,7 @@
 <div class="date-added">
     {{ album.getDateAdded() }}
 </div>
-<div class="icons">
+<div class="icons" *ngIf="authenticationService.isAdmin()">
     <img alt="edit" [src]="editImage" (click)="edit()" [sharedTooltip]="{title: 'Edit', topOffset: -3}"/>
     <img alt="delete" [src]="deleteImage" (click)="delete($event)" [sharedTooltip]="{title: 'Delete', topOffset: -3}"/>
 </div>

@@ -26,5 +26,4 @@ export class Session implements SessionInterface {
     public getUserId(): number {
         return this.userId;
     }
-
 }
