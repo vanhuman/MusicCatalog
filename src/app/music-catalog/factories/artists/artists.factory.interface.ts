@@ -5,7 +5,7 @@ import { ArtistApiResponse } from '../../models/api-responses/artists-api-respon
 import { AlbumInterface } from '../../models/album.model.interface';
 
 export abstract class ArtistsFactoryInterface {
-    public abstract getArtistsFromAPI(page: number): Observable<ArtistInterface[]>;
+    public abstract getArtistsFromAPI(page?: number, forced?: boolean): Observable<ArtistInterface[]>;
     public abstract getArtistFromAPI(artistId: number): Observable<ArtistInterface>;
     public abstract postArtist(artistApiPostData: ArtistApiPostData): Observable<ArtistInterface>;
     public abstract putArtist(artist: ArtistInterface, artistApiPostData: ArtistApiPostData): Observable<ArtistInterface>;

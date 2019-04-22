@@ -11,6 +11,7 @@ import { Configuration } from '../../configuration';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { CustomModalComponent } from '../../modals/custom-modal.component';
+import { FactoryHelperInterface } from '../../factories/factory.helper.interface';
 
 export type SortField = 'title' | 'year' | 'date_added'
     | 'artist_name' | 'format_name' | 'label_name' | 'genre_description';
@@ -64,6 +65,9 @@ export class OverviewComponent {
                     this.albumToEdit = null;
                     this.showAlbumEdit = true;
                     break;
+                case 'removedOrphans':
+                    this.factoryHelper.getRelatedEntities(true);
+                    break;
                 default:
                     //
                     break;
@@ -75,6 +79,7 @@ export class OverviewComponent {
         private albumsFactory: AlbumsFactoryInterface,
         private element: ElementRef,
         private modalService: ModalServiceInterface,
+        private factoryHelper: FactoryHelperInterface,
     ) {
         this.getAlbums();
         this.defineColumns();

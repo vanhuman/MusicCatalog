@@ -26,12 +26,16 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
         //
     }
 
-    public getArtistsFromAPI(page: number): Observable<ArtistInterface[]> {
+    public getArtistsFromAPI(page: number = 0, forced: boolean = false): Observable<ArtistInterface[]> {
         const observable: Subject<ArtistInterface[]> = new Subject<ArtistInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
         params = params.set('page', page.toString());
+        if (forced) {
+            this.state.cache = {};
+            this.state.retrievedAllArtists = false;
+        }
         if (page === 0) {
             if (this.state.retrievedAllArtists) {
                 return of(this.sortArtists(this.state.getCacheAsArray()));

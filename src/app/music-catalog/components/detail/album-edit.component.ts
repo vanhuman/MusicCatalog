@@ -22,6 +22,7 @@ import { AlbumsFactoryInterface } from '../../factories/albums/albums.factory.in
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { StringUtility } from '../../utilities/string.utility';
 import { Entity, EntityType } from '../../models/entity.interface';
+import { FactoryHelperInterface } from '../../factories/factory.helper.interface';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
@@ -89,8 +90,9 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         private formCloseService: FormCloseService,
         private albumFactory: AlbumsFactoryInterface,
         private modalService: ModalServiceInterface,
+        private factoryHelper: FactoryHelperInterface,
     ) {
-        this.getRelatedEntities();
+        this.factoryHelper.getRelatedEntities();
         this.defineAlbumFields();
         this.addFormControls();
     }
@@ -388,13 +390,6 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
             default:
                 return [];
         }
-    }
-
-    private getRelatedEntities(): void {
-        this.artistsFactory.getArtistsFromAPI(0);
-        this.formatsFactory.getFormatsFromAPI(0);
-        this.labelsFactory.getLabelsFromAPI(0);
-        this.genresFactory.getGenresFromAPI(0);
     }
 
     private displayAlbumInForm(): void {

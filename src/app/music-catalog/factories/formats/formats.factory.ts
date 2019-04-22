@@ -26,12 +26,16 @@ export class FormatsFactory implements FormatsFactoryInterface {
         //
     }
 
-    public getFormatsFromAPI(page: number): Observable<FormatInterface[]> {
+    public getFormatsFromAPI(page: number = 0, forced: boolean = false): Observable<FormatInterface[]> {
         const observable: Subject<FormatInterface[]> = new Subject<FormatInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
         params = params.set('page', page.toString());
+        if (forced) {
+            this.state.cache = {};
+            this.state.retrievedAllFormats = false;
+        }
         if (page === 0) {
             if (this.state.retrievedAllFormats) {
                 return of(this.sortFormats(this.state.getCacheAsArray()));

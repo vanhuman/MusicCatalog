@@ -5,7 +5,7 @@ import { LabelApiPostData } from '../../models/api-post-data/label-api-post-data
 import { AlbumInterface } from '../../models/album.model.interface';
 
 export abstract class LabelsFactoryInterface {
-    public abstract getLabelsFromAPI(page: number): Observable<LabelInterface[]>;
+    public abstract getLabelsFromAPI(page?: number, force?: boolean): Observable<LabelInterface[]>;
     public abstract postLabel(labelApiPostData: LabelApiPostData): Observable<LabelInterface>;
     public abstract putLabel(label: LabelInterface, labelApiPostData: LabelApiPostData): Observable<LabelInterface>;
     public abstract searchLabelsInCache(keyword: string): LabelInterface[];

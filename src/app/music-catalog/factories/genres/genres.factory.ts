@@ -26,12 +26,16 @@ export class GenresFactory implements GenresFactoryInterface {
         //
     }
 
-    public getGenresFromAPI(page: number): Observable<GenreInterface[]> {
+    public getGenresFromAPI(page: number = 0, forced: boolean = false): Observable<GenreInterface[]> {
         const observable: Subject<GenreInterface[]> = new Subject<GenreInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
         params = params.set('page', page.toString());
+        if (forced) {
+            this.state.cache = {};
+            this.state.retrievedAllGenres = false;
+        }
         if (page === 0) {
             if (this.state.retrievedAllGenres) {
                 return of(this.sortGenres(this.state.getCacheAsArray()));

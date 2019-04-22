@@ -5,12 +5,20 @@ import { ApiRequestServiceInterface } from '../services/api-request.service.inte
 import { AuthenticationServiceInterface } from '../services/authentication.service.interface';
 import { EntityType } from '../models/entity.interface';
 import { FactoryHelperInterface } from './factory.helper.interface';
+import { ArtistsFactoryInterface } from './artists/artists.factory.interface';
+import { FormatsFactoryInterface } from './formats/formats.factory.interface';
+import { LabelsFactoryInterface } from './labels/labels.factory.interface';
+import { GenresFactoryInterface } from './genres/genres.factory.interface';
 
 @Injectable()
 export class FactoryHelper implements FactoryHelperInterface {
     public constructor(
         private apiRequestService: ApiRequestServiceInterface,
         private authenticationService: AuthenticationServiceInterface,
+        private artistsFactory: ArtistsFactoryInterface,
+        private formatsFactory: FormatsFactoryInterface,
+        private labelsFactory: LabelsFactoryInterface,
+        private genresFactory: GenresFactoryInterface,
     ) {
         //
     }
@@ -32,4 +40,12 @@ export class FactoryHelper implements FactoryHelperInterface {
             });
         });
     }
+
+    public getRelatedEntities(forced: boolean = false): void {
+        this.artistsFactory.getArtistsFromAPI(0, forced);
+        this.formatsFactory.getFormatsFromAPI(0, forced);
+        this.labelsFactory.getLabelsFromAPI(0, forced);
+        this.genresFactory.getGenresFromAPI(0, forced);
+    }
+
 }

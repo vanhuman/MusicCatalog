@@ -127,8 +127,12 @@ export class HeaderComponent implements OnDestroy {
                             modal.newLine();
                         });
                         modal.open();
+                        this.mcCommunicationOut.emit({
+                            action: 'removedOrphans',
+                        });
                     },
                     (error) => {
+                        this.modal.close();
                         this.modalService.getModal('modal1')
                             .setErrorMessage(error)
                             .open();

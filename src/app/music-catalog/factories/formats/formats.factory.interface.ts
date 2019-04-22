@@ -5,7 +5,7 @@ import { FormatApiPostData } from '../../models/api-post-data/format-api-post-da
 import { AlbumInterface } from '../../models/album.model.interface';
 
 export abstract class FormatsFactoryInterface {
-    public abstract getFormatsFromAPI(page: number): Observable<FormatInterface[]>;
+    public abstract getFormatsFromAPI(page?: number, forced?: boolean): Observable<FormatInterface[]>;
     public abstract postFormat(formatApiPostData: FormatApiPostData): Observable<FormatInterface>;
     public abstract putFormat(format: FormatInterface, formatApiPostData: FormatApiPostData): Observable<FormatInterface>;
     public abstract searchFormatsInCache(keyword: string): FormatInterface[];

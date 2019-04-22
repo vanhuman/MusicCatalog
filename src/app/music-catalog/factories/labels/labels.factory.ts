@@ -26,12 +26,16 @@ export class LabelsFactory implements LabelsFactoryInterface {
         //
     }
 
-    public getLabelsFromAPI(page: number): Observable<LabelInterface[]> {
+    public getLabelsFromAPI(page: number = 0, forced: boolean = false): Observable<LabelInterface[]> {
         const observable: Subject<LabelInterface[]> = new Subject<LabelInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
         params = params.set('page', page.toString());
+        if (forced) {
+            this.state.cache = {};
+            this.state.retrievedAllLabels = false;
+        }
         if (page === 0) {
             if (this.state.retrievedAllLabels) {
                 return of(this.sortLabels(this.state.getCacheAsArray()));

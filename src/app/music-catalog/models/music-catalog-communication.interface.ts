@@ -1,7 +1,7 @@
 import { AlbumInterface } from './album.model.interface';
 
 export type McAction = 'search' | 'editAlbum' | 'addAlbum' | 'deleteAlbum' | 'loggedIn' | 'loggedOut'
-    | 'sort' | 'close' | 'previous' | 'next' | 'saved' | 'getImage';
+    | 'sort' | 'close' | 'previous' | 'next' | 'saved' | 'getImage' | 'removedOrphans';
 
 export type McItem = AlbumInterface;
 

@@ -5,7 +5,7 @@ import { GenreApiPostData } from '../../models/api-post-data/genre-api-post-data
 import { AlbumInterface } from '../../models/album.model.interface';
 
 export abstract class GenresFactoryInterface {
-    public abstract getGenresFromAPI(page: number): Observable<GenreInterface[]>;
+    public abstract getGenresFromAPI(page?: number, forced?: boolean): Observable<GenreInterface[]>;
     public abstract postGenre(genreApiPostData: GenreApiPostData): Observable<GenreInterface>;
     public abstract putGenre(genre: GenreInterface, genreApiPostData: GenreApiPostData): Observable<GenreInterface>;
     public abstract searchGenresInCache(keyword: string): GenreInterface[];
