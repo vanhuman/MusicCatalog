@@ -168,6 +168,9 @@ export class OverviewComponent {
                         this.albumsFactory.deleteAlbum(mcCommunication.item).subscribe({
                             next: () => {
                                 this.modal.close();
+                                this.mcCommunicationOut.emit({
+                                    action: 'albumDeleted',
+                                });
                             },
                         });
                     })
@@ -186,9 +189,8 @@ export class OverviewComponent {
                 this.showAlbumEdit = false;
                 break;
             case 'saved':
-                // this.albumToEdit = null;
-                // this.showAlbumEdit = false;
                 if (mcCommunication.item && this.albums.indexOf(mcCommunication.item) === -1) {
+                    this.page = 1;
                     this.albums.unshift(mcCommunication.item);
                     this.getAlbums(false);
                 }

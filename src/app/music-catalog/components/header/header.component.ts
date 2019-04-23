@@ -43,6 +43,9 @@ export class HeaderComponent implements OnDestroy {
                         this.headerForm.controls['page'].setValue(mcCommunication.page);
                     }
                     break;
+                case 'albumDeleted':
+                    this.totalNumberOfAlbums = this.totalNumberOfAlbums - 1;
+                    break;
                 default:
                     //
                     break;
