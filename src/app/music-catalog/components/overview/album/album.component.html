@@ -6,7 +6,7 @@
 </div>
 <div class="title">
     <span *ngIf="authenticationService.isAdmin()" (click)="edit()"
-          [sharedTooltip]="{title: 'Edit', topOffset: -3}" class="edit">
+          [sharedTooltip]="{title: 'Edit album', topOffset: -3}" class="edit">
         {{ album.getTitle() }}
     </span>
     <span *ngIf="!authenticationService.isAdmin()">

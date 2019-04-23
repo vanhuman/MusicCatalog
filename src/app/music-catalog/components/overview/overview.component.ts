@@ -93,7 +93,7 @@ export class OverviewComponent {
     }
 
     public scrollUp(): void {
-        this.scrollViewport.scrollToIndex(0);
+        this.scrollViewport.scrollToIndex(0, 'smooth');
     }
 
     public sortOn(clickedColumn: Column): void {
