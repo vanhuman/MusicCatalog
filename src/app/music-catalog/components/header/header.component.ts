@@ -52,9 +52,9 @@ export class HeaderComponent implements OnDestroy {
 
     public constructor(
         private albumsFactory: AlbumsFactoryInterface,
-        private authenticationService: AuthenticationServiceInterface,
         private factoryHelper: FactoryHelperInterface,
         private modalService: ModalServiceInterface,
+        private authenticationService: AuthenticationServiceInterface,
     ) {
         this.metaDataSubscription = this.albumsFactory.getAlbumsMetaData()
             .subscribe((albumsMetaData: AlbumsMetaData) => {
@@ -62,6 +62,10 @@ export class HeaderComponent implements OnDestroy {
                 this.pageSize = albumsMetaData.pageSize;
                 this.totalNumberOfPages = Math.ceil(this.totalNumberOfAlbums / this.pageSize);
             });
+    }
+
+    public isAdmin(): boolean {
+        return this.authenticationService.isAdmin();
     }
 
     public getTotalAlbumsText(): string {

@@ -19,6 +19,7 @@ export class AlbumComponent {
     public deleteImage = Configuration.IMAGE_PATH + 'delete.svg';
     public showImages = Configuration.SHOW_IMAGES;
     public imageThumbDefault = Configuration.IMAGE_PATH + 'transparant.png';
+    public isAdmin = false;
 
     private _album: AlbumInterface;
 
@@ -27,6 +28,7 @@ export class AlbumComponent {
         private elementRef: ElementRef,
         private authenticationService: AuthenticationServiceInterface,
     ) {
+        this.isAdmin = this.authenticationService.isAdmin();
     }
 
     @Input()

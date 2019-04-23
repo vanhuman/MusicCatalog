@@ -21,7 +21,7 @@
         <button class="btn-primary" (click)="search()">Fetch</button>
         <button class="btn-primary" (click)="clear()">Clear</button>
     </div>
-    <div class="menu" *ngIf="authenticationService.isAdmin()">
+    <div class="menu" *ngIf="isAdmin()">
         <img [src]="menuIcon" alt="">
         <div class="menu">
             <button class="btn-primary" (click)="addAlbum()">New</button>

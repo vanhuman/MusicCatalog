@@ -41,6 +41,7 @@ export class OverviewComponent {
     public albumToEdit: AlbumInterface;
     public showAlbumEdit = false;
     public outputToAlbumRow: McCommunication;
+    public itemSize = 27;
 
     private loading = false;
     private page = 1;
@@ -85,15 +86,19 @@ export class OverviewComponent {
         this.defineColumns();
     }
 
+    public getPaddingBottom(): number {
+        return window.innerHeight - (this.albums.length * this.itemSize) > 0 ? 300 : 20;
+    }
+
     public onScroll() {
-        if (!this.loading && this.scrollViewport.measureScrollOffset('bottom') < 100) {
+        if (!this.loading && this.scrollViewport.measureScrollOffset('bottom') < 200) {
             this.page = this.page + 1;
             this.getAlbums();
         }
     }
 
-    public scrollUp(): void {
-        this.scrollViewport.scrollToIndex(0, 'smooth');
+    public scrollUp(behavior: ScrollBehavior = 'instant'): void {
+        this.scrollViewport.scrollToIndex(0, behavior);
     }
 
     public sortOn(clickedColumn: Column): void {
