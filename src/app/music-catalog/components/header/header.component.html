@@ -22,7 +22,7 @@
     </div>
     <div class="menu" *ngIf="isAdmin()">
         <img [src]="menuIcon" alt="">
-        <div class="menu">
+        <div class="extra-buttons">
             <button class="btn-primary" (click)="addAlbum()">New</button>
             <button class="btn-primary" (click)="removeOphans()">Clean-up</button>
         </div>
