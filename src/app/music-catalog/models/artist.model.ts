@@ -28,8 +28,8 @@ export class Artist implements ArtistInterface {
         const nameArray = this.name.split(',');
         let name = this.name;
         if (nameArray.length > 1) {
-            name = nameArray[1].trim() + ' ' + nameArray[0].trim();
+            name = nameArray[1].trim() + ' ' + nameArray[0];
         }
-        return name;
+        return name.trim();
     }
 }

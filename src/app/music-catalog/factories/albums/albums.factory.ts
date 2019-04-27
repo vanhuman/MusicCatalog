@@ -88,7 +88,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
 
     public getImagesFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>> {
         return new Promise<Map<ImageSize, string>>((resolve, reject) => {
-            const artistName = this.cleanUp(album.getArtist().getFullName());
+            const artistName = album.getArtist().getFullName();
             const title = this.cleanUp(album.getTitle(), album.getArtist().getFullName());
             let params = new HttpParams();
             params = params.set('method', 'album.getinfo');
@@ -236,22 +236,10 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
 
     private cleanUp(value: string, artistName: string = null): string {
         let returnValue = value;
-
-        // remove brackets
-        if (value.indexOf('(') !== -1 && value.indexOf(')') !== -1) {
-            const start = value.indexOf('(');
-            const end = value.indexOf(')');
-            returnValue = value.substring(0, start) + value.substring(end + 1);
-        }
-
         // replace s/t with artist name
-        if (artistName && value.trim() === 's/t') {
+        if (value.trim() === 's/t') {
             returnValue = artistName;
         }
-
-        // remove entries separated by /
-        returnValue = returnValue.split('/')[0];
-
         return returnValue.trim();
     }
 

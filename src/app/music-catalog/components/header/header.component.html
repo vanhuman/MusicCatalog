@@ -16,7 +16,6 @@
         <input type="text" id="{{id}}-keywords"
                placeholder="Enter keywords"
                formControlName="keywords"
-               (keyup)="trackEnter($event)"
         >
         <button class="btn-primary" (click)="search()">Fetch</button>
         <button class="btn-primary" (click)="clear()">Clear</button>

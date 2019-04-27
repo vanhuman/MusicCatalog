@@ -33,6 +33,7 @@ export class HeaderComponent implements OnDestroy {
 
     private metaDataSubscription: Subscription;
     private modal: CustomModalComponent;
+    private prevKeywords = '';
 
     @Input()
     set mcCommunication(mcCommunication: McCommunication) {
@@ -88,8 +89,12 @@ export class HeaderComponent implements OnDestroy {
     }
 
     public search(): void {
-        const page = this.headerForm.controls['page'].value;
         const keywords = this.headerForm.controls['keywords'].value;
+        if (this.prevKeywords !== keywords) {
+            this.headerForm.controls['page'].setValue(1);
+            this.prevKeywords = keywords;
+        }
+        const page = this.headerForm.controls['page'].value;
         if (NumberUtility.isInt(page)) {
             this.mcCommunicationOut.emit({
                 action: 'search',
@@ -103,13 +108,6 @@ export class HeaderComponent implements OnDestroy {
         this.headerForm.controls['page'].setValue(1);
         this.headerForm.controls['keywords'].setValue('');
         this.search();
-    }
-
-    public trackEnter(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
-            event.stopPropagation();
-            this.search();
-        }
     }
 
     public removeOphans(): void {
