@@ -4,12 +4,12 @@
             (mcCommunicationOut)="processInputFromHeader($event)">
     </music-catalog-header>
     <music-catalog-overview
-            *ngIf="loggedIn"
+            *ngIf="validSession"
             [mcCommunication]="outputToOverview"
             (mcCommunicationOut)="processInputFromOverview($event)">
     </music-catalog-overview>
     <music-catalog-login
-            *ngIf="!loggedIn"
+            *ngIf="showLogin"
             (loggedIn)="processInputFromLogin($event)">
     </music-catalog-login>
     <custom-modal [id]="'modal1'"></custom-modal>

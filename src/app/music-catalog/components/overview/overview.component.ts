@@ -69,6 +69,9 @@ export class OverviewComponent {
                 case 'removedOrphans':
                     this.factoryHelper.getRelatedEntities(true);
                     break;
+                case 'loggedIn':
+                    this.outputToAlbumRow = mcCommunication;
+                    break;
                 default:
                     //
                     break;

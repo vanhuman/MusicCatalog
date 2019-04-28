@@ -43,8 +43,19 @@ export class AlbumComponent {
 
     @Input()
     set mcCommunication(mcCommunication: McCommunication) {
-        if (mcCommunication && mcCommunication.action === 'getImage' && mcCommunication.item === this.album) {
-            this.getImages(this.album, true);
+        if (mcCommunication) {
+            switch (mcCommunication.action) {
+                case 'getImage':
+                    if (mcCommunication.item === this.album) {
+                        this.getImages(this.album, true);
+                    }
+                    break;
+                case 'loggedIn':
+                    this.isAdmin = this.authenticationService.isAdmin();
+                    break;
+                default:
+                //
+            }
         }
     }
 

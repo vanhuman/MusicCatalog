@@ -102,38 +102,41 @@ form.header div.menu {
   margin-right: 0;
   width: 30px;
   text-align: center;
+  cursor: pointer;
 }
-form.header div.menu:hover div.menu {
+form.header div.menu:hover div.extra-buttons {
   opacity: 1;
-  right: 90px;
+  right: 60px;
   width: 470px;
+  padding-right: 30px;
+  margin-right: 0;
 }
 form.header div.menu img {
   position: relative;
   top: 2px;
   width: 15px;
-  cursor: pointer;
 }
-form.header div.menu div.menu {
+form.header div.menu div.extra-buttons {
   position: absolute;
   top: 0;
   right: 0;
   opacity: 0;
+  width: 40px;
   padding: 0;
   margin: 0;
-  width: 40px;
+  margin-right: 30px;
   text-align: right;
-  -moz-transition-property: opacity, right, width;
-  -webkit-transition-property: opacity, right, width;
-  -o-transition-property: opacity, right, width;
-  transition-property: opacity, right, width;
-  -moz-transition-duration: 0.5s, 0.5s, 0.5s;
-  -webkit-transition-duration: 0.5s, 0.5s, 0.5s;
-  -o-transition-duration: 0.5s, 0.5s, 0.5s;
-  transition-duration: 0.5s, 0.5s, 0.5s;
-  -moz-transition-delay: 0s, 0s, 0s;
-  -webkit-transition-delay: 0s, 0s, 0s;
-  -o-transition-delay: 0s, 0s, 0s;
-  transition-delay: 0s, 0s, 0s;
+  -moz-transition-property: opacity, right, width, padding-right, margin-right;
+  -webkit-transition-property: opacity, right, width, padding-right, margin-right;
+  -o-transition-property: opacity, right, width, padding-right, margin-right;
+  transition-property: opacity, right, width, padding-right, margin-right;
+  -moz-transition-duration: 0.5s, 0.5s, 0.5s, 0s, 0s;
+  -webkit-transition-duration: 0.5s, 0.5s, 0.5s, 0s, 0s;
+  -o-transition-duration: 0.5s, 0.5s, 0.5s, 0s, 0s;
+  transition-duration: 0.5s, 0.5s, 0.5s, 0s, 0s;
+  -moz-transition-delay: 0s, 0s, 0s, 0.5s, 0.5s;
+  -webkit-transition-delay: 0s, 0s, 0s, 0.5s, 0.5s;
+  -o-transition-delay: 0s, 0s, 0s, 0.5s, 0.5s;
+  transition-delay: 0s, 0s, 0s, 0.5s, 0.5s;
   background: #f9f9f9;
 }

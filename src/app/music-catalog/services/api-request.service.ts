@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 
 import { ApiRequestServiceInterface } from './api-request.service.interface';
 import { Configuration } from '../configuration';
-import { ErrorApiResponse, isErrorApiResponse } from '../models/api-responses/error-api-response.interface';
+import { isErrorApiResponse } from '../models/api-responses/error-api-response.interface';
 import { errorTypeMap } from '../constants/error-type.map';
 
 interface HttpQueueItem {
@@ -117,7 +117,7 @@ export class ApiRequestService implements ApiRequestServiceInterface {
 
     private handleError(errorResponse: HttpErrorResponse) {
         console.log(errorResponse);
-        if (errorResponse.status === 401) { // authentication error
+        if (errorResponse.status === 401) { // authorisation error
             this.authorisationError.next(true);
         }
         // if no custom error message available, use the http message

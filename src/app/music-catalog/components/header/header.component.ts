@@ -68,6 +68,12 @@ export class HeaderComponent implements OnDestroy {
             });
     }
 
+    public login(): void {
+        this.mcCommunicationOut.emit({
+            action: 'login',
+        });
+    }
+
     public isAdmin(): boolean {
         return this.authenticationService.isAdmin();
     }

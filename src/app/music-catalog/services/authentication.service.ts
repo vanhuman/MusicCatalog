@@ -17,7 +17,7 @@ export interface AuthenticationResult {
 
 @Injectable()
 export class AuthenticationService implements AuthenticationServiceInterface, OnDestroy {
-    private isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    private validSession: BehaviorSubject<boolean> = new BehaviorSubject(false);
     private session: SessionInterface;
     private user: UserInterface;
     private authorisationErrorSubscription: Subscription;
@@ -29,8 +29,7 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
         this.authorisationErrorSubscription = this.apiRequestService.monitorAuthorisationError()
             .subscribe((autorisationError) => {
                 if (autorisationError) {
-                    this.isLoggedIn.next(false);
-                    this.removeSession();
+                    this.validSession.next(false);
                 }
             });
     }
@@ -39,8 +38,8 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
         this.authorisationErrorSubscription.unsubscribe();
     }
 
-    public login(username: string, password: string): Observable<AuthenticationResult> {
-        if (this.session) {
+    public login(username: string, password: string, forced: boolean = false): Observable<AuthenticationResult> {
+        if (this.session && !forced) {
             return of({succes: true});
         }
         return this.authenticate(username, password);
@@ -69,12 +68,11 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
                     response.body.user.username,
                     response.body.user.admin,
                 );
-                this.isLoggedIn.next(true);
+                this.validSession.next(true);
                 observable.next({succes: true});
             },
             error: (error: HttpErrorResponse) => {
-                this.removeSession();
-                this.isLoggedIn.next(false);
+                this.validSession.next(false);
                 observable.next({
                     succes: false,
                     error: error.error.message,
@@ -84,8 +82,8 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
         return observable;
     }
 
-    public monitorLogin(): Observable<boolean> {
-        return this.isLoggedIn;
+    public monitorValidSession(): Observable<boolean> {
+        return this.validSession;
     }
 
     public getToken(): string {
@@ -94,9 +92,5 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
 
     public isAdmin(): boolean {
         return this.user ? this.user.isAdmin() : false;
-    }
-
-    private removeSession(): void {
-        delete this.session;
     }
 }

@@ -54,12 +54,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.authenticationSubscription.unsubscribe();
+        if (this.authenticationSubscription) {
+            this.authenticationSubscription.unsubscribe();
+        }
         KeyStrokeUtility.removeListener();
     }
 
     public cancel(): void {
-        this.error = 'Please login to continue.';
+        this.loggedIn.emit(false);
     }
 
     public login(): void {
@@ -67,7 +69,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.loggingIn = true;
             const username = this.loginForm.controls['username'].value;
             const password = this.loginForm.controls['password'].value;
-            this.authenticationSubscription = this.authenticationService.login(username, password)
+            this.authenticationSubscription = this.authenticationService.login(username, password, true)
                 .subscribe((loginResult: AuthenticationResult) => {
                     if (loginResult.succes) {
                         this.loggedIn.emit(true);

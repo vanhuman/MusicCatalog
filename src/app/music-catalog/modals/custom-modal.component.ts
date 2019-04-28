@@ -35,6 +35,7 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     private width = this.defaultWidth;
     private closeOnYes = true;
     private startedWaiting = false;
+    private modalIsOpen = false;
 
     constructor(
         private modalService: ModalServiceInterface,
@@ -132,11 +133,13 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     }
 
     public open(): void {
+        this.modalIsOpen = true;
         this.element.style.display = 'block';
         document.body.classList.add('custom-modal-open');
     }
 
     public close(): void {
+        this.modalIsOpen = false;
         this.element.style.display = 'none';
         document.body.classList.remove('custom-modal-open');
         this.reset();
@@ -176,6 +179,10 @@ export class CustomModalComponent implements OnInit, OnDestroy {
         this.noButtonDisabled = false;
         this.waiting = false;
         this.startedWaiting = false;
+    }
+
+    public isOpen(): boolean {
+        return this.modalIsOpen;
     }
 
     private enter(): void {

@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs';
 
 import { McCommunication } from './models/music-catalog-communication.interface';
 import { AuthenticationServiceInterface } from './services/authentication.service.interface';
+import { AuthenticationResult } from './services/authentication.service';
+import { skip, take } from 'rxjs/operators';
 
 @Component({
     selector: 'music-catalog',
@@ -10,33 +12,62 @@ import { AuthenticationServiceInterface } from './services/authentication.servic
     styleUrls: ['./music-catalog.component.css'],
 })
 export class MusicCatalogComponent implements OnDestroy {
-    public loggedIn = false;
+    public validSession = false;
+    public showLogin = false;
     public outputToOverview: McCommunication;
     public outputToHeader: McCommunication;
-    private authenticationSubscription: Subscription;
+    private authenticationMonitorSubscription: Subscription;
 
     public constructor(
         private authenticationService: AuthenticationServiceInterface,
     ) {
-        this.authenticationSubscription = this.authenticationService.monitorLogin()
-            .subscribe((loggedIn) => {
-                this.loggedIn = loggedIn;
-            });
+        this.getSession();
     }
 
     public ngOnDestroy(): void {
-        this.authenticationSubscription.unsubscribe();
+        if (this.authenticationMonitorSubscription) {
+            this.authenticationMonitorSubscription.unsubscribe();
+        }
     }
 
     public processInputFromHeader(mcCommunication: McCommunication): void {
+        if (mcCommunication && mcCommunication.action === 'login') {
+            this.showLogin = true;
+        }
         this.outputToOverview = mcCommunication;
     }
 
     public processInputFromLogin(loggedIn: boolean): void {
-        this.loggedIn = loggedIn;
+        this.showLogin = false;
+        if (loggedIn) {
+            this.outputToOverview = {
+                action: 'loggedIn',
+            };
+        }
     }
 
     public processInputFromOverview(mcCommunication: McCommunication): void {
         this.outputToHeader = mcCommunication;
+    }
+
+    private getSession(): void {
+        this.authenticationService.login('dummy', 'dummylogin', true)
+            .pipe(take(1))
+            .subscribe((loginResult: AuthenticationResult) => {
+                if (loginResult.succes) {
+                    this.outputToOverview = {
+                        action: 'loggedIn',
+                    };
+                    this.validSession = true;
+                    this.authenticationMonitorSubscription = this.authenticationService.monitorValidSession()
+                        .pipe(skip(1))
+                        .subscribe((validSession) => {
+                            if (!validSession) {
+                                this.authenticationMonitorSubscription.unsubscribe();
+                                this.getSession();
+                            }
+                        });
+                }
+            });
     }
 }

@@ -77,10 +77,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.next(albums);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHandling(error, observable);
             }
         });
         return observable;
@@ -142,10 +139,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.complete();
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHandling(error, observable);
             }
         });
         return observable;
@@ -167,10 +161,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.complete();
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHandling(error, observable);
             }
         });
         return observable;
@@ -190,13 +181,26 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.complete();
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error(false);
+                this.errorHandling(error, observable);
             }
         });
         return observable;
+    }
+
+    private errorHandling(error: HttpErrorResponse, observable: Subject<any>): void {
+        if (error.status === 401) {
+            if (this.authenticationService.isAdmin()) {
+                error.error.message = 'Your session has expired. You are now in a read-only session.';
+            } else {
+                error.error.message = 'Your session was expired. But do not worry: we have retrieved a new session for you.';
+            }
+        }
+        if (!this.modalService.getModal('modal1').isOpen()) {
+            this.modalService.getModal('modal1')
+                .setErrorMessage(error.error)
+                .open();
+            observable.error(false);
+        }
     }
 
     private getHttpParams(albumPostData: AlbumPostData): HttpParams {

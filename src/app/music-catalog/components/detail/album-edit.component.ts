@@ -213,14 +213,23 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                     } else {
                         observable = this.albumFactory.postAlbum(albumPostData);
                     }
-                    observable.subscribe((album: AlbumInterface) => {
-                        this.waiting = false;
-                        this.saving = false;
-                        this.mcCommunication.emit({
-                            action: 'saved',
-                            item: album,
-                        });
-                        this.formCloseService.reset();
+                    observable.subscribe({
+                        next: (album: AlbumInterface) => {
+                            this.waiting = false;
+                            this.saving = false;
+                            this.mcCommunication.emit({
+                                action: 'saved',
+                                item: album,
+                            });
+                            this.formCloseService.reset();
+                        },
+                        error: () => {
+                            this.waiting = false;
+                            this.saving = false;
+                            this.mcCommunication.emit({
+                                action: 'close',
+                            });
+                        },
                     });
                 }
             );
