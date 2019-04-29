@@ -195,12 +195,13 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 error.error.message = 'Your session was expired. But do not worry: we have retrieved a new session for you.';
             }
         }
-        if (!this.modalService.getModal('modal1').isOpen()) {
-            this.modalService.getModal('modal1')
-                .setErrorMessage(error.error)
-                .open();
-            observable.error(false);
+        if (this.modalService.getModal('modal1').isOpen()) {
+            this.modalService.getModal('modal1').close();
         }
+        this.modalService.getModal('modal1')
+            .setErrorMessage(error.error)
+            .open();
+        observable.error(false);
     }
 
     private getHttpParams(albumPostData: AlbumPostData): HttpParams {

@@ -175,6 +175,9 @@ export class OverviewComponent {
                                     action: 'albumDeleted',
                                 });
                             },
+                            error: () => {
+                                //
+                            }
                         });
                     })
                     .addNoButton(() => {
