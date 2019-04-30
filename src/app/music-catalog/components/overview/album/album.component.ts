@@ -85,7 +85,7 @@ export class AlbumComponent {
     }
 
     private getImages(album: AlbumInterface, forced: boolean = false): void {
-        if (!album.getImageThumb() || !album.getImage()) {
+        if (!album.getImageThumb() || !album.getImage() || forced) {
             album.setImageThumb(this.imageThumbDefault);
             const fetchInterval = new Date();
             fetchInterval.setDate(fetchInterval.getDate() - Configuration.IMAGE_FETCH_INTERVAL);
@@ -97,14 +97,22 @@ export class AlbumComponent {
                             && imageMap.has('extralarge') && imageMap.get('extralarge')) {
                             const imageThumb = imageMap.get('small');
                             const imageExtralarge = imageMap.get('extralarge');
-                            // save the image locations in the database
                             albumPostData = {
                                 image_thumb: imageThumb,
                                 image: imageExtralarge,
                                 image_fetch_timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                             };
-                            this.albumsFactory.putAlbum(albumPostData, album);
-                        } else {
+                            if (this.authenticationService.isAdmin()) {
+                                // save the image locations in the database
+                                this.albumsFactory.putAlbum(albumPostData, album);
+                            } else {
+                                // only update the model if we are not admin
+                                this.albumsFactory.updateAlbumImages(album, {
+                                    image: albumPostData.image,
+                                    image_thumb: albumPostData.image_thumb,
+                                });
+                            }
+                        } else if (this.authenticationService.isAdmin()) {
                             // save the image fetch timestamp in the database
                             albumPostData = {
                                 image_fetch_timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),

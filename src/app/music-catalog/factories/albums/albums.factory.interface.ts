@@ -26,6 +26,7 @@ export abstract class AlbumsFactoryInterface {
     public abstract postAlbum(albumPostData: AlbumPostData): Observable<AlbumInterface>;
     public abstract deleteAlbum(album: AlbumInterface): Observable<boolean>;
     public abstract clearThrottleQueue(): void;
+    public abstract updateAlbumImages(album: AlbumInterface, albumImagesApiResponse: AlbumPostData): void;
 }
 
 

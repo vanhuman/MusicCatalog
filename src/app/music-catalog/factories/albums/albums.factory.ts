@@ -187,6 +187,11 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         return observable;
     }
 
+    public updateAlbumImages(album: AlbumInterface, albumImagesPostData: AlbumPostData): void {
+        album.setImageThumb(albumImagesPostData.image_thumb);
+        album.setImage(albumImagesPostData.image);
+    }
+
     private errorHandling(error: HttpErrorResponse, observable: Subject<any>): void {
         if (error.status === 401) {
             if (this.authenticationService.isAdmin()) {
