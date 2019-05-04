@@ -29,7 +29,7 @@ export class HeaderComponent implements OnDestroy {
         keywords: new FormControl(''),
     });
     public id = 'music-catalog-header';
-    public menuIcon = Configuration.IMAGE_PATH + 'menu.png';
+    public menuIcon = Configuration.ICONS_PATH + 'menu.png';
 
     private metaDataSubscription: Subscription;
     private modal: CustomModalComponent;

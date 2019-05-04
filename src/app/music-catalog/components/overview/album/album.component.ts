@@ -15,10 +15,10 @@ import { AuthenticationServiceInterface } from '../../../services/authentication
 export class AlbumComponent {
     @Output() mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
 
-    public editImage = Configuration.IMAGE_PATH + 'edit.svg';
-    public deleteImage = Configuration.IMAGE_PATH + 'delete.svg';
+    public editImage = Configuration.ICONS_PATH + 'edit.svg';
+    public deleteImage = Configuration.ICONS_PATH + 'delete.svg';
     public showImages = Configuration.SHOW_IMAGES;
-    public imageThumbDefault = Configuration.IMAGE_PATH + 'transparant.png';
+    public imageThumbDefault = Configuration.ICONS_PATH + 'transparant.png';
     public isAdmin = false;
 
     private _album: AlbumInterface;
@@ -86,7 +86,9 @@ export class AlbumComponent {
 
     private getImages(album: AlbumInterface, forced: boolean = false): void {
         if (!album.getImageThumb() || !album.getImage() || forced) {
-            album.setImageThumb(this.imageThumbDefault);
+            if (!album.getImageThumb()) {
+                album.setImageThumb(this.imageThumbDefault);
+            }
             const fetchInterval = new Date();
             fetchInterval.setDate(fetchInterval.getDate() - Configuration.IMAGE_FETCH_INTERVAL);
             if (forced || !album.getImageFetchTimestamp() || album.getImageFetchTimestamp() < fetchInterval) {

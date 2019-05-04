@@ -19,7 +19,9 @@ export interface AlbumApiResponse {
     genre: GenreApiResponse;
     id: number;
     image_thumb: string;
+    image_thumb_local: string;
     image: string;
+    image_local: string;
     image_fetch_timestamp: string;
     label: LabelApiResponse;
     notes: string;

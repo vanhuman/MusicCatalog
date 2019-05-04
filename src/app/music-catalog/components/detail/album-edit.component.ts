@@ -52,9 +52,9 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     public formats: FormatInterface[] = [];
     public genres: GenreInterface[] = [];
     public entityPopup: EntityType = 'none';
-    public previousImage = Configuration.IMAGE_PATH + 'previous.png';
-    public nextImage = Configuration.IMAGE_PATH + 'next.png';
-    public loaderImage = Configuration.IMAGE_PATH + 'loader.gif';
+    public previousImage = Configuration.ICONS_PATH + 'previous.png';
+    public nextImage = Configuration.ICONS_PATH + 'next.png';
+    public loaderImage = Configuration.ICONS_PATH + 'loader.gif';
     public error = '';
     public showImages = Configuration.SHOW_IMAGES;
     public waiting = false;

@@ -223,8 +223,14 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         if (albumPostData.image_thumb) {
             body = body.set('image_thumb', albumPostData.image_thumb);
         }
+        if (albumPostData.image_thumb_local) {
+            body = body.set('image_thumb_local', albumPostData.image_thumb_local);
+        }
         if (albumPostData.image) {
             body = body.set('image', albumPostData.image);
+        }
+        if (albumPostData.image_local) {
+            body = body.set('image_local', albumPostData.image_local);
         }
         if (albumPostData.image_fetch_timestamp) {
             body = body.set('image_fetch_timestamp', albumPostData.image_fetch_timestamp);
@@ -277,7 +283,9 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
             DateUtility.parseDate(albumApiResponse.date_added),
             albumApiResponse.notes,
             albumApiResponse.image_thumb,
+            albumApiResponse.image_thumb_local,
             albumApiResponse.image,
+            albumApiResponse.image_local,
             DateUtility.parseDate(albumApiResponse.image_fetch_timestamp),
             artist,
             format,
@@ -292,8 +300,10 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         album.setDateAdded(DateUtility.parseDate(albumApiResponse.date_added));
         album.setNotes(albumApiResponse.notes);
         album.setImageThumb(albumApiResponse.image_thumb);
-        album.setImageFetchTimestamp(DateUtility.parseDate(albumApiResponse.image_fetch_timestamp));
+        album.setImageThumbLocal(albumApiResponse.image_thumb_local);
         album.setImage(albumApiResponse.image);
+        album.setImageLocal(albumApiResponse.image_local);
+        album.setImageFetchTimestamp(DateUtility.parseDate(albumApiResponse.image_fetch_timestamp));
         if (albumApiResponse.artist) {
             album.setArtist(this.artistsFactory.updateAndGetArtist(albumApiResponse.artist));
         }

@@ -4,6 +4,7 @@ import { ArtistInterface } from './artist.model.interface';
 import { FormatInterface } from './format.model.interface';
 import { LabelInterface } from './label.model.interface';
 import { GenreInterface } from './genre.model.interface';
+import { Configuration } from '../configuration';
 
 export class Album implements AlbumInterface {
     private deleted = false;
@@ -15,7 +16,9 @@ export class Album implements AlbumInterface {
         private dateAdded: Date,
         private notes: string,
         private imageThumb: string,
+        private imageThumbLocal: string,
         private image: string,
+        private imageLocal: string,
         private imageFetchTimestamp: Date,
         private artist: ArtistInterface,
         private format: FormatInterface,
@@ -62,19 +65,35 @@ export class Album implements AlbumInterface {
     }
 
     public getImageThumb(): string {
-        return this.imageThumb;
+        return this.imageThumbLocal ? Configuration.IMAGE_THUMB_PATH + this.imageThumbLocal : this.imageThumb;
     }
 
     public setImageThumb(image: string): void {
         this.imageThumb = image;
     }
 
+    public getImageThumbLocal(): string {
+        return this.imageThumbLocal;
+    }
+
+    public setImageThumbLocal(image: string): void {
+        this.imageThumbLocal = image;
+    }
+
     public getImage(): string {
-        return this.image;
+        return this.imageLocal ? Configuration.IMAGE_FULL_PATH + this.imageLocal : this.image;
     }
 
     public setImage(image: string): void {
         this.image = image;
+    }
+
+    public getImageLocal(): string {
+        return this.imageLocal;
+    }
+
+    public setImageLocal(image: string): void {
+        this.imageLocal = image;
     }
 
     public getArtist(): ArtistInterface {

@@ -26,7 +26,7 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     public yesButtonDisabled = false;
     public noButtonDisabled = false;
     public waiting = false;
-    public loaderImage = Configuration.IMAGE_PATH + 'loader.gif';
+    public loaderImage = Configuration.ICONS_PATH + 'loader.gif';
 
     private element: any;
     private yesFunction: () => void;

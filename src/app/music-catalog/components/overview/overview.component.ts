@@ -36,7 +36,7 @@ export class OverviewComponent {
 
     public albums: AlbumInterface[] = [];
     public columns: Column[] = [];
-    public arrowImage = Configuration.IMAGE_PATH + 'arrow-left.png';
+    public arrowImage = Configuration.ICONS_PATH + 'arrow-left.png';
     public showImages = Configuration.SHOW_IMAGES;
     public albumToEdit: AlbumInterface;
     public showAlbumEdit = false;
