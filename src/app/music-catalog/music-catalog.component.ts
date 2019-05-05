@@ -31,8 +31,17 @@ export class MusicCatalogComponent implements OnDestroy {
     }
 
     public processInputFromHeader(mcCommunication: McCommunication): void {
-        if (mcCommunication && mcCommunication.action === 'login') {
-            this.showLogin = true;
+        if (mcCommunication) {
+            switch (mcCommunication.action) {
+                case 'login':
+                    this.showLogin = true;
+                    break;
+                case 'logout':
+                    this.getSession();
+                    break;
+                default:
+                //
+            }
         }
         this.outputToOverview = mcCommunication;
     }
@@ -51,6 +60,9 @@ export class MusicCatalogComponent implements OnDestroy {
     }
 
     private getSession(): void {
+        if (this.authenticationMonitorSubscription) {
+            this.authenticationMonitorSubscription.unsubscribe();
+        }
         this.authenticationService.login('dummy', 'dummylogin', true)
             .pipe(take(1))
             .subscribe((loginResult: AuthenticationResult) => {

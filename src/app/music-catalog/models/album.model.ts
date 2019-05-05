@@ -65,7 +65,8 @@ export class Album implements AlbumInterface {
     }
 
     public getImageThumb(): string {
-        return this.imageThumbLocal ? Configuration.IMAGE_THUMB_PATH + this.imageThumbLocal : this.imageThumb;
+        return this.imageThumbLocal ? Configuration.IMAGE_THUMB_PATH + this.imageThumbLocal
+            : (this.imageThumb ? this.imageThumb : Configuration.IMAGE_THUMB_DEFAULT);
     }
 
     public setImageThumb(image: string): void {

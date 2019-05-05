@@ -109,6 +109,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                         }
                     },
                     error: (error) => {
+                        reject();
                         console.log(error);
                     }
                 });

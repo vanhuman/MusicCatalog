@@ -18,7 +18,6 @@ export class AlbumComponent {
     public editImage = Configuration.ICONS_PATH + 'edit.svg';
     public deleteImage = Configuration.ICONS_PATH + 'delete.svg';
     public showImages = Configuration.SHOW_IMAGES;
-    public imageThumbDefault = Configuration.ICONS_PATH + 'transparant.png';
     public isAdmin = false;
 
     private _album: AlbumInterface;
@@ -87,7 +86,7 @@ export class AlbumComponent {
     private getImages(album: AlbumInterface, forced: boolean = false): void {
         if (!album.getImageThumb() || !album.getImage() || forced) {
             if (!album.getImageThumb()) {
-                album.setImageThumb(this.imageThumbDefault);
+                album.setImageThumb(Configuration.IMAGE_THUMB_DEFAULT);
             }
             const fetchInterval = new Date();
             fetchInterval.setDate(fetchInterval.getDate() - Configuration.IMAGE_FETCH_INTERVAL);
@@ -114,18 +113,25 @@ export class AlbumComponent {
                                     image_thumb: albumPostData.image_thumb,
                                 });
                             }
-                        } else if (this.authenticationService.isAdmin()) {
-                            // save the image fetch timestamp in the database
-                            albumPostData = {
-                                image_fetch_timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-                            };
-                            this.albumsFactory.putAlbum(albumPostData, album);
+                        } else {
+                            this.saveImageTimestamp(album);
                         }
                     },
                     () => {
+                        this.saveImageTimestamp(album);
                     }
                 );
             }
+        }
+    }
+
+    private saveImageTimestamp(album: AlbumInterface): void {
+        if (this.authenticationService.isAdmin()) {
+            // save the image fetch timestamp in the database
+            const albumPostData = {
+                image_fetch_timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+            };
+            this.albumsFactory.putAlbum(albumPostData, album);
         }
     }
 }

@@ -1,6 +1,6 @@
 import { AlbumInterface } from './album.model.interface';
 
-export type McAction = 'search' | 'editAlbum' | 'addAlbum' | 'deleteAlbum' | 'loggedIn' | 'loggedOut' | 'login'
+export type McAction = 'search' | 'editAlbum' | 'addAlbum' | 'deleteAlbum' | 'loggedIn' | 'login' | 'logout'
     | 'sort' | 'close' | 'previous' | 'next' | 'saved' | 'getImage' | 'removedOrphans' | 'albumDeleted';
 
 export type McItem = AlbumInterface;

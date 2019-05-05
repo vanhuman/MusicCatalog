@@ -42,6 +42,8 @@ export class OverviewComponent {
     public showAlbumEdit = false;
     public outputToAlbumRow: McCommunication;
     public itemSize = 27;
+    public currentPage = 1;
+    public showCurrentPage = false;
 
     private loading = false;
     private page = 1;
@@ -51,6 +53,8 @@ export class OverviewComponent {
     private prevClickedColumn: Column;
     private selectedAlbum: AlbumInterface;
     private modal: CustomModalComponent;
+    private basePage = 1;
+    private currentPageTimeOut;
 
     @Input()
     set mcCommunication(mcCommunication: McCommunication) {
@@ -58,6 +62,7 @@ export class OverviewComponent {
             switch (mcCommunication.action) {
                 case 'search':
                     this.page = mcCommunication.page;
+                    this.basePage = this.page;
                     this.keywords = mcCommunication.keywords;
                     this.scrollUp();
                     this.getAlbums(false);
@@ -97,6 +102,20 @@ export class OverviewComponent {
         if (!this.loading && this.scrollViewport.measureScrollOffset('bottom') < 200) {
             this.page = this.page + 1;
             this.getAlbums();
+        }
+        // set current page
+        const numberOfItemsScrolled = this.scrollViewport.measureScrollOffset('top') / this.itemSize;
+        const page = this.basePage + Math.floor(numberOfItemsScrolled / Configuration.PAGE_SIZE);
+        if (page !== this.currentPage) {
+            this.currentPage = page;
+            this.showCurrentPage = true;
+            if (this.currentPageTimeOut) {
+                clearTimeout(this.currentPageTimeOut);
+            }
+            this.currentPageTimeOut = setTimeout(() => {
+                this.currentPageTimeOut = null;
+                this.showCurrentPage = false;
+            }, 5000);
         }
     }
 

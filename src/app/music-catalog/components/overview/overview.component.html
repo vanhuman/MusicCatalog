@@ -26,6 +26,7 @@
     </div>
 </cdk-virtual-scroll-viewport>
 <button class="btn-primary scroll-up" (click)="scrollUp()">To top</button>
+<div class="page" *ngIf="showCurrentPage">Page {{currentPage}}</div>
 <music-catalog-album-edit *ngIf="showAlbumEdit"
                           [album]="albumToEdit"
                           (mcCommunication)="processInputFromAlbumEdit($event)">

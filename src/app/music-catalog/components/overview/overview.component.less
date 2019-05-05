@@ -21,55 +21,68 @@ div.overview-header {
         span {
             padding-right: 3px;
         }
+
         img {
             width: 10px;
 
             &.up {
                 .transform(rotate(270deg));
             }
+
             &.down {
                 .transform(rotate(90deg));
             }
         }
     }
+
     div.image {
         width: @width-image;
     }
+
     div.artist {
         width: @width-artist;
         padding-right: @padding-right-artist;
     }
+
     div.title {
         width: @width-title;
         padding-right: @padding-right-title;
         padding-left: @padding-left-title;
     }
+
     div.year {
         width: @width-year;
     }
+
     div.format {
         width: @width-format;
     }
+
     div.label {
         width: @width-label;
         padding-right: @padding-right-label;
     }
+
     div.genre {
         width: @width-genre;
         padding-right: @padding-right-genre;
     }
+
     div.date-added {
         width: @width-date-added;
     }
+
     div.icons {
         width: @width-icons;
         padding-right: @padding-right-icons;
     }
 }
+
 .viewport {
     height: 90vh;
     margin-top: @overview-labels-height + @header-height + 6px;
 }
+
 div.overview-body {
     width: ~'calc(100% - @{padding-overview-body-side} - @{padding-overview-body-side})';
     padding: 10px @padding-overview-body-side 30px @padding-overview-body-side;
@@ -83,16 +96,36 @@ div.overview-body {
             background: @tertiary-color;
             border: 1px solid @primary-color;
         }
+
         &.selected {
             border: 1px solid @primary-color;
         }
     }
 }
+
 button.scroll-up {
     position: fixed;
     bottom: 10px;
     right: 20px;
 }
+
+div.page {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    background: @primary-color;
+}
+
 music-catalog-album-edit {
     position: fixed;
     top: 0;
