@@ -184,7 +184,7 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
                 resolve(null);
             } else if (!album || !album.getArtist() || album.getArtist().getName() !== value) {
                 artist = this.matchArtistInCache(value);
-                if (artist) {
+                if (artist && !allReferences) {
                     resolve(artist.getId());
                 } else {
                     if (album && album.getArtist() && allReferences) {
