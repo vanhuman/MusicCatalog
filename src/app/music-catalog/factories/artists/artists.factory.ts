@@ -102,7 +102,7 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
         const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         let body = new HttpParams();
         if (artistApiPostData.name) {
-            body = body.set('name', artistApiPostData.name);
+            body = body.set('name', encodeURIComponent(artistApiPostData.name));
         }
         this.apiRequestService.post<ArtistApiResponseWrapper>(
             '/artists?token=' + token,
@@ -131,7 +131,7 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
         const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         let body = new HttpParams();
         if (artistApiPostData.name) {
-            body = body.set('name', artistApiPostData.name);
+            body = body.set('name', encodeURIComponent(artistApiPostData.name));
         }
         this.apiRequestService.put<ArtistApiResponseWrapper>(
             '/artists/' + artist.getId() + '?token=' + token,

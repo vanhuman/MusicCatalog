@@ -73,10 +73,10 @@ export class GenresFactory implements GenresFactoryInterface {
         const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         let body = new HttpParams();
         if (genreApiPostData.description) {
-            body = body.set('description', genreApiPostData.description);
+            body = body.set('description', encodeURIComponent(genreApiPostData.description));
         }
         if (genreApiPostData.notes) {
-            body = body.set('notes', genreApiPostData.notes);
+            body = body.set('notes', encodeURIComponent(genreApiPostData.notes));
         }
         this.apiRequestService.post<GenreApiResponseWrapper>(
             '/genres?token=' + token,

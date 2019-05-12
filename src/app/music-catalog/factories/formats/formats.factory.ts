@@ -72,7 +72,7 @@ export class FormatsFactory implements FormatsFactoryInterface {
         const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         let body = new HttpParams();
         if (formatApiPostData.name) {
-            body = body.set('name', formatApiPostData.name);
+            body = body.set('name', encodeURIComponent(formatApiPostData.name));
         }
         if (formatApiPostData.description) {
             body = body.set('description', formatApiPostData.description);
@@ -104,7 +104,7 @@ export class FormatsFactory implements FormatsFactoryInterface {
         const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         let body = new HttpParams();
         if (formatApiPostData.name) {
-            body = body.set('name', formatApiPostData.name);
+            body = body.set('name', encodeURIComponent(formatApiPostData.name));
         }
         this.apiRequestService.put<FormatApiResponseWrapper>(
             '/formats/' + format.getId() + '?token=' + token,

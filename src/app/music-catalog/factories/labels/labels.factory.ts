@@ -72,7 +72,7 @@ export class LabelsFactory implements LabelsFactoryInterface {
         const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         let body = new HttpParams();
         if (labelApiPostData.name) {
-            body = body.set('name', labelApiPostData.name);
+            body = body.set('name', encodeURIComponent(labelApiPostData.name));
         }
         this.apiRequestService.post<LabelApiResponseWrapper>(
             '/labels?token=' + token,
@@ -101,7 +101,7 @@ export class LabelsFactory implements LabelsFactoryInterface {
         const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         let body = new HttpParams();
         if (labelApiPostData.name) {
-            body = body.set('name', labelApiPostData.name);
+            body = body.set('name', encodeURIComponent(labelApiPostData.name));
         }
         this.apiRequestService.put<LabelApiResponseWrapper>(
             '/labels/' + label.getId() + '?token=' + token,

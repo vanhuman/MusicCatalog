@@ -91,7 +91,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
             params = params.set('method', 'album.getinfo');
             params = params.set('api_key', '7582eb9c2d8036e2b57c1ce973467d14');
             params = params.set('artist', artistName);
-            params = params.set('album', title);
+            params = params.set('album', encodeURIComponent(title));
             params = params.set('format', 'json');
             const url = 'https://ws.audioscrobbler.com/2.0/';
             this.apiRequestService.getThrottled<LastfmAlbumInfo>(url, params, true)
@@ -213,13 +213,13 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
     private getHttpParams(albumPostData: AlbumPostData): HttpParams {
         let body = new HttpParams();
         if (albumPostData.title) {
-            body = body.set('title', albumPostData.title);
+            body = body.set('title', encodeURIComponent(albumPostData.title));
         }
         if (albumPostData.year) {
             body = body.set('year', albumPostData.year.toString());
         }
         if (albumPostData.notes) {
-            body = body.set('notes', albumPostData.notes);
+            body = body.set('notes', encodeURIComponent(albumPostData.notes));
         }
         if (albumPostData.image_thumb) {
             body = body.set('image_thumb', albumPostData.image_thumb);
