@@ -99,7 +99,7 @@ export class OverviewComponent {
     }
 
     public onScroll() {
-        if (!this.loading && this.scrollViewport.measureScrollOffset('bottom') < 200) {
+        if (!this.loading && this.scrollViewport.measureScrollOffset('bottom') < 500) {
             this.page = this.page + 1;
             this.getAlbums();
         }

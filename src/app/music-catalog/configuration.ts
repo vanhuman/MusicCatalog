@@ -7,6 +7,6 @@ export class Configuration {
     public static IMAGE_FULL_PATH = '/artwork/full/';
     public static IMAGE_THUMB_PATH = '/artwork/thumb/';
     public static API_THROTTLE_TIME = 500;
-    public static PAGE_SIZE = 50;
+    public static PAGE_SIZE = 100;
     public static IMAGE_THUMB_DEFAULT = 'assets/icons/transparant.png';
 }
