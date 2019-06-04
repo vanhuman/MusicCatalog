@@ -34,6 +34,7 @@ export class AlbumComponent {
     set album(album: AlbumInterface) {
         this._album = album;
         this.getImages(this.album);
+        this.isAdmin = this.authenticationService.isAdmin();
     }
 
     get album(): AlbumInterface {
