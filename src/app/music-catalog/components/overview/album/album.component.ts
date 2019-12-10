@@ -85,7 +85,7 @@ export class AlbumComponent {
     }
 
     private getImages(album: AlbumInterface, forced: boolean = false): void {
-        if (!album.getImageThumb() || !album.getImage() || forced) {
+        if ( (!album.getImageThumb() || !album.getImage() || forced) && !album.getImageLock()) {
             if (!album.getImageThumb()) {
                 album.setImageThumb(Configuration.IMAGE_THUMB_DEFAULT);
             }

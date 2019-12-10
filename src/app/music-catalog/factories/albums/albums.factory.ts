@@ -291,7 +291,8 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
             artist,
             format,
             label,
-            genre
+            genre,
+            albumApiResponse.image_lock,
         );
     }
 
@@ -305,6 +306,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         album.setImage(albumApiResponse.image);
         album.setImageLocal(albumApiResponse.image_local);
         album.setImageFetchTimestamp(DateUtility.parseDate(albumApiResponse.image_fetch_timestamp));
+        album.setImageLock(albumApiResponse.image_lock);
         if (albumApiResponse.artist) {
             album.setArtist(this.artistsFactory.updateAndGetArtist(albumApiResponse.artist));
         }

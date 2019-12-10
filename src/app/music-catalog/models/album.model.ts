@@ -24,6 +24,7 @@ export class Album implements AlbumInterface {
         private format: FormatInterface,
         private label: LabelInterface,
         private genre: GenreInterface,
+        private imageLock: boolean,
     ) {
         //
     }
@@ -147,6 +148,14 @@ export class Album implements AlbumInterface {
 
     public getDeleted(): boolean {
         return this.deleted;
+    }
+
+    public getImageLock(): boolean {
+        return this.imageLock;
+    }
+
+    public setImageLock(imageLock: boolean): void {
+        this.imageLock = imageLock;
     }
 
 }

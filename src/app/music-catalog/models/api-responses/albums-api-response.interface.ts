@@ -27,5 +27,6 @@ export interface AlbumApiResponse {
     notes: string;
     title: string;
     year: number;
+    image_lock: boolean;
 }
 

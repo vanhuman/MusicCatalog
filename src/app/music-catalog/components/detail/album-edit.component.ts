@@ -221,6 +221,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                                 action: 'saved',
                                 item: album,
                             });
+                            this.album = album;
                             this.formCloseService.reset();
                         },
                         error: () => {
