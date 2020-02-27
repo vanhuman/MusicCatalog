@@ -1,28 +1,28 @@
 import {
     AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild
 } from '@angular/core';
-import { AlbumInterface } from '../../models/album.model.interface';
-import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { McCommunication } from '../../models/music-catalog-communication.interface';
-import { ArtistInterface } from '../../models/artist.model.interface';
-import { LabelInterface } from '../../models/label.model.interface';
-import { FormatInterface } from '../../models/format.model.interface';
-import { GenreInterface } from '../../models/genre.model.interface';
-import { ArtistsFactoryInterface } from '../../factories/artists/artists.factory.interface';
-import { KeyCode, KeyStrokeUtility } from '../../utilities/key-stroke.utility';
-import { NumberUtility } from '../../utilities/number.utility';
-import { Configuration } from '../../configuration';
-import { FormCloseService } from '../../services/form-close.service';
-import { BehaviorSubject } from 'rxjs';
-import { FormatsFactoryInterface } from '../../factories/formats/formats.factory.interface';
-import { LabelsFactoryInterface } from '../../factories/labels/labels.factory.interface';
-import { GenresFactoryInterface } from '../../factories/genres/genres.factory.interface';
-import { AlbumPostData } from '../../models/api-post-data/album-api-post-data.interface';
-import { AlbumsFactoryInterface } from '../../factories/albums/albums.factory.interface';
-import { ModalServiceInterface } from '../../services/modal.service.interface';
-import { StringUtility } from '../../utilities/string.utility';
-import { Entity, EntityType } from '../../models/entity.interface';
-import { FactoryHelperInterface } from '../../factories/factory.helper.interface';
+import {AlbumInterface} from '../../models/album.model.interface';
+import {FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {McCommunication} from '../../models/music-catalog-communication.interface';
+import {ArtistInterface} from '../../models/artist.model.interface';
+import {LabelInterface} from '../../models/label.model.interface';
+import {FormatInterface} from '../../models/format.model.interface';
+import {GenreInterface} from '../../models/genre.model.interface';
+import {ArtistsFactoryInterface} from '../../factories/artists/artists.factory.interface';
+import {KeyCode, KeyStrokeUtility} from '../../utilities/key-stroke.utility';
+import {NumberUtility} from '../../utilities/number.utility';
+import {Configuration} from '../../configuration';
+import {FormCloseService} from '../../services/form-close.service';
+import {BehaviorSubject} from 'rxjs';
+import {FormatsFactoryInterface} from '../../factories/formats/formats.factory.interface';
+import {LabelsFactoryInterface} from '../../factories/labels/labels.factory.interface';
+import {GenresFactoryInterface} from '../../factories/genres/genres.factory.interface';
+import {AlbumPostData} from '../../models/api-post-data/album-api-post-data.interface';
+import {AlbumsFactoryInterface} from '../../factories/albums/albums.factory.interface';
+import {ModalServiceInterface} from '../../services/modal.service.interface';
+import {StringUtility} from '../../utilities/string.utility';
+import {Entity, EntityType} from '../../models/entity.interface';
+import {FactoryHelperInterface} from '../../factories/factory.helper.interface';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
@@ -109,6 +109,10 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
+        this.setFocusToTitleField();
+    }
+
+    private setFocusToTitleField(): void {
         this.title.nativeElement.focus();
         const title = this.title.nativeElement.value;
         this.title.nativeElement.value = '';
@@ -117,7 +121,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.title.nativeElement.selectionEnd = 0;
     }
 
-    public preSave(): void {
+    public preSave(andNew: boolean = false): void {
         if (this.entityPopup === 'none') {
             this.saving = true;
             setTimeout(() => {
@@ -161,7 +165,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                     .newLine()
                     .setWidth(500)
                     .addYesButton(() => {
-                        this.save();
+                        this.save(andNew);
                     })
                     .addNoButton(() => {
                         this.saving = false;
@@ -176,12 +180,12 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
                 modal.open();
             } else {
-                this.save();
+                this.save(andNew);
             }
         }
     }
 
-    public save(): void {
+    public save(andNew: boolean = false): void {
         if (this.albumEditForm.valid) {
             Promise.all([
                 this.artistsFactory.getArtistIdFromValue(
@@ -221,8 +225,14 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                                 action: 'saved',
                                 item: album,
                             });
-                            this.album = album;
                             this.formCloseService.reset();
+                            if (andNew) {
+                                this.album = null;
+                                this.albumEditForm.reset();
+                                this.setFocusToTitleField();
+                            } else {
+                                this.album = album;
+                            }
                         },
                         error: () => {
                             this.waiting = false;

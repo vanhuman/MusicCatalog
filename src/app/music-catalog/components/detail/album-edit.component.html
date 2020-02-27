@@ -138,6 +138,7 @@
         </div>
         <div class="buttons">
             <img class="loader" [src]="loaderImage" *ngIf="waiting" alt="">
+            <button class="btn-primary" (click)="preSave(true)" [disabled]="saveDisabled()">Save and New</button>
             <button class="btn-primary" (click)="preSave()" [disabled]="saveDisabled()">Save</button>
             <button class="btn-secondary" (click)="cancel()" [disabled]="saving">Close</button>
         </div>
