@@ -32,7 +32,7 @@ interface Column {
 })
 export class OverviewComponent {
     @Output() public mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
-    @ViewChild(CdkVirtualScrollViewport) public scrollViewport: CdkVirtualScrollViewport;
+    @ViewChild(CdkVirtualScrollViewport, { static: false }) public scrollViewport: CdkVirtualScrollViewport;
 
     public albums: AlbumInterface[] = [];
     public columns: Column[] = [];
@@ -119,7 +119,7 @@ export class OverviewComponent {
         }
     }
 
-    public scrollUp(behavior: ScrollBehavior = 'instant'): void {
+    public scrollUp(behavior: ScrollBehavior = 'auto'): void {
         this.scrollViewport.scrollToIndex(0, behavior);
     }
 

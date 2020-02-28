@@ -17,9 +17,9 @@ declare var jQuery: any;
 export class TooltipComponent implements AfterViewInit {
     @Input() public tooltipConfig: TooltipConfig;
 
-    @ViewChild('tooltipContent') public tooltipContent: ElementRef;
-    @ViewChild('tooltipArrowTop') public tooltipArrowTop: ElementRef;
-    @ViewChild('tooltipArrowBottom') public tooltipArrowBottom: ElementRef;
+    @ViewChild('tooltipContent', { static: false }) public tooltipContent: ElementRef;
+    @ViewChild('tooltipArrowTop', { static: false }) public tooltipArrowTop: ElementRef;
+    @ViewChild('tooltipArrowBottom', { static: false }) public tooltipArrowBottom: ElementRef;
 
     public ngAfterViewInit() {
         const targetElement = this.tooltipConfig.element.nativeElement;
@@ -29,7 +29,7 @@ export class TooltipComponent implements AfterViewInit {
         const tooltipArrowBottomElement = this.tooltipArrowBottom.nativeElement;
 
         // set initial left position
-        let leftPosition = 0;
+        let leftPosition: number;
         if (!this.tooltipConfig.centered) {
             leftPosition = targetElementOffset.left - tooltipElement.offsetWidth / 2;
         } else {
