@@ -1,11 +1,16 @@
 <div class="album-edit" [ngClass]="getClassForWidth()">
-    <div class="image" *ngIf="showImages">
-        <img [src]="album.getImage()" alt="" *ngIf="album && album.getImage()"/>
-        <div class="no-image" *ngIf="!album || !album.getImage()">
-            <div>no image available</div>
-        </div>
-    </div>
     <form class="album-edit" [formGroup]="albumEditForm">
+        <div class="image" *ngIf="showImages">
+            <img [src]="album.getImage()" alt="" *ngIf="album && album.getImage()"/>
+            <div class="no-image" *ngIf="!album || !album.getImage()">
+                <div>no image available</div>
+            </div>
+            <div class="re-fetch-image" *ngIf="album">
+                <label for="{{id}}-re-fetch-image">Get new image</label>
+                <input type="checkbox" id="{{id}}-re-fetch-image"
+                       formControlName="re-fetch-image">
+            </div>
+        </div>
         <fieldset>
             <div class="field">
                 <label for="{{id}}-title">Title</label>

@@ -219,10 +219,12 @@ export class OverviewComponent {
                     this.albums.unshift(mcCommunication.item);
                     this.getAlbums(false);
                 }
-                this.outputToAlbumRow = {
-                    action: 'getImage',
-                    item: mcCommunication.item,
-                };
+                if (mcCommunication.fetchImage) {
+                    this.outputToAlbumRow = {
+                        action: 'getImage',
+                        item: mcCommunication.item,
+                    };
+                }
                 break;
             case 'previous':
                 index = this.albums.indexOf(this.albumToEdit);

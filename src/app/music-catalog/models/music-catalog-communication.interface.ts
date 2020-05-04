@@ -10,4 +10,5 @@ export interface McCommunication {
     item?: McItem;
     page?: number;
     keywords?: string;
+    fetchImage?: boolean;
 }

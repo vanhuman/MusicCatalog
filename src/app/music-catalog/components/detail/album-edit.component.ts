@@ -224,6 +224,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                             this.mcCommunication.emit({
                                 action: 'saved',
                                 item: album,
+                                fetchImage: this.albumEditForm.controls['re-fetch-image'].value === true || !this.album,
                             });
                             this.formCloseService.reset();
                             if (andNew) {
@@ -427,6 +428,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.albumEditForm.controls['format-all-refs'].setValue(false);
         this.albumEditForm.controls['label-all-refs'].setValue(false);
         this.albumEditForm.controls['genre-all-refs'].setValue(false);
+        this.albumEditForm.controls['re-fetch-image'].setValue(false);
         this.originalFormData = this.albumEditForm.value;
         this.error = '';
     }
@@ -461,6 +463,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
         this.albumFields.set('format-all-refs', {});
         this.albumFields.set('label-all-refs', {});
         this.albumFields.set('genre-all-refs', {});
+        this.albumFields.set('re-fetch-image', {});
     }
 
     private addFormControls(): void {

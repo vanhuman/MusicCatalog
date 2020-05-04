@@ -19,34 +19,44 @@ div.album-edit {
     &.small {
         width: 370px;
     }
-    div.image {
-        display: inline-block;
-        padding-right: 30px;
-        width: @image-width;
-        height: @image-width;
-        margin-top: 10px;
+    form.album-edit {
+        div.image {
+            display: inline-block;
+            padding-right: 30px;
+            width: @image-width;
+            height: @image-width;
+            margin-top: 10px;
 
-        img {
-            width: 300px;
-        }
-        div.no-image {
-            font-size: 8px;
-            text-align: center;
-            height: 298px;
-            border: 1px solid #A0A0A0;
-            opacity: 0.3;
+            img {
+                width: 300px;
+            }
+            div.no-image {
+                font-size: 8px;
+                text-align: center;
+                height: 298px;
+                border: 1px solid #A0A0A0;
+                opacity: 0.3;
 
-            div {
-                padding-top: 10px;
+                div {
+                    padding-top: 10px;
+                }
+            }
+            div.re-fetch-image {
+                width: @image-width;
+                text-align: center;
+                padding-top: 20px;
+
+                label {
+                    color: @label-color;
+                }
+                input {
+                    vertical-align: -2px;
+                }
             }
         }
-    }
-
-    form.album-edit {
-        display: inline-block;
-        vertical-align: top;
-
         fieldset {
+            display: inline-block;
+            vertical-align: top;
             border: 0;
             padding: 0 0 50px 0;
             margin: 0;
@@ -130,8 +140,9 @@ div.album-edit {
         }
         div.icons {
             display: inline-block;
-            position: relative;
-            left: -14px;
+            position: absolute;
+            bottom: 32px;
+            left: 345px;
 
             img {
                 cursor: pointer;
