@@ -10,4 +10,5 @@ export class Configuration {
     public static PAGE_SIZE = 100;
     public static IMAGE_THUMB_DEFAULT = 'assets/icons/transparant.png';
     public static RIP_IMAGES_ON_BROWSE = false;
+    public static FORCE_IMAGES_FROM_REMOTE = false;
 }

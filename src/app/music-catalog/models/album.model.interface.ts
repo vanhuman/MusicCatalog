@@ -34,6 +34,5 @@ export interface AlbumInterface {
     setGenre(genre: GenreInterface): void;
     getDeleted(): boolean;
     setDeleted(deleted: boolean): void;
-    getImageLock(): boolean;
-    setImageLock(imageLock: boolean): void;
+    isMissingImages(): boolean;
 }

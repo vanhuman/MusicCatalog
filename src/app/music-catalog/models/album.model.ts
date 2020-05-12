@@ -24,7 +24,6 @@ export class Album implements AlbumInterface {
         private format: FormatInterface,
         private label: LabelInterface,
         private genre: GenreInterface,
-        private imageLock: boolean,
     ) {
         //
     }
@@ -66,7 +65,7 @@ export class Album implements AlbumInterface {
     }
 
     public getImageThumb(): string {
-        return this.imageThumbLocal
+        return this.imageThumbLocal && !Configuration.FORCE_IMAGES_FROM_REMOTE
             ? Configuration.IMAGE_THUMB_PATH + this.imageThumbLocal
             : (this.imageThumb ? this.imageThumb : Configuration.IMAGE_THUMB_DEFAULT);
     }
@@ -84,7 +83,9 @@ export class Album implements AlbumInterface {
     }
 
     public getImage(): string {
-        return this.imageLocal ? Configuration.IMAGE_FULL_PATH + this.imageLocal : this.image;
+        return this.imageLocal && !Configuration.FORCE_IMAGES_FROM_REMOTE
+            ? Configuration.IMAGE_FULL_PATH + this.imageLocal
+            : this.image;
     }
 
     public setImage(image: string): void {
@@ -151,12 +152,7 @@ export class Album implements AlbumInterface {
         return this.deleted;
     }
 
-    public getImageLock(): boolean {
-        return this.imageLock;
+    public isMissingImages(): boolean {
+        return (!this.image && !this.imageLocal) || (!this.imageThumb && !this.imageThumbLocal);
     }
-
-    public setImageLock(imageLock: boolean): void {
-        this.imageLock = imageLock;
-    }
-
 }

@@ -86,7 +86,7 @@ export class AlbumComponent {
 
     private getImages(album: AlbumInterface, forced: boolean = false): void {
         let albumPostData: AlbumPostData;
-        if (!album.getImage() || forced) {
+        if (album.isMissingImages() || forced) {
             // if no images at all or forced, get from lastfm and store in db
             const fetchInterval = new Date();
             fetchInterval.setDate(fetchInterval.getDate() - Configuration.IMAGE_FETCH_INTERVAL);
