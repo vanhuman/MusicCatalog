@@ -85,14 +85,12 @@ export class AlbumComponent {
     }
 
     private getImages(album: AlbumInterface, forced: boolean = false): void {
-        if (!album.getImageThumb() || !album.getImage() || forced) {
-            if (!album.getImageThumb()) {
-                album.setImageThumb(Configuration.IMAGE_THUMB_DEFAULT);
-            }
+        let albumPostData: AlbumPostData;
+        if (!album.getImage() || forced) {
+            // if no images at all or forced, get from lastfm and store in db
             const fetchInterval = new Date();
             fetchInterval.setDate(fetchInterval.getDate() - Configuration.IMAGE_FETCH_INTERVAL);
             if (forced || !album.getImageFetchTimestamp() || album.getImageFetchTimestamp() < fetchInterval) {
-                let albumPostData: AlbumPostData;
                 this.albumsFactory.getImagesFromLastfm(album).then(
                     (imageMap) => {
                         if (imageMap.has('small') && imageMap.get('small')
@@ -123,6 +121,16 @@ export class AlbumComponent {
                     }
                 );
             }
+        } else if (Configuration.RIP_IMAGES_ON_BROWSE
+            && (!album.getImageThumbLocal() || !album.getImageLocal())
+            && this.authenticationService.isAdmin()) {
+            // if no local images, save remote images to trigger download to local in the API
+            albumPostData = {
+                image_thumb: album.getImageThumb(),
+                image: album.getImage(),
+                image_fetch_timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+            };
+            this.albumsFactory.putAlbum(albumPostData, album);
         }
     }
 
