@@ -6,12 +6,12 @@ div.overview-header {
     top: @header-height;
     height: @overview-labels-height;
     width: ~'calc(100% - @{padding-overview-header-left} - @{padding-overview-header-right})';
+    min-width: calc(@min-width - @padding-overview-header-left - @padding-overview-header-right);
+    padding: 5px @padding-overview-header-right 0 @padding-overview-header-left;
     border-bottom: 1px solid @primary-color;
     margin-bottom: 5px;
     color: @label-color;
-    padding: 5px @padding-overview-header-right 0 @padding-overview-header-left;
     background: @tertiary-color;
-    min-width: calc(@min-width - @padding-overview-header-left - @padding-overview-header-right);
     z-index: -1;
 
     div {
@@ -21,14 +21,12 @@ div.overview-header {
         span {
             padding-right: 3px;
         }
-
         img {
             width: 10px;
 
             &.up {
                 .transform(rotate(270deg));
             }
-
             &.down {
                 .transform(rotate(90deg));
             }
@@ -38,51 +36,41 @@ div.overview-header {
     div.image {
         width: @width-image;
     }
-
     div.artist {
         width: @width-artist;
         padding-right: @padding-right-artist;
     }
-
     div.title {
         width: @width-title;
         padding-right: @padding-right-title;
         padding-left: @padding-left-title;
     }
-
     div.year {
         width: @width-year;
     }
-
     div.format {
         width: @width-format;
     }
-
     div.label {
         width: @width-label;
         padding-right: @padding-right-label;
     }
-
     div.genre {
         width: @width-genre;
         padding-right: @padding-right-genre;
     }
-
     div.date-added {
         width: @width-date-added;
     }
-
     div.icons {
         width: @width-icons;
         padding-right: @padding-right-icons;
     }
 }
-
 .viewport {
     height: 90vh;
     margin-top: @overview-labels-height + @header-height + 6px;
 }
-
 div.overview-body {
     width: ~'calc(100% - @{padding-overview-body-side} - @{padding-overview-body-side})';
     padding: 10px @padding-overview-body-side 30px @padding-overview-body-side;
@@ -96,19 +84,16 @@ div.overview-body {
             background: @tertiary-color;
             border: 1px solid @primary-color;
         }
-
         &.selected {
             border: 1px solid @primary-color;
         }
     }
 }
-
 button.scroll-up {
     position: fixed;
     bottom: 10px;
     right: 20px;
 }
-
 div.page {
     position: fixed;
     top: 0;
@@ -125,7 +110,6 @@ div.page {
     vertical-align: middle;
     background: @primary-color;
 }
-
 music-catalog-album-edit {
     position: fixed;
     top: 0;
