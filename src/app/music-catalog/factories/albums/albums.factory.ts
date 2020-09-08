@@ -32,6 +32,10 @@ interface LastfmAlbumInfo {
 
 @Injectable()
 export class AlbumsFactory implements AlbumsFactoryInterface {
+    private static LastfmApiUrl = 'https://ws.audioscrobbler.com/2.0/';
+    private static LastfmImageUrl1 = 'https://lastfm-img2.akamaized.net/';
+    private static LastfmImageUrl2 = 'https://lastfm.freetls.fastly.net/';
+
     public albumsMetaData: Subject<AlbumsMetaData> = new Subject();
 
     public constructor(
@@ -66,6 +70,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                     pageSize: response.body.pagination.page_size,
                 });
                 response.body.albums.forEach((albumApiResponse) => {
+                    albumApiResponse = this.processLastfmUrl(albumApiResponse);
                     if (this.state.cache[albumApiResponse.id]) {
                         albums.push(this.updateAlbum(this.state.cache[albumApiResponse.id], albumApiResponse));
                     } else {
@@ -93,8 +98,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
             params = params.set('artist', artistName);
             params = params.set('album', title);
             params = params.set('format', 'json');
-            const url = 'https://ws.audioscrobbler.com/2.0/';
-            this.apiRequestService.getThrottled<LastfmAlbumInfo>(url, params, true)
+            this.apiRequestService.getThrottled<LastfmAlbumInfo>(AlbumsFactory.LastfmApiUrl, params, true)
                 .subscribe({
                     next: (result) => {
                         if (result.body && result.body.album && result.body.album.image) {
@@ -191,6 +195,12 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
     public updateAlbumImages(album: AlbumInterface, albumImagesPostData: AlbumPostData): void {
         album.setImageThumb(albumImagesPostData.image_thumb);
         album.setImage(albumImagesPostData.image);
+    }
+
+    private processLastfmUrl(albumApiResponse: AlbumApiResponse): AlbumApiResponse {
+        albumApiResponse.image = albumApiResponse.image.replace(AlbumsFactory.LastfmImageUrl1, AlbumsFactory.LastfmImageUrl2);
+        albumApiResponse.image_thumb = albumApiResponse.image_thumb.replace(AlbumsFactory.LastfmImageUrl1, AlbumsFactory.LastfmImageUrl2);
+        return albumApiResponse;
     }
 
     private errorHandling(error: HttpErrorResponse, observable: Subject<any>): void {
