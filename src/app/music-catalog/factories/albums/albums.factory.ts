@@ -9,7 +9,6 @@ import {
 } from '../../models/api-responses/albums-api-response.interface';
 import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
 import { ApiRequestServiceInterface } from '../../services/api-request.service.interface';
-import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
 import { Album } from '../../models/album.model';
 import { AlbumsFactoryState } from './albums.factory.state';
@@ -18,6 +17,7 @@ import { ArtistsFactoryInterface } from '../artists/artists.factory.interface';
 import { FormatsFactoryInterface } from '../formats/formats.factory.interface';
 import { GenresFactoryInterface } from '../genres/genres.factory.interface';
 import { LabelsFactoryInterface } from '../labels/labels.factory.interface';
+import { ErrorHelperInterface } from '../helpers/error.helper.interface';
 
 interface LastfmAlbumImage {
     '#text': string;
@@ -41,13 +41,13 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
     public constructor(
         private authenticationService: AuthenticationServiceInterface,
         private apiRequestService: ApiRequestServiceInterface,
-        private modalService: ModalServiceInterface,
         private httpClient: HttpClient,
         private state: AlbumsFactoryState,
         private artistsFactory: ArtistsFactoryInterface,
         private formatsFactory: FormatsFactoryInterface,
         private genresFactory: GenresFactoryInterface,
         private labelsFactory: LabelsFactoryInterface,
+        private errorHelper: ErrorHelperInterface,
     ) {
         //
     }
@@ -82,7 +82,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.next(albums);
             },
             error: (error: HttpErrorResponse) => {
-                this.errorHandling(error, observable);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -144,7 +144,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.complete();
             },
             error: (error: HttpErrorResponse) => {
-                this.errorHandling(error, observable);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -166,7 +166,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.complete();
             },
             error: (error: HttpErrorResponse) => {
-                this.errorHandling(error, observable);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -186,7 +186,7 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                 observable.complete();
             },
             error: (error: HttpErrorResponse) => {
-                this.errorHandling(error, observable);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -201,23 +201,6 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         albumApiResponse.image = albumApiResponse.image.replace(AlbumsFactory.LastfmImageUrl1, AlbumsFactory.LastfmImageUrl2);
         albumApiResponse.image_thumb = albumApiResponse.image_thumb.replace(AlbumsFactory.LastfmImageUrl1, AlbumsFactory.LastfmImageUrl2);
         return albumApiResponse;
-    }
-
-    private errorHandling(error: HttpErrorResponse, observable: Subject<any>): void {
-        if (error.status === 401) {
-            if (this.authenticationService.isAdmin()) {
-                error.error.message = 'Your session has expired. You are now in a read-only session.';
-            } else {
-                error.error.message = 'Your session was expired. But do not worry: we have retrieved a new session for you.';
-            }
-        }
-        if (this.modalService.getModal('modal1').isOpen()) {
-            this.modalService.getModal('modal1').close();
-        }
-        this.modalService.getModal('modal1')
-            .setErrorMessage(error.error)
-            .open();
-        observable.error(false);
     }
 
     private getHttpParams(albumPostData: AlbumPostData): HttpParams {

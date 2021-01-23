@@ -7,5 +7,7 @@ export abstract class AuthenticationServiceInterface {
     public abstract getToken(): string;
     public abstract monitorValidSession(): Observable<boolean>;
     public abstract isAdmin(): boolean;
+    public abstract isLoggedIn(): boolean;
+    public abstract logout(): void;
 }
 

@@ -8,11 +8,11 @@ import { GenresFactoryState } from './genres.factory.state';
 import {
     GenreApiResponse, GenreApiResponseWrapper, GenresApiResponse
 } from '../../models/api-responses/genres-api-response.interface';
-import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Genre } from '../../models/genre.model';
 import { GenresFactoryInterface } from './genres.factory.interface';
 import { GenreApiPostData } from '../../models/api-post-data/genre-api-post-data.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
+import { ErrorHelperInterface } from '../helpers/error.helper.interface';
 
 @Injectable()
 export class GenresFactory implements GenresFactoryInterface {
@@ -21,7 +21,7 @@ export class GenresFactory implements GenresFactoryInterface {
         private authenticationService: AuthenticationServiceInterface,
         private apiRequestService: ApiRequestServiceInterface,
         private state: GenresFactoryState,
-        private modalService: ModalServiceInterface,
+        private errorHelper: ErrorHelperInterface,
     ) {
         //
     }
@@ -57,11 +57,7 @@ export class GenresFactory implements GenresFactoryInterface {
                 observable.next(this.sortGenres(genres));
             },
             error: (error: HttpErrorResponse) => {
-                console.log(error);
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -90,10 +86,7 @@ export class GenresFactory implements GenresFactoryInterface {
                 observable.next(genre);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -118,10 +111,7 @@ export class GenresFactory implements GenresFactoryInterface {
                 observable.next(genre);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;

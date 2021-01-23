@@ -107,7 +107,7 @@ form.header div.menu {
 form.header div.menu:hover div.extra-buttons {
   opacity: 1;
   right: 60px;
-  width: 470px;
+  width: 430px;
   padding-right: 30px;
   margin-right: 0;
 }
@@ -140,3 +140,4 @@ form.header div.menu div.extra-buttons {
   transition-delay: 0s, 0s, 0s, 0.5s, 0.5s;
   background: #f9f9f9;
 }
+/*# sourceMappingURL=header.component.css.map */

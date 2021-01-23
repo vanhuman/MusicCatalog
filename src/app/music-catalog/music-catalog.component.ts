@@ -1,19 +1,17 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { McCommunication } from './models/music-catalog-communication.interface';
 import { AuthenticationServiceInterface } from './services/authentication.service.interface';
-import { AuthenticationResult } from './services/authentication.service';
-import { skip, take } from 'rxjs/operators';
 
 @Component({
     selector: 'music-catalog',
     templateUrl: './music-catalog.component.html',
     styleUrls: ['./music-catalog.component.css'],
 })
-export class MusicCatalogComponent implements OnDestroy {
+export class MusicCatalogComponent implements OnInit, OnDestroy {
     public validSession = false;
-    public showLogin = false;
+    public showLogin = true;
     public outputToOverview: McCommunication;
     public outputToHeader: McCommunication;
     private authenticationMonitorSubscription: Subscription;
@@ -21,7 +19,16 @@ export class MusicCatalogComponent implements OnDestroy {
     public constructor(
         private authenticationService: AuthenticationServiceInterface,
     ) {
-        this.getSession();
+    }
+
+    public ngOnInit() {
+        this.authenticationMonitorSubscription = this.authenticationService.monitorValidSession()
+            .subscribe((validSession) => {
+                if (!validSession) {
+                    this.validSession = false;
+                    this.showLogin = true;
+                }
+            });
     }
 
     public ngOnDestroy(): void {
@@ -37,7 +44,9 @@ export class MusicCatalogComponent implements OnDestroy {
                     this.showLogin = true;
                     break;
                 case 'logout':
-                    this.getSession();
+                    this.validSession = false;
+                    this.showLogin = true;
+                    this.authenticationService.logout();
                     break;
                 default:
                 //
@@ -49,6 +58,7 @@ export class MusicCatalogComponent implements OnDestroy {
     public processInputFromLogin(loggedIn: boolean): void {
         this.showLogin = false;
         if (loggedIn) {
+            this.validSession = true;
             this.outputToOverview = {
                 action: 'loggedIn',
             };
@@ -57,29 +67,5 @@ export class MusicCatalogComponent implements OnDestroy {
 
     public processInputFromOverview(mcCommunication: McCommunication): void {
         this.outputToHeader = mcCommunication;
-    }
-
-    private getSession(): void {
-        if (this.authenticationMonitorSubscription) {
-            this.authenticationMonitorSubscription.unsubscribe();
-        }
-        this.authenticationService.login('dummy', 'dummylogin', true)
-            .pipe(take(1))
-            .subscribe((loginResult: AuthenticationResult) => {
-                if (loginResult.succes) {
-                    this.outputToOverview = {
-                        action: 'loggedIn',
-                    };
-                    this.validSession = true;
-                    this.authenticationMonitorSubscription = this.authenticationService.monitorValidSession()
-                        .pipe(skip(1))
-                        .subscribe((validSession) => {
-                            if (!validSession) {
-                                this.authenticationMonitorSubscription.unsubscribe();
-                                this.getSession();
-                            }
-                        });
-                }
-            });
     }
 }

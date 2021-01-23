@@ -22,7 +22,7 @@ import { AlbumsFactoryInterface } from '../../factories/albums/albums.factory.in
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { StringUtility } from '../../utilities/string.utility';
 import { Entity, EntityType } from '../../models/entity.interface';
-import { FactoryHelperInterface } from '../../factories/factory.helper.interface';
+import { FactoryHelperInterface } from '../../factories/helpers/factory.helper.interface';
 
 interface AlbumFieldSettings {
     validators?: ValidatorFn[];
@@ -59,8 +59,8 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     public showImages = Configuration.SHOW_IMAGES;
     public waiting = false;
     public saving = false;
+    public selectedEntityNumber = -1;
 
-    private selectedEntityNumber = -1;
     private _album: AlbumInterface;
     private originalFormData: any;
     private keyHandlings = [

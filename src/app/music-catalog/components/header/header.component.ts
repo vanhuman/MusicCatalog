@@ -8,7 +8,7 @@ import { AlbumsMetaData } from '../../factories/albums/albums.factory.interface'
 import { McCommunication } from '../../models/music-catalog-communication.interface';
 import { Configuration } from '../../configuration';
 import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
-import { FactoryHelperInterface } from '../../factories/factory.helper.interface';
+import { FactoryHelperInterface } from '../../factories/helpers/factory.helper.interface';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { CustomModalComponent } from '../../modals/custom-modal.component';
 
@@ -78,10 +78,16 @@ export class HeaderComponent implements OnDestroy {
         this.mcCommunicationOut.emit({
             action: 'logout',
         });
+        this.totalNumberOfAlbums = 0;
+        this.totalNumberOfPages = 0;
     }
 
     public isAdmin(): boolean {
         return this.authenticationService.isAdmin();
+    }
+
+    public isLoggedIn(): boolean {
+        return this.authenticationService.isLoggedIn();
     }
 
     public getTotalAlbumsText(): string {
@@ -127,37 +133,39 @@ export class HeaderComponent implements OnDestroy {
             .setMessage('Are you sure you want to delete all artists, formats, labels and genres')
             .setMessage(' that are not referenced on any albums?')
             .doCloseOnYes(false)
-            .addYesButton(() => {
-                Promise.all([
-                    this.factoryHelper.removeOrphans('artist'),
-                    this.factoryHelper.removeOrphans('format'),
-                    this.factoryHelper.removeOrphans('label'),
-                    this.factoryHelper.removeOrphans('genre'),
-                ]).then(
-                    (responseArray) => {
-                        this.modal.close();
-                        const modal = this.modalService.getModal('modal1')
-                            .setMessage('Clean-up result', ['big'])
-                            .newLine();
-                        responseArray.forEach((response) => {
-                            modal.setMessage('Number of ' + response.entity + 's deleted: ' + response.deleted);
-                            modal.newLine();
-                        });
-                        modal.open();
-                        this.mcCommunicationOut.emit({
-                            action: 'removedOrphans',
-                        });
-                    },
-                    (error) => {
-                        this.modal.close();
-                        this.modalService.getModal('modal1')
-                            .setErrorMessage(error)
-                            .open();
-                    }
-                );
-            })
+            .addYesButton(() => this.doRemoveOrphans())
             .addNoButton(() => {
             });
         this.modal.open();
+    }
+
+    private doRemoveOrphans() {
+        Promise.all([
+            this.factoryHelper.removeOrphans('artist'),
+            this.factoryHelper.removeOrphans('format'),
+            this.factoryHelper.removeOrphans('label'),
+            this.factoryHelper.removeOrphans('genre'),
+        ]).then(
+            (responseArray) => {
+                this.modal.close();
+                const modal = this.modalService.getModal('modal1')
+                    .setMessage('Clean-up result', ['big'])
+                    .newLine();
+                responseArray.forEach((response) => {
+                    modal.setMessage('Number of ' + response.entity + 's deleted: ' + response.deleted);
+                    modal.newLine();
+                });
+                modal.open();
+                this.mcCommunicationOut.emit({
+                    action: 'removedOrphans',
+                });
+            },
+            (error) => {
+                this.modal.close();
+                this.modalService.getModal('modal1')
+                    .setErrorMessage(error)
+                    .open();
+            }
+        );
     }
 }

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { RemoveOrphanApiResponse } from '../models/api-responses/remove-orphan-api-response.interface';
-import { ApiRequestServiceInterface } from '../services/api-request.service.interface';
-import { AuthenticationServiceInterface } from '../services/authentication.service.interface';
-import { EntityType } from '../models/entity.interface';
+import { RemoveOrphanApiResponse } from '../../models/api-responses/remove-orphan-api-response.interface';
+import { ApiRequestServiceInterface } from '../../services/api-request.service.interface';
+import { AuthenticationServiceInterface } from '../../services/authentication.service.interface';
+import { EntityType } from '../../models/entity.interface';
 import { FactoryHelperInterface } from './factory.helper.interface';
-import { ArtistsFactoryInterface } from './artists/artists.factory.interface';
-import { FormatsFactoryInterface } from './formats/formats.factory.interface';
-import { LabelsFactoryInterface } from './labels/labels.factory.interface';
-import { GenresFactoryInterface } from './genres/genres.factory.interface';
+import { ArtistsFactoryInterface } from '../artists/artists.factory.interface';
+import { FormatsFactoryInterface } from '../formats/formats.factory.interface';
+import { LabelsFactoryInterface } from '../labels/labels.factory.interface';
+import { GenresFactoryInterface } from '../genres/genres.factory.interface';
 
 @Injectable()
 export class FactoryHelper implements FactoryHelperInterface {

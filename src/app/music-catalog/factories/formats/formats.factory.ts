@@ -8,11 +8,11 @@ import { FormatsFactoryState } from './formats.factory.state';
 import {
     FormatApiResponse, FormatApiResponseWrapper, FormatsApiResponse
 } from '../../models/api-responses/formats-api-response.interface';
-import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Format } from '../../models/format.model';
 import { FormatsFactoryInterface } from './formats.factory.interface';
 import { FormatApiPostData } from '../../models/api-post-data/format-api-post-data.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
+import { ErrorHelperInterface } from '../helpers/error.helper.interface';
 
 @Injectable()
 export class FormatsFactory implements FormatsFactoryInterface {
@@ -21,7 +21,7 @@ export class FormatsFactory implements FormatsFactoryInterface {
         private authenticationService: AuthenticationServiceInterface,
         private apiRequestService: ApiRequestServiceInterface,
         private state: FormatsFactoryState,
-        private modalService: ModalServiceInterface,
+        private errorHelper: ErrorHelperInterface,
     ) {
         //
     }
@@ -57,10 +57,7 @@ export class FormatsFactory implements FormatsFactoryInterface {
                 observable.next(this.sortFormats(formats));
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -89,10 +86,7 @@ export class FormatsFactory implements FormatsFactoryInterface {
                 observable.next(format);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -117,10 +111,7 @@ export class FormatsFactory implements FormatsFactoryInterface {
                 observable.next(format);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;

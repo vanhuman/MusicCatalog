@@ -30,6 +30,7 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
             .subscribe((autorisationError) => {
                 if (autorisationError) {
                     this.validSession.next(false);
+                    this.logout();
                 }
             });
     }
@@ -51,34 +52,22 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
         let body = new HttpParams();
         body = body.set('username', username);
         body = body.set('password', password);
-        this.apiRequestService.post<AuthenticateApiResponse>(
-            '/authenticate',
-            body,
-            headers
-        ).subscribe({
-            next: (response) => {
-                this.session = new Session(
-                    response.body.session.id,
-                    response.body.session.token,
-                    response.body.session.time_out,
-                    response.body.session.user_id,
-                );
-                this.user = new User(
-                    response.body.user.id,
-                    response.body.user.username,
-                    response.body.user.admin,
-                );
-                this.validSession.next(true);
-                observable.next({succes: true});
-            },
-            error: (error: HttpErrorResponse) => {
-                this.validSession.next(false);
-                observable.next({
-                    succes: false,
-                    error: error.error.message,
-                });
-            }
-        });
+        this.apiRequestService.post<AuthenticateApiResponse>('/authenticate', body, headers)
+            .subscribe({
+                next: (response) => {
+                    this.createSession(response.body);
+                    this.createUser(response.body);
+                    this.validSession.next(true);
+                    observable.next({succes: true});
+                },
+                error: (error: HttpErrorResponse) => {
+                    this.validSession.next(false);
+                    observable.next({
+                        succes: false,
+                        error: error.error.message,
+                    });
+                }
+            });
         return observable;
     }
 
@@ -92,5 +81,31 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
 
     public isAdmin(): boolean {
         return this.user ? this.user.isAdmin() : false;
+    }
+
+    public isLoggedIn(): boolean {
+        return !!this.user;
+    }
+
+    public logout(): void {
+        this.user = null;
+        this.session = null;
+    }
+
+    private createSession(responseBody: AuthenticateApiResponse): void {
+        this.session = new Session(
+            responseBody.session.id,
+            responseBody.session.token,
+            responseBody.session.time_out,
+            responseBody.session.user_id,
+        );
+    }
+
+    private createUser(responseBody: AuthenticateApiResponse): void {
+        this.user = new User(
+            responseBody.user.id,
+            responseBody.user.username,
+            responseBody.user.admin,
+        );
     }
 }

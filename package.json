@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "watch": "ng build --watch --base-href=/music-catalog/",
+    "watch": "ng build --watch --poll 300 --base-href=/music-catalog/",
     "prod": "ng build --prod --base-href=/music-catalog/"
   },
   "private": true,

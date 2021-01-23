@@ -8,11 +8,11 @@ import { ArtistsFactoryState } from './artists.factory.state';
 import {
     ArtistApiResponse, ArtistApiResponseWrapper, ArtistsApiResponse
 } from '../../models/api-responses/artists-api-response.interface';
-import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Artist } from '../../models/artist.model';
 import { ArtistsFactoryInterface } from './artists.factory.interface';
 import { ArtistApiPostData } from '../../models/api-post-data/artist-api-post-data.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
+import { ErrorHelperInterface } from '../helpers/error.helper.interface';
 
 @Injectable()
 export class ArtistsFactory implements ArtistsFactoryInterface {
@@ -21,7 +21,7 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
         private authenticationService: AuthenticationServiceInterface,
         private apiRequestService: ApiRequestServiceInterface,
         private state: ArtistsFactoryState,
-        private modalService: ModalServiceInterface,
+        private errorHelper: ErrorHelperInterface,
     ) {
         //
     }
@@ -57,10 +57,7 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
                 observable.next(this.sortArtists(artists));
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -87,10 +84,7 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
                 observable.next(artist);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -116,10 +110,7 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
                 observable.next(artist);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -144,10 +135,7 @@ export class ArtistsFactory implements ArtistsFactoryInterface {
                 observable.next(artist);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;

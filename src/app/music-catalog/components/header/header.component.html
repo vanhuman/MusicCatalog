@@ -26,9 +26,11 @@
             <ng-container *ngIf="isAdmin()">
                 <button class="btn-primary" (click)="addAlbum()">New</button>
                 <button class="btn-primary" (click)="removeOphans()">Clean-up</button>
+            </ng-container>
+            <ng-container *ngIf="isLoggedIn()">
                 <button class="btn-primary" (click)="logout()">Logout</button>
             </ng-container>
-            <ng-container *ngIf="!isAdmin()">
+            <ng-container *ngIf="!isLoggedIn()">
                 <button class="btn-primary" (click)="login()">Login</button>
             </ng-container>
         </div>

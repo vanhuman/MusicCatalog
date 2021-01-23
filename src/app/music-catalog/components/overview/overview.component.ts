@@ -11,7 +11,7 @@ import { Configuration } from '../../configuration';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { CustomModalComponent } from '../../modals/custom-modal.component';
-import { FactoryHelperInterface } from '../../factories/factory.helper.interface';
+import { FactoryHelperInterface } from '../../factories/helpers/factory.helper.interface';
 
 export type SortField = 'title' | 'year' | 'date_added'
     | 'artist_name' | 'format_name' | 'label_name' | 'genre_description';
@@ -44,11 +44,11 @@ export class OverviewComponent {
     public itemSize = 27;
     public currentPage = 1;
     public showCurrentPage = false;
+    public sortField: SortField = 'date_added';
 
     private loading = false;
     private page = 1;
     private keywords = '';
-    private sortField: SortField = 'date_added';
     private sortDirection: SortDirection = 'DESC';
     private prevClickedColumn: Column;
     private selectedAlbum: AlbumInterface;
@@ -103,7 +103,6 @@ export class OverviewComponent {
             this.page = this.page + 1;
             this.getAlbums();
         }
-        // set current page
         const numberOfItemsScrolled = this.scrollViewport.measureScrollOffset('top') / this.itemSize;
         const page = this.basePage + Math.floor(numberOfItemsScrolled / Configuration.PAGE_SIZE);
         if (page !== this.currentPage) {
@@ -126,17 +125,7 @@ export class OverviewComponent {
     public sortOn(clickedColumn: Column): void {
         this.columns.forEach((column) => {
             if (column === clickedColumn && column === this.prevClickedColumn) {
-                switch (column.sortDirection) {
-                    case 'ASC':
-                        column.sortDirection = 'DESC';
-                        break;
-                    case 'DESC':
-                        column.sortDirection = 'ASC';
-                        break;
-                    default:
-                        //
-                        break;
-                }
+                column.sortDirection = column.sortDirection === 'ASC' ? 'DESC' : 'ASC';
             }
         });
         this.prevClickedColumn = clickedColumn;

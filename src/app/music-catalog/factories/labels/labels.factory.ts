@@ -8,11 +8,11 @@ import { LabelsFactoryState } from './labels.factory.state';
 import {
     LabelApiResponse, LabelApiResponseWrapper, LabelsApiResponse
 } from '../../models/api-responses/labels-api-response.interface';
-import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { Label } from '../../models/label.model';
 import { LabelsFactoryInterface } from './labels.factory.interface';
 import { LabelApiPostData } from '../../models/api-post-data/label-api-post-data.interface';
 import { AlbumInterface } from '../../models/album.model.interface';
+import { ErrorHelperInterface } from '../helpers/error.helper.interface';
 
 @Injectable()
 export class LabelsFactory implements LabelsFactoryInterface {
@@ -21,7 +21,7 @@ export class LabelsFactory implements LabelsFactoryInterface {
         private authenticationService: AuthenticationServiceInterface,
         private apiRequestService: ApiRequestServiceInterface,
         private state: LabelsFactoryState,
-        private modalService: ModalServiceInterface,
+        private errorHelper: ErrorHelperInterface,
     ) {
         //
     }
@@ -57,10 +57,7 @@ export class LabelsFactory implements LabelsFactoryInterface {
                 observable.next(this.sortLabels(labels));
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -86,10 +83,7 @@ export class LabelsFactory implements LabelsFactoryInterface {
                 observable.next(label);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
@@ -114,10 +108,7 @@ export class LabelsFactory implements LabelsFactoryInterface {
                 observable.next(label);
             },
             error: (error: HttpErrorResponse) => {
-                this.modalService.getModal('modal1')
-                    .setErrorMessage(error.error)
-                    .open();
-                observable.error([]);
+                this.errorHelper.errorHandling(error, observable);
             }
         });
         return observable;
