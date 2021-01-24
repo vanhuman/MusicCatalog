@@ -1,0 +1,152 @@
+<div class="album-edit" [ngClass]="getClassForWidth()">
+    <form class="album-edit" [formGroup]="albumEditForm">
+        <div class="image" *ngIf="showImages">
+            <img [src]="album.getImage()" alt="" *ngIf="album && album.getImage()"/>
+            <div class="no-image" *ngIf="!album || !album.getImage()">
+                <div>no image available</div>
+            </div>
+            <div class="re-fetch-image" *ngIf="album">
+                <label for="{{id}}-re-fetch-image">Get new image</label>
+                <input type="checkbox" id="{{id}}-re-fetch-image"
+                       formControlName="re-fetch-image">
+            </div>
+        </div>
+        <fieldset>
+            <div class="field">
+                <label for="{{id}}-title">Title</label>
+                <div class="input-with-error">
+                    <input id="{{id}}-title" #title
+                           type="text"
+                           formControlName="title">
+                    <div class="error" *ngIf="fieldError('title')">{{ getValidationMessage('title') }}</div>
+                </div>
+            </div>
+            <div class="field">
+                <label for="{{id}}-artist">Artist</label>
+                <div class="input-with-error">
+                    <input #artist id="{{id}}-artist"
+                           type="text"
+                           formControlName="artist"
+                           [placeholder]="albumFields.get('artist').placeholder"
+                           (keyup)="processKeyupOnEntity('artist', artist.value, $event)">
+                    <div class="error" *ngIf="fieldError('artist')">{{ getValidationMessage('artist') }}</div>
+                </div>
+                <div class="all-refs" *ngIf="album">
+                    <label for="{{id}}-artist-all-refs" class="e-reader">Update all artist references</label>
+                    <input type="checkbox" id="{{id}}-artist-all-refs"
+                           formControlName="artist-all-refs"
+                           [sharedTooltip]="{title: 'Update all references'}">
+                </div>
+                <ul class="selection-list" [style.display]="entityPopup === 'artist' ? 'block' : 'none'">
+                    <li *ngFor="let artist of artists; let index = index"
+                        (click)="selectEntity('artist', artist)"
+                        [ngClass]="index === selectedEntityNumber ? 'selected' : ''">
+                        {{ artist.getName() }}
+                    </li>
+                </ul>
+            </div>
+            <div class="field year">
+                <label for="{{id}}-year">Year</label>
+                <div class="input-with-error">
+                    <input #year id="{{id}}-year"
+                           type="text"
+                           formControlName="year"
+                           [placeholder]="albumFields.get('year').placeholder"
+                           (keyup)="processKeyupOnYear(year.value, $event)">
+                    <div class="error" *ngIf="fieldError('year')">{{ getValidationMessage('year') }}</div>
+                </div>
+            </div>
+            <div class="field format">
+                <label for="{{id}}-format">Format</label>
+                <div class="input-with-error">
+                    <input #format id="{{id}}-format"
+                           type="text"
+                           formControlName="format"
+                           (keyup)="processKeyupOnEntity('format', format.value, $event)">
+                    <div class="error" *ngIf="fieldError('format')">{{ getValidationMessage('format') }}</div>
+                </div>
+                <div class="all-refs" *ngIf="album">
+                    <label for="{{id}}-format-all-refs" class="e-reader">Update all format references</label>
+                    <input type="checkbox" id="{{id}}-format-all-refs"
+                           formControlName="format-all-refs"
+                           [sharedTooltip]="{title: 'Update all references'}">
+                </div>
+                <ul class="selection-list" [style.display]="entityPopup === 'format' ? 'block' : 'none'">
+                    <li *ngFor="let format of formats; let index = index"
+                        (click)="selectEntity('format', format)"
+                        [ngClass]="index === selectedEntityNumber ? 'selected' : ''">
+                        {{ format.getName() }}
+                    </li>
+                </ul>
+            </div>
+            <div class="field label">
+                <label for="{{id}}-label">Label</label>
+                <div class="input-with-error">
+                    <input #label id="{{id}}-label"
+                           type="text"
+                           formControlName="label"
+                           (keyup)="processKeyupOnEntity('label', label.value, $event)">
+                    <div class="error" *ngIf="fieldError('label')">{{ getValidationMessage('label') }}</div>
+                </div>
+                <div class="all-refs" *ngIf="album">
+                    <label for="{{id}}-label-all-refs" class="e-reader">Update all label references</label>
+                    <input type="checkbox" id="{{id}}-label-all-refs"
+                           formControlName="label-all-refs"
+                           [sharedTooltip]="{title: 'Update all references'}">
+                </div>
+                <ul class="selection-list" [style.display]="entityPopup === 'label' ? 'block' : 'none'">
+                    <li *ngFor="let label of labels; let index = index"
+                        (click)="selectEntity('label', label)"
+                        [ngClass]="index === selectedEntityNumber ? 'selected' : ''">
+                        {{ label.getName() }}
+                    </li>
+                </ul>
+            </div>
+            <div class="field genre">
+                <label for="{{id}}-genre">Genre</label>
+                <div class="input-with-error">
+                    <input #genre id="{{id}}-genre"
+                           type="text"
+                           formControlName="genre"
+                           (keyup)="processKeyupOnEntity('genre', genre.value, $event)">
+                    <div class="error" *ngIf="fieldError('genre')">{{ getValidationMessage('genre') }}</div>
+                </div>
+                <div class="all-refs" *ngIf="album">
+                    <label for="{{id}}-genre-all-refs" class="e-reader">Update all genre references</label>
+                    <input type="checkbox" id="{{id}}-genre-all-refs"
+                           formControlName="genre-all-refs"
+                           [sharedTooltip]="{title: 'Update all references'}">
+                </div>
+                <ul class="selection-list" [style.display]="entityPopup === 'genre' ? 'block' : 'none'">
+                    <li *ngFor="let genre of genres; let index = index"
+                        (click)="selectEntity('genre', genre)"
+                        [ngClass]="index === selectedEntityNumber ? 'selected' : ''">
+                        {{ genre.getDescription() }}
+                    </li>
+                </ul>
+            </div>
+            <div class="field notes">
+                <label for="{{id}}-notes">Notes</label>
+                <div class="input-with-error">
+                <textarea id="{{id}}-notes"
+                          type="text"
+                          formControlName="notes">
+                </textarea>
+                    <div class="error" *ngIf="fieldError('notes')">{{ getValidationMessage('notes') }}</div>
+                </div>
+            </div>
+        </fieldset>
+        <div class="icons" *ngIf="album">
+            <img alt="previous" [src]="previousImage" (click)="previousAlbum()"
+                 [sharedTooltip]="{title: 'Previous'}"/>
+            <img alt="next" [src]="nextImage" (click)="nextAlbum()" [sharedTooltip]="{title: 'Next'}"/>
+        </div>
+        <div class="buttons">
+            <img class="loader" [src]="loaderImage" *ngIf="waiting" alt="">
+            <button class="btn-primary" (click)="preSave(true)" [disabled]="saveDisabled()">Save and New</button>
+            <button class="btn-primary" (click)="preSave()" [disabled]="saveDisabled()">Save</button>
+            <button class="btn-secondary" (click)="cancel()" [disabled]="saving">Close</button>
+        </div>
+    </form>
+</div>
+<div class="album-edit-background"></div>

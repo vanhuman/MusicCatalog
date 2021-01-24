@@ -1,0 +1,18 @@
+<div class="custom-modal">
+    <div class="custom-modal-body" [style.width.px]="getWidth()">
+        <div class="message">
+            <ng-container *ngFor="let message of messages">
+                <span [ngClass]="getStyle(message)">{{ message.text }}</span>
+            </ng-container>
+        </div>
+        <div class="buttons">
+            <button class="btn-primary" (click)="close()" *ngIf="showCloseButton">Close</button>
+            <img [src]="loaderImage" *ngIf="waiting" alt="">
+            <button class="btn-primary" [disabled]="yesButtonDisabled"
+                    (click)="yes()" *ngIf="showYesButton">Yes</button>
+            <button class="btn-secondary" [disabled]="noButtonDisabled"
+                    (click)="no()" *ngIf="showNoButton">No</button>
+        </div>
+    </div>
+</div>
+<div class="custom-modal-background"></div>

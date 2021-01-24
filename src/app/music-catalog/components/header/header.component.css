@@ -1,0 +1,143 @@
+input,
+button,
+select,
+textarea {
+  border: solid 1px #979797;
+}
+input:focus,
+button:focus,
+select:focus,
+textarea:focus {
+  outline: solid 1px #59525400;
+  border: solid 1px #444444;
+}
+button.btn-secondary:focus {
+  outline: solid 1px #59525400;
+  border: solid 1px #666666;
+}
+.default-button {
+  padding: 0 15px;
+  min-width: 40px;
+  margin-left: 20px;
+  height: 20px;
+  font-size: 12px;
+}
+.btn-primary {
+  padding: 0 15px;
+  min-width: 40px;
+  margin-left: 20px;
+  height: 20px;
+  font-size: 12px;
+  background-color: #ffa500;
+  border: 1px solid transparent;
+  color: #000;
+}
+.btn-primary:hover,
+.btn-secondary:hover {
+  cursor: pointer;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #e69500;
+}
+.btn-primary:disabled {
+  background-color: #c2c2c2;
+  opacity: 0.5;
+  cursor: default;
+}
+.btn-secondary {
+  padding: 0 15px;
+  min-width: 40px;
+  margin-left: 20px;
+  height: 20px;
+  font-size: 12px;
+  background-color: #fff;
+  border: solid 1px #979797;
+  color: #000;
+}
+.btn-secondary:hover:not(:disabled) {
+  border: solid 1px #7e7e7e;
+}
+.btn-secondary:disabled {
+  border: solid 1px #d5d5d5;
+  color: #b7b7b7;
+  cursor: default;
+}
+div.title {
+  display: inline-block;
+  margin-right: 20px;
+  color: #ffa500;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 35px;
+}
+form.header {
+  display: inline-block;
+  line-height: 35px;
+  float: right;
+  padding-right: 20px;
+}
+form.header div {
+  display: inline-block;
+  margin-right: 20px;
+}
+form.header div button.btn-primary {
+  margin-left: 5px;
+}
+form.header label {
+  display: inline-block;
+  color: #945a00;
+  margin-right: 5px;
+}
+form.header input {
+  padding: 0 5px;
+  height: 18px;
+  font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
+  font-size: 12px;
+}
+form.header input.page {
+  width: 25px;
+  margin-right: 10px;
+}
+form.header div.menu {
+  margin-right: 0;
+  width: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+form.header div.menu:hover div.extra-buttons {
+  opacity: 1;
+  right: 60px;
+  width: 430px;
+  padding-right: 30px;
+  margin-right: 0;
+}
+form.header div.menu img {
+  position: relative;
+  top: 2px;
+  width: 15px;
+}
+form.header div.menu div.extra-buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  width: 40px;
+  padding: 0;
+  margin: 0;
+  margin-right: 30px;
+  text-align: right;
+  -moz-transition-property: opacity, right, width, padding-right, margin-right;
+  -webkit-transition-property: opacity, right, width, padding-right, margin-right;
+  -o-transition-property: opacity, right, width, padding-right, margin-right;
+  transition-property: opacity, right, width, padding-right, margin-right;
+  -moz-transition-duration: 0.5s, 0.5s, 0.5s, 0s, 0s;
+  -webkit-transition-duration: 0.5s, 0.5s, 0.5s, 0s, 0s;
+  -o-transition-duration: 0.5s, 0.5s, 0.5s, 0s, 0s;
+  transition-duration: 0.5s, 0.5s, 0.5s, 0s, 0s;
+  -moz-transition-delay: 0s, 0s, 0s, 0.5s, 0.5s;
+  -webkit-transition-delay: 0s, 0s, 0s, 0.5s, 0.5s;
+  -o-transition-delay: 0s, 0s, 0s, 0.5s, 0.5s;
+  transition-delay: 0s, 0s, 0s, 0.5s, 0.5s;
+  background: #f9f9f9;
+}
+/*# sourceMappingURL=header.component.css.map */

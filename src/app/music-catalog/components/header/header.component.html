@@ -1,0 +1,38 @@
+<div class="title">
+    {{ title }}
+</div>
+<form class="header" [formGroup]="headerForm">
+    <div class="number-of-records">
+        <label>Total albums:</label>
+        {{ getTotalAlbumsText() }}
+    </div>
+    <div class="search">
+        <label for="{{id}}-page">Page:</label>
+        <input type="text" id="{{id}}-page" class="page"
+               placeholder="1"
+               formControlName="page"
+        >
+        <label for="{{id}}-keywords">Keywords:</label>
+        <input type="text" id="{{id}}-keywords"
+               placeholder="Enter keywords"
+               formControlName="keywords"
+        >
+        <button class="btn-primary" (click)="search()">Fetch</button>
+        <button class="btn-primary" (click)="clear()">Clear</button>
+    </div>
+    <div class="menu">
+        <img [src]="menuIcon" alt="">
+        <div class="extra-buttons">
+            <ng-container *ngIf="isAdmin()">
+                <button class="btn-primary" (click)="addAlbum()">New</button>
+                <button class="btn-primary" (click)="removeOphans()">Clean-up</button>
+            </ng-container>
+            <ng-container *ngIf="isLoggedIn()">
+                <button class="btn-primary" (click)="logout()">Logout</button>
+            </ng-container>
+            <ng-container *ngIf="!isLoggedIn()">
+                <button class="btn-primary" (click)="login()">Login</button>
+            </ng-container>
+        </div>
+    </div>
+</form>

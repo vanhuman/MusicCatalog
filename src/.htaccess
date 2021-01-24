@@ -1,0 +1,5 @@
+ExpiresActive On
+ExpiresByType image/jpeg "acces plus 1 month"
+ExpiresByType image/jpg "acces plus 1 month"
+ExpiresByType image/png "acces plus 1 month"
+ExpiresByType image/gif "acces plus 1 month"

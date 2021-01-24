@@ -1,0 +1,48 @@
+@import '../../styles/defines';
+
+.tooltip-component-text {
+    min-width: 60px;
+    background-color: #000;
+    color: @primary-color;
+    text-align: center;
+    border-radius: 2px;
+    padding: 3px 5px;
+    position: absolute;
+    z-index: 5;
+    margin-top: -10px;
+    font-size: 11px;
+    display: table;
+    opacity: 0;
+    .transition(opacity; .2s; ease-out);
+    white-space: nowrap;
+
+    span.tooltip-arrow-bottom {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border: 5px solid transparent;
+        border-top-color: #000;
+        opacity: 0;
+        .transition(opacity; .2s; ease-out);
+    }
+
+    span.tooltip-arrow-top {
+        position: absolute;
+        bottom: 100%;
+        right: 50%;
+        margin-right: -5px;
+        border: 5px solid transparent;
+        border-bottom-color: #000;
+        opacity: 0;
+        .transition(opacity; .2s; ease-out);
+    }
+
+    span.show {
+        opacity: 1;
+    }
+
+    &.show {
+        opacity: 1;
+    }
+}

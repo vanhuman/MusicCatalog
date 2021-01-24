@@ -1,7 +1,17 @@
 <div class="music-catalog">
-    <h1>{{ title }}</h1>
-    <music-catalog-header></music-catalog-header>
-    <music-catalog-login></music-catalog-login>
-    <music-catalog-overview></music-catalog-overview>
+    <music-catalog-header
+            [mcCommunication]="outputToHeader"
+            (mcCommunicationOut)="processInputFromHeader($event)">
+    </music-catalog-header>
+    <music-catalog-overview
+            *ngIf="validSession"
+            [mcCommunication]="outputToOverview"
+            (mcCommunicationOut)="processInputFromOverview($event)">
+    </music-catalog-overview>
+    <music-catalog-login
+            *ngIf="showLogin"
+            (loggedIn)="processInputFromLogin($event)">
+    </music-catalog-login>
+    <custom-modal [id]="'modal1'"></custom-modal>
+    <shared-tooltip-container></shared-tooltip-container>
 </div>
-

@@ -1,0 +1,180 @@
+@import '../../styles/buttons';
+@input-width: 300px;
+@input-width-small: 50px;
+@image-width: 300px;
+
+div.album-edit {
+    z-index: 1;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 30px;
+    min-height: 320px;
+    width: 750px;
+    margin-top: 40px;
+    white-space: nowrap;
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.4);
+    background: #fff;
+
+    &.small {
+        width: 370px;
+    }
+    form.album-edit {
+        div.image {
+            display: inline-block;
+            padding-right: 30px;
+            width: @image-width;
+            height: @image-width;
+            margin-top: 10px;
+
+            img {
+                width: 300px;
+            }
+            div.no-image {
+                font-size: 8px;
+                text-align: center;
+                height: 298px;
+                border: 1px solid #A0A0A0;
+                opacity: 0.3;
+
+                div {
+                    padding-top: 10px;
+                }
+            }
+            div.re-fetch-image {
+                width: @image-width;
+                text-align: center;
+                padding-top: 20px;
+
+                label {
+                    color: @label-color;
+                }
+                input {
+                    vertical-align: -2px;
+                }
+            }
+        }
+        fieldset {
+            display: inline-block;
+            vertical-align: top;
+            border: 0;
+            padding: 0 0 50px 0;
+            margin: 0;
+
+            div.field {
+                padding: 12px 0;
+                position: relative;
+
+                .e-reader {
+                    position: absolute;
+                    left: 9999px;
+                }
+                &.year, &.format {
+                    div.input-with-error input {
+                        width: @input-width-small;
+                    }
+                    ul.selection-list {
+                        min-width: @input-width-small + 30px;
+                    }
+                }
+                &.notes {
+                    label {
+                        vertical-align: top;
+                    }
+                }
+                div.input-with-error {
+                    width: calc(@input-width + 10px);
+                    display: inline-block;
+
+                    input {
+                        padding: 0 5px;
+                        height: @input-height;
+                        width: @input-width;
+                        font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
+                        font-size: 12px;
+                    }
+                    textarea {
+                        width: @input-width + 5px;
+                        height: 50px;
+                    }
+                    div.error {
+                        position: absolute;
+                        padding-top: 3px;
+                        color: @red;
+                        font-size: 10px;
+                    }
+                }
+                div.all-refs {
+                    display: inline-block;
+                    padding-left: 20px;
+                    width: 30px;
+                }
+                label {
+                    display: inline-block;
+                    color: @label-color;
+                    width: 55px;
+                }
+                ul.selection-list {
+                    display: none;
+                    position: absolute;
+                    list-style: none;
+                    border: 1px solid #979797;
+                    z-index: 4;
+                    background: @secondary-color;
+                    top: 26px;
+                    left: 45px;
+                    min-width: @input-width + 30px;
+                    overflow: hidden;
+                    cursor: pointer;
+                    padding-left: 0;
+
+                    li {
+                        padding: 2px 5px;
+
+                        &:hover, &.selected {
+                            background: @tertiary-color;
+                        }
+                    }
+                }
+            }
+        }
+        div.icons {
+            display: inline-block;
+            position: absolute;
+            bottom: 32px;
+            left: 345px;
+
+            img {
+                cursor: pointer;
+                width: 15px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+        div.buttons {
+            display: inline-block;
+            position: absolute;
+            right: 30px;
+            bottom: 30px;
+
+            button.btn-primary, button.btn-secondary {
+                height: @button-height-extra;
+            }
+            img.loader {
+                width: 35px;
+                position: relative;
+                top: 15px;
+            }
+        }
+    }
+}
+
+.album-edit-background {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    opacity: 0.75;
+}

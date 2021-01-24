@@ -1,7 +1,31 @@
-div.music-catalog {
-    font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
+@import 'styles/defines';
 
-    h1 {
-        color: orange;
+custom-modal {
+    display: none;
+}
+div.music-catalog {
+    padding: 0;
+    margin: 0;
+
+    music-catalog-header, music-catalog-overview {
+        display: block;
+        min-width: @min-width;
+    }
+    music-catalog-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: @header-height;
+        background: @secondary-color;
+        padding: 0 @padding-overview-body-side;
+        white-space: nowrap;
+    }
+    music-catalog-overview {
+        width: 100%;
+    }
+    music-catalog-login {
+        position: fixed;
+        top: 50px;
+        width: 100%;
     }
 }

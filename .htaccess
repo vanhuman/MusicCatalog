@@ -1,0 +1,6 @@
+AuthGroupFile /dev/null
+AuthType Basic
+AuthUserFile /home/deb55474/domains/west28.nl/.htpasswd/public_html/music-catalog/.htpasswd
+AuthName "Music Catalog"
+require valid-user
+ErrorDocument 401 "Unauthorized Access"

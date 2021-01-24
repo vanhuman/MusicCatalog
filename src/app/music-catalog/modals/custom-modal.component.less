@@ -1,0 +1,73 @@
+@import '../styles/buttons';
+
+.custom-modal {
+    position: fixed;
+    top: 100px;
+    width: 100%;
+    z-index: 1000;
+    /* enables scrolling for tall modals */
+    overflow: auto;
+
+    .custom-modal-body {
+        box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.4);
+        padding: 20px;
+        min-height: 60px;
+        margin: 40px auto;
+        position: relative;
+        background: #fff;
+
+        div.message {
+            padding-bottom: 35px;
+            word-break: break-word;
+
+            .bold {
+                font-weight: 600;
+            }
+            .italic {
+                font-style: italic;
+            }
+            .big {
+                font-size: 16px;
+                padding-top: 15px;
+                padding-bottom: 15px;
+            }
+            .new-line {
+                display: block;
+                height: 20px;
+            }
+            .align-center {
+                text-align: center;
+            }
+            .alert {
+                color: @primary-color;
+            }
+        }
+        div.buttons {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+
+            img {
+                width: 35px;
+                position: relative;
+                top: 15px;
+            }
+        }
+    }
+}
+
+.custom-modal-background {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    opacity: 0.75;
+    z-index: 900;
+}
+
+body.custom-modal-open {
+    /* body overflow is hidden to hide main scrollbar when modal window is open */
+    overflow: hidden;
+}

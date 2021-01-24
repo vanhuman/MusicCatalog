@@ -1,39 +1,71 @@
-import { Component } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { AuthenticateApiResponse } from './models/authenticate-api-response.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+
+import { McCommunication } from './models/music-catalog-communication.interface';
+import { AuthenticationServiceInterface } from './services/authentication.service.interface';
 
 @Component({
-    selector: 'app-root',
+    selector: 'music-catalog',
     templateUrl: './music-catalog.component.html',
     styleUrls: ['./music-catalog.component.css'],
 })
-export class MusicCatalogComponent {
-    public title = 'Sutton Music Catalog';
-    private token: string;
+export class MusicCatalogComponent implements OnInit, OnDestroy {
+    public validSession = false;
+    public showLogin = true;
+    public outputToOverview: McCommunication;
+    public outputToHeader: McCommunication;
+    private authenticationMonitorSubscription: Subscription;
 
     public constructor(
-        httpClient: HttpClient,
+        private authenticationService: AuthenticationServiceInterface,
     ) {
-        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-        let body = new HttpParams();
-        body = body.set('username', 'robert');
-        body = body.set('password', 'ankerput');
-        httpClient.post<AuthenticateApiResponse>(
-            'http://moses.test/api/authenticate',
-            body,
-            {headers}
-        ).subscribe({
-            next: (response) => {
-                this.token = response.session.token;
-                let params = new HttpParams();
-                params = params.set('token', this.token);
-                httpClient.get('http://moses.test/api/albums/33', { params }).subscribe((resp) => {
-                    console.log(resp);
-                });
-            },
-            error: (error: HttpErrorResponse) => {
-                console.log(error.error);
+    }
+
+    public ngOnInit() {
+        this.authenticationMonitorSubscription = this.authenticationService.monitorValidSession()
+            .subscribe((validSession) => {
+                if (!validSession) {
+                    this.validSession = false;
+                    this.showLogin = true;
+                }
+            });
+    }
+
+    public ngOnDestroy(): void {
+        if (this.authenticationMonitorSubscription) {
+            this.authenticationMonitorSubscription.unsubscribe();
+        }
+    }
+
+    public processInputFromHeader(mcCommunication: McCommunication): void {
+        if (mcCommunication) {
+            switch (mcCommunication.action) {
+                case 'login':
+                    this.showLogin = true;
+                    break;
+                case 'logout':
+                    this.validSession = false;
+                    this.showLogin = true;
+                    this.authenticationService.logout();
+                    break;
+                default:
+                //
             }
-        });
+        }
+        this.outputToOverview = mcCommunication;
+    }
+
+    public processInputFromLogin(loggedIn: boolean): void {
+        this.showLogin = false;
+        if (loggedIn) {
+            this.validSession = true;
+            this.outputToOverview = {
+                action: 'loggedIn',
+            };
+        }
+    }
+
+    public processInputFromOverview(mcCommunication: McCommunication): void {
+        this.outputToHeader = mcCommunication;
     }
 }

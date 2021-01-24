@@ -1,0 +1,41 @@
+<div class="image" *ngIf="showImages">
+    <img [src]="album.getImageThumb()" alt="" />
+    <div class="popup-image" *ngIf="album.getImage()" [style.top]="getTop()">
+        <img [src]="album.getImage()" alt="" />
+    </div>
+</div>
+<div class="title">
+    <span *ngIf="isAdmin" (click)="edit()"
+          [sharedTooltip]="{title: 'Edit album', topOffset: -3}" class="edit">
+        {{ album.getTitle() }}
+    </span>
+    <span *ngIf="!isAdmin">
+        {{ album.getTitle() }}
+    </span>
+</div>
+<div class="artist">
+    <span>
+        {{ album.getArtist() ? album.getArtist().getName() : '' }}
+    </span>
+</div>
+<div class="year">
+    {{ album.getYear() }}
+</div>
+<div class="format">
+    {{ album.getFormat() ? album.getFormat().getName() : '' }}
+</div>
+<div class="label">
+    <span>
+        {{ album.getLabel() ? album.getLabel().getName() : '' }}
+    </span>
+</div>
+<div class="genre">
+    {{ album.getGenre() ? album.getGenre().getDescription() : '' }}
+</div>
+<div class="date-added">
+    {{ album.getDateAdded() }}
+</div>
+<div class="icons" *ngIf="isAdmin">
+    <img alt="edit" [src]="editImage" (click)="edit()" [sharedTooltip]="{title: 'Edit', topOffset: -3}"/>
+    <img alt="delete" [src]="deleteImage" (click)="delete($event)" [sharedTooltip]="{title: 'Delete', topOffset: -3}"/>
+</div>

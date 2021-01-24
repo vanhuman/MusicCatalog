@@ -1,0 +1,140 @@
+@import '../../styles/defines';
+@import '../../styles/buttons';
+
+div.overview-header {
+    position: fixed;
+    top: @header-height;
+    height: @overview-labels-height;
+    width: ~'calc(100% - @{padding-overview-header-left} - @{padding-overview-header-right})';
+    min-width: calc(@min-width - @padding-overview-header-left - @padding-overview-header-right);
+    padding: 5px @padding-overview-header-right 0 @padding-overview-header-left;
+    border-bottom: 1px solid @primary-color;
+    margin-bottom: 5px;
+    color: @label-color;
+    background: @tertiary-color;
+    z-index: -1;
+
+    div {
+        display: inline-block;
+        cursor: pointer;
+
+        span {
+            padding-right: 3px;
+        }
+        img {
+            width: 10px;
+
+            &.up {
+                .transform(rotate(270deg));
+            }
+            &.down {
+                .transform(rotate(90deg));
+            }
+        }
+    }
+
+    div.image {
+        width: @width-image;
+    }
+    div.artist {
+        width: @width-artist;
+        padding-right: @padding-right-artist;
+    }
+    div.title {
+        width: @width-title;
+        padding-right: @padding-right-title;
+        padding-left: @padding-left-title;
+    }
+    div.year {
+        width: @width-year;
+    }
+    div.format {
+        width: @width-format;
+    }
+    div.label {
+        width: @width-label;
+        padding-right: @padding-right-label;
+    }
+    div.genre {
+        width: @width-genre;
+        padding-right: @padding-right-genre;
+    }
+    div.date-added {
+        width: @width-date-added;
+    }
+    div.icons {
+        width: @width-icons;
+        padding-right: @padding-right-icons;
+    }
+}
+.viewport {
+    height: 90vh;
+    margin-top: @overview-labels-height + @header-height + 6px;
+}
+//.viewport::-webkit-scrollbar {
+//    -webkit-appearance: none;
+//}
+//
+//.viewport::-webkit-scrollbar:vertical {
+//    width: 11px;
+//}
+//
+//.viewport::-webkit-scrollbar:horizontal {
+//    height: 11px;
+//}
+//
+//.viewport::-webkit-scrollbar-thumb {
+//    border-radius: 8px;
+//    border: 2px solid white; /* should match background, can't be transparent */
+//    background-color: rgba(0, 0, 0, .5);
+//}
+//
+//.viewport::-webkit-scrollbar-track {
+//    background-color: #fff;
+//    border-radius: 8px;
+//}
+div.overview-body {
+    width: ~'calc(100% - @{padding-overview-body-side} - @{padding-overview-body-side})';
+    padding: 10px @padding-overview-body-side 30px @padding-overview-body-side;
+
+    div.album-row {
+        height: 25px;
+        .transition(background; 0.3s; ease-out);
+        border: 1px solid transparent;
+
+        &:hover {
+            background: @tertiary-color;
+            border: 1px solid @primary-color;
+        }
+        &.selected {
+            border: 1px solid @primary-color;
+        }
+    }
+}
+button.scroll-up {
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+}
+div.page {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    background: @primary-color;
+}
+music-catalog-album-edit {
+    position: fixed;
+    top: 0;
+    z-index: 2;
+}
+

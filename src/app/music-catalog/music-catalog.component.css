@@ -1,6 +1,46 @@
-div.music-catalog {
-  font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
+input,
+button,
+select,
+textarea {
+  border: solid 1px #979797;
 }
-div.music-catalog h1 {
-  color: orange;
+input:focus,
+button:focus,
+select:focus,
+textarea:focus {
+  outline: solid 1px #59525400;
+  border: solid 1px #444444;
+}
+button.btn-secondary:focus {
+  outline: solid 1px #59525400;
+  border: solid 1px #666666;
+}
+custom-modal {
+  display: none;
+}
+div.music-catalog {
+  padding: 0;
+  margin: 0;
+}
+div.music-catalog music-catalog-header,
+div.music-catalog music-catalog-overview {
+  display: block;
+  min-width: 1024px;
+}
+div.music-catalog music-catalog-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 35px;
+  background: #f9f9f9;
+  padding: 0 20px;
+  white-space: nowrap;
+}
+div.music-catalog music-catalog-overview {
+  width: 100%;
+}
+div.music-catalog music-catalog-login {
+  position: fixed;
+  top: 50px;
+  width: 100%;
 }

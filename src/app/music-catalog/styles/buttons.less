@@ -1,0 +1,40 @@
+@import 'defines';
+
+.default-button {
+    padding: 0 15px;
+    min-width: 40px;
+    margin-left: 20px;
+    height: @button-height;
+    font-size: 12px;
+}
+.btn-primary {
+    .default-button;
+    background-color: @primary-button-background-color;
+    border: 1px solid transparent;
+    color: @primary-button-text-color;
+}
+.btn-primary:hover, .btn-secondary:hover {
+    cursor: pointer;
+}
+.btn-primary:hover:not(:disabled) {
+    background-color: darken(@primary-button-background-color, 5%);
+}
+.btn-primary:disabled {
+    background-color: #c2c2c2;
+    opacity: 0.5;
+    cursor: default;
+}
+.btn-secondary {
+    .default-button;
+    background-color: #fff;
+    border: solid 1px @secondary-button-border-color;
+    color: @secondary-button-text-color;
+}
+.btn-secondary:hover:not(:disabled) {
+    border: solid 1px darken(@secondary-button-border-color, 10%);
+}
+.btn-secondary:disabled {
+    border: solid 1px #d5d5d5;
+    color: #b7b7b7;
+    cursor: default;
+}

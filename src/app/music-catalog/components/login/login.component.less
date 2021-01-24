@@ -1,0 +1,61 @@
+@import '../../styles/buttons';
+
+.login {
+    z-index: 1000;
+
+    form.login {
+        box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.4);
+        padding: 20px;
+        width: 260px;
+        min-height: 60px;
+        margin: 40px auto;
+        position: relative;
+        background: white;
+
+        fieldset {
+            border: 0;
+            padding: 0 0 50px 0;
+            margin: 0;
+
+            div.field {
+                padding: 10px 0;
+
+                label {
+                    display: inline-block;
+                    color: @label-color;
+                    width: 75px;
+                }
+                input {
+                    padding: 0 5px;
+                    height: @input-height;
+                    width: 173px;
+                    font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
+                    font-size: 12px;
+                }
+                div.error {
+                    color: red;
+                }
+            }
+        }
+        div.buttons {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+
+            button.btn-primary, button.btn-secondary {
+                height: @button-height-extra;
+            }
+        }
+    }
+}
+
+.login-background {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    opacity: 0.75;
+    z-index: 900;
+}

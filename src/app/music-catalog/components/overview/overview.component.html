@@ -1,0 +1,34 @@
+<div class="overview-header">
+    <div class="image" *ngIf="showImages"></div>
+    <ng-container *ngFor="let column of columns">
+        <div class="{{ column.class }}" (click)="sortOn(column)"
+             [sharedTooltip]="getTooltipConfig(column)">
+            <span>{{ column.title }}</span>
+            <img *ngIf="column.sortField === sortField" alt="arrow"
+                 [src]="arrowImage" [ngClass]="getArrowClass(column)"/>
+        </div>
+    </ng-container>
+    <div class="icons">&nbsp;</div>
+</div>
+<cdk-virtual-scroll-viewport [itemSize]="itemSize" class="viewport" (scroll)="onScroll()">
+    <div class="overview-body" [style.padding-bottom.px]="getPaddingBottom()">
+        <ng-container *cdkVirtualFor="let album of albums">
+            <div class="album-row" *ngIf="!album.getDeleted()"
+                 [ngClass]="isSelected(album)" (click)="select(album)">
+                <music-catalog-album
+                        (mcCommunicationOut)="processInputFromAlbumRow($event)"
+                        [album]="album"
+                        [mcCommunication]="outputToAlbumRow"
+                >
+                </music-catalog-album>
+            </div>
+        </ng-container>
+    </div>
+</cdk-virtual-scroll-viewport>
+<button class="btn-primary scroll-up" (click)="scrollUp()">To top</button>
+<div class="page" *ngIf="showCurrentPage">Page {{currentPage}}</div>
+<music-catalog-album-edit *ngIf="showAlbumEdit"
+                          [album]="albumToEdit"
+                          (mcCommunication)="processInputFromAlbumEdit($event)">
+</music-catalog-album-edit>
+
