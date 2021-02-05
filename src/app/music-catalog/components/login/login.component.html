@@ -22,8 +22,8 @@
             </div>
         </fieldset>
         <div class="buttons">
-            <button class="btn-primary" (click)="login()">OK</button>
-            <button class="btn-secondary" (click)="cancel()">Cancel</button>
+            <button class="btn-primary" (click)="login()" [disabled]="loggingIn">OK</button>
+            <button class="btn-secondary" (click)="cancel()" [disabled]="loggingIn">Cancel</button>
         </div>
     </form>
 </div>
