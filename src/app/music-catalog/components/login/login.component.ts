@@ -20,9 +20,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
     public id = 'music-catalog-login';
     public error;
+    public loggingIn = false;
 
     private element: any;
-    private loggingIn = false;
     private authenticationSubscription: Subscription;
 
     public constructor(
@@ -73,10 +73,13 @@ export class LoginComponent implements OnInit, OnDestroy {
                 .subscribe((loginResult: AuthenticationResult) => {
                     if (loginResult.succes) {
                         this.loggedIn.emit(true);
+                        this.loggingIn = false;
                     } else {
-                        this.error = loginResult.error;
+                        setTimeout(() => {
+                            this.error = loginResult.error;
+                            this.loggingIn = false;
+                        }, 500);
                     }
-                    this.loggingIn = false;
                 });
         }
     }
