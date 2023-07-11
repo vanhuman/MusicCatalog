@@ -32,7 +32,7 @@ interface Column {
 })
 export class OverviewComponent {
     @Output() public mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
-    @ViewChild(CdkVirtualScrollViewport, { static: false }) public scrollViewport: CdkVirtualScrollViewport;
+    @ViewChild(CdkVirtualScrollViewport) public scrollViewport: CdkVirtualScrollViewport;
 
     public albums: AlbumInterface[] = [];
     public columns: Column[] = [];

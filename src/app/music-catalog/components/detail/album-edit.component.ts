@@ -42,7 +42,7 @@ interface ChangeAllRefs {
 })
 export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     @Output() mcCommunication: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
-    @ViewChild('title', {static: false}) public title: ElementRef;
+    @ViewChild('title') public title: ElementRef;
 
     public id = 'music-catalog-album-edit';
     public albumEditForm = new FormGroup({});
