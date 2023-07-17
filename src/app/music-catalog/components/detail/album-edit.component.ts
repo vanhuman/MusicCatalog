@@ -2,7 +2,7 @@ import {
     AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild
 } from '@angular/core';
 import { AlbumInterface } from '../../models/album.model.interface';
-import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { McCommunication } from '../../models/music-catalog-communication.interface';
 import { ArtistInterface } from '../../models/artist.model.interface';
 import { LabelInterface } from '../../models/label.model.interface';
@@ -45,7 +45,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('title') public title: ElementRef;
 
     public id = 'music-catalog-album-edit';
-    public albumEditForm = new FormGroup({});
+    public albumEditForm = new UntypedFormGroup({});
     public albumFields: Map<string, AlbumFieldSettings> = new Map<string, AlbumFieldSettings>();
     public artists: ArtistInterface[] = [];
     public labels: LabelInterface[] = [];
@@ -468,7 +468,7 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private addFormControls(): void {
         this.albumFields.forEach((albumFieldSettings, name) => {
-            this.albumEditForm.addControl(name, new FormControl());
+            this.albumEditForm.addControl(name, new UntypedFormControl());
             this.albumEditForm.controls[name].setValidators(albumFieldSettings.validators);
         });
     }
