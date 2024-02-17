@@ -10,8 +10,8 @@ import { AuthenticationServiceInterface } from './services/authentication.servic
     styleUrls: ['./music-catalog.component.css'],
 })
 export class MusicCatalogComponent implements OnInit, OnDestroy {
-    public validSession = false;
-    public showLogin = true;
+    public validSession = true;
+    public showLogin = false;
     public outputToOverview: McCommunication;
     public outputToHeader: McCommunication;
     private authenticationMonitorSubscription: Subscription;
