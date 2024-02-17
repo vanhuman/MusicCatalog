@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 
@@ -16,7 +16,7 @@ export interface AuthenticationResult {
 }
 
 @Injectable()
-export class AuthenticationService implements AuthenticationServiceInterface, OnDestroy {
+export class AuthenticationService implements AuthenticationServiceInterface, OnDestroy, OnInit {
     private validSession: BehaviorSubject<boolean> = new BehaviorSubject(false);
     private session: SessionInterface;
     private user: UserInterface;
@@ -26,6 +26,10 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
         private httpClient: HttpClient,
         private apiRequestService: ApiRequestServiceInterface,
     ) {
+        this.loginWithSessionStorage();
+    }
+
+    public ngOnInit() {
         this.authorisationErrorSubscription = this.apiRequestService.monitorAuthorisationError()
             .subscribe((autorisationError) => {
                 if (autorisationError) {
@@ -39,7 +43,7 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
         this.authorisationErrorSubscription.unsubscribe();
     }
 
-    public login(username: string, password: string, forced: boolean = false): Observable<AuthenticationResult> {
+    public login(username: string, password: string, forced = false): Observable<AuthenticationResult> {
         if (this.session && !forced) {
             return of({succes: true});
         }
@@ -90,6 +94,28 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
     public logout(): void {
         this.user = null;
         this.session = null;
+        sessionStorage.removeItem('mc-session');
+        sessionStorage.removeItem('mc-user');
+    }
+
+    private loginWithSessionStorage(): void {
+        let storedSession = sessionStorage.getItem('mc-session');
+        let storedUser = sessionStorage.getItem('mc-user');
+        if (storedSession && storedUser) {
+            storedSession = this.camelCaseToSnakeCase(storedSession);
+            storedUser = this.camelCaseToSnakeCase(storedUser);
+            const authenticateApiResponse: AuthenticateApiResponse = {
+                session: JSON.parse(storedSession),
+                user: JSON.parse(storedUser),
+            };
+            this.createSession(authenticateApiResponse);
+            this.createUser(authenticateApiResponse);
+            this.validSession.next(true);
+        }
+    }
+
+    private camelCaseToSnakeCase(value: string): string {
+        return value.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
     }
 
     private createSession(responseBody: AuthenticateApiResponse): void {
@@ -99,6 +125,7 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
             responseBody.session.time_out,
             responseBody.session.user_id,
         );
+        sessionStorage.setItem('mc-session', JSON.stringify(this.session));
     }
 
     private createUser(responseBody: AuthenticateApiResponse): void {
@@ -107,5 +134,6 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
             responseBody.user.username,
             responseBody.user.admin,
         );
+        sessionStorage.setItem('mc-user', JSON.stringify(this.user));
     }
 }

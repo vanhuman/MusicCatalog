@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { NumberUtility } from '../../utilities/number.utility';
@@ -24,9 +24,9 @@ export class HeaderComponent implements OnDestroy {
     public totalNumberOfAlbums = 0;
     public pageSize = 50;
     public totalNumberOfPages = 0;
-    public headerForm = new FormGroup({
-        page: new FormControl(1),
-        keywords: new FormControl(''),
+    public headerForm = new UntypedFormGroup({
+        page: new UntypedFormControl(1),
+        keywords: new UntypedFormControl(''),
     });
     public id = 'music-catalog-header';
     public menuIcon = Configuration.ICONS_PATH + 'menu.png';

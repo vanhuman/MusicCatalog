@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { AuthenticationResult } from '../../services/authentication.service';
@@ -14,9 +14,9 @@ import { AuthenticationServiceInterface } from '../../services/authentication.se
 export class LoginComponent implements OnInit, OnDestroy {
     @Output() loggedIn: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    public loginForm = new FormGroup({
-        username: new FormControl(),
-        password: new FormControl(),
+    public loginForm = new UntypedFormGroup({
+        username: new UntypedFormControl(),
+        password: new UntypedFormControl(),
     });
     public id = 'music-catalog-login';
     public error;

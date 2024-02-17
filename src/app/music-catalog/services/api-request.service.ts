@@ -129,6 +129,11 @@ export class ApiRequestService implements ApiRequestServiceInterface {
             };
             errorResponse.error.error_code = errorResponse.status;
             errorResponse.error.reference = 'HttpErrorResponse';
+        } else {
+            errorResponse.error.error_type = {
+                id: errorResponse.error.error_type[0],
+                description: errorResponse.error.error_type[1],
+            };
         }
         return throwError(errorResponse);
     }

@@ -17,9 +17,9 @@ declare var jQuery: any;
 export class TooltipComponent implements AfterViewInit {
     @Input() public tooltipConfig: TooltipConfig;
 
-    @ViewChild('tooltipContent', { static: false }) public tooltipContent: ElementRef;
-    @ViewChild('tooltipArrowTop', { static: false }) public tooltipArrowTop: ElementRef;
-    @ViewChild('tooltipArrowBottom', { static: false }) public tooltipArrowBottom: ElementRef;
+    @ViewChild('tooltipContent') public tooltipContent: ElementRef;
+    @ViewChild('tooltipArrowTop') public tooltipArrowTop: ElementRef;
+    @ViewChild('tooltipArrowBottom') public tooltipArrowBottom: ElementRef;
 
     public ngAfterViewInit() {
         const targetElement = this.tooltipConfig.element.nativeElement;
