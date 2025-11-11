@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { MusicCatalogComponent } from './music-catalog/music-catalog.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HeaderComponent } from './music-catalog/components/header/header.component';
 import { OverviewComponent } from './music-catalog/components/overview/overview.component';
 import { AuthenticationService } from './music-catalog/services/authentication.service';
@@ -43,8 +43,7 @@ import { FactoryHelper } from './music-catalog/factories/helpers/factory.helper'
 import { ErrorHelperInterface } from './music-catalog/factories/helpers/error.helper.interface';
 import { ErrorHelper } from './music-catalog/factories/helpers/error.helper';
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         MusicCatalogComponent,
         HeaderComponent,
         OverviewComponent,
@@ -56,15 +55,11 @@ import { ErrorHelper } from './music-catalog/factories/helpers/error.helper';
         TooltipContainerComponent,
         AlbumEditComponent,
     ],
-    imports: [
-        BrowserModule,
+    bootstrap: [MusicCatalogComponent], imports: [BrowserModule,
         AppRoutingModule,
-        HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
-        ScrollingModule,
-    ],
-    providers: [
+        ScrollingModule], providers: [
         HttpClient,
         TooltipService,
         AlbumsFactoryState,
@@ -83,8 +78,7 @@ import { ErrorHelper } from './music-catalog/factories/helpers/error.helper';
         { provide: GenresFactoryInterface, useClass: GenresFactory },
         { provide: FactoryHelperInterface, useClass: FactoryHelper },
         { provide: ErrorHelperInterface, useClass: ErrorHelper },
-    ],
-    bootstrap: [MusicCatalogComponent]
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {
 }
