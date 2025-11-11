@@ -38,7 +38,8 @@ interface ChangeAllRefs {
 @Component({
     selector: 'music-catalog-album-edit',
     templateUrl: './album-edit.component.html',
-    styleUrls: ['./album-edit.component.css']
+    styleUrls: ['./album-edit.component.css'],
+    standalone: false
 })
 export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
     @Output() mcCommunication: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();

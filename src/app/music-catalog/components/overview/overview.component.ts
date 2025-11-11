@@ -29,6 +29,7 @@ interface Column {
     selector: 'music-catalog-overview',
     templateUrl: './overview.component.html',
     styleUrls: ['./overview.component.css'],
+    standalone: false
 })
 export class OverviewComponent {
     @Output() public mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();

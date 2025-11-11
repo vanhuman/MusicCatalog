@@ -13,6 +13,7 @@ declare var jQuery: any;
         </div>
     `,
     styleUrls: ['./tooltip.css'],
+    standalone: false
 })
 export class TooltipComponent implements AfterViewInit {
     @Input() public tooltipConfig: TooltipConfig;

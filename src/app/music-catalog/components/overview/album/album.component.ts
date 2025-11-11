@@ -11,6 +11,7 @@ import { AuthenticationServiceInterface } from '../../../services/authentication
     selector: 'music-catalog-album',
     templateUrl: './album.component.html',
     styleUrls: ['./album.component.css'],
+    standalone: false
 })
 export class AlbumComponent {
     @Output() mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();

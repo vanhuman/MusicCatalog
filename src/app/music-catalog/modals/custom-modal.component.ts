@@ -16,6 +16,7 @@ export interface ModalMessage {
     selector: 'custom-modal',
     templateUrl: './custom-modal.component.html',
     styleUrls: ['./custom-modal.component.css'],
+    standalone: false
 })
 export class CustomModalComponent implements OnInit, OnDestroy {
     @Input() id: string;
