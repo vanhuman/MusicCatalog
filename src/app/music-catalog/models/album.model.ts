@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import { AlbumInterface } from './album.model.interface';
 import { ArtistInterface } from './artist.model.interface';
 import { FormatInterface } from './format.model.interface';
