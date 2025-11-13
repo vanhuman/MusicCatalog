@@ -14,36 +14,33 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "aot": true,
+            "outputHashing": "all",
             "outputPath": {
               "base": "dist/MusicCatalog"
             },
             "index": "src/index.html",
+            "sourceMap": true,
             "polyfills": [
               "src/polyfills.ts"
             ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
               "src/styles.css"
             ],
             "scripts": [],
-            "browser": "src/main.ts"
+            "browser": "src/main.ts",
+            "allowedCommonJsDependencies": [
+              "moment"
+            ]
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
               "budgets": [

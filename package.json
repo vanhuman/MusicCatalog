@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration=production --base-href=/music-catalog/browser/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -21,8 +21,6 @@
     "@angular/platform-browser": "^19.2.15",
     "@angular/platform-browser-dynamic": "^19.2.15",
     "@angular/router": "^19.2.15",
-    "core-js": "^3.31.1",
-    "fstream": "^1.0.12",
     "moment": "^2.29.4",
     "rxjs": "~6.5.4",
     "tslib": "^2.6.0",
