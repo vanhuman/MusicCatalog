@@ -46,18 +46,17 @@
     width: @width;
     white-space: nowrap;
 }
-
-.transition(@property: opacity; @duration: .5s; @timing-function: ease-in; @delay: 0s;) {
+.transition(@prop: opacity; @duration: .5s; @timing-function: ease-in; @delay: 0s;) {
     -moz-transition: @arguments;
     -webkit-transition: @arguments;
     -o-transition: @arguments;
     transition: @arguments;
 }
-.transition-property(@property: opacity) {
-    -moz-transition-property: @property;
-    -webkit-transition-property: @property;
-    -o-transition-property: @property;
-    transition-property: @property;
+.transition-property(@prop: opacity) {
+    -moz-transition-property: @prop;
+    -webkit-transition-property: @prop;
+    -o-transition-property: @prop;
+    transition-property: @prop;
 }
 .transition-duration(@duration: .5s) {
     -moz-transition-duration: @duration;
@@ -70,13 +69,6 @@
     -webkit-transition-delay: @delay;
     -o-transition-delay: @delay;
     transition-delay: @delay;
-}
-
-.transform(@transformation) {
-    -ms-transform: @transformation; /* IE 9 */
-    -moz-transform: @transformation; /* Firefox */
-    -webkit-transform: @transformation; /* Chrome, Safari, Opera */
-    transform: @transformation;
 }
 
 input, button, select, textarea {

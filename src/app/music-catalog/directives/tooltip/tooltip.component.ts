@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { TooltipConfig } from './tooltip.directive';
 
-declare var jQuery: any;
-
 @Component({
     selector: 'shared-tooltip-component',
     template: `
@@ -21,10 +19,10 @@ export class TooltipComponent implements AfterViewInit {
     @ViewChild('tooltipContent') public tooltipContent: ElementRef;
     @ViewChild('tooltipArrowTop') public tooltipArrowTop: ElementRef;
     @ViewChild('tooltipArrowBottom') public tooltipArrowBottom: ElementRef;
-
     public ngAfterViewInit() {
         const targetElement = this.tooltipConfig.element.nativeElement;
-        const targetElementOffset = jQuery(targetElement).offset();
+        const targetElementTop = targetElement.getBoundingClientRect().top;
+        const targetElementLeft = targetElement.getBoundingClientRect().left;
         const tooltipElement = this.tooltipContent.nativeElement;
         const tooltipArrowTopElement = this.tooltipArrowTop.nativeElement;
         const tooltipArrowBottomElement = this.tooltipArrowBottom.nativeElement;
@@ -32,50 +30,51 @@ export class TooltipComponent implements AfterViewInit {
         // set initial left position
         let leftPosition: number;
         if (!this.tooltipConfig.centered) {
-            leftPosition = targetElementOffset.left - tooltipElement.offsetWidth / 2;
+            leftPosition = targetElementLeft - tooltipElement.offsetWidth / 2;
         } else {
-            leftPosition = targetElementOffset.left + targetElement.offsetWidth / 2 - tooltipElement.offsetWidth / 2;
+            leftPosition = targetElementLeft + targetElement.offsetWidth / 2 - tooltipElement.offsetWidth / 2;
         }
         // move tooltip to the left if it goes to the right out of screen; add a bit of space after the element
         const maxLeftPosition = window.innerWidth - tooltipElement.offsetWidth - 20;
         if (leftPosition > maxLeftPosition) {
             const leftShiftBottomArrow = (leftPosition - maxLeftPosition - 5) + 'px';
             const leftShiftTopArrow = (maxLeftPosition - leftPosition - 5) + 'px';
-            jQuery(tooltipArrowBottomElement).css({'margin-left': leftShiftBottomArrow});
-            jQuery(tooltipArrowTopElement).css({'margin-right': leftShiftTopArrow});
+            tooltipArrowBottomElement.style['margin-left'] = leftShiftBottomArrow;
+            tooltipArrowBottomElement.style['margin-right'] = leftShiftTopArrow;
             leftPosition = maxLeftPosition;
         }
         // move tooltip to the right if it goes to the left out of screen
         if (leftPosition < 0) {
             const rightShiftBottomArrow = leftPosition - 10 + 'px';
             const rightShiftTopArrow = Math.abs(leftPosition) + 'px';
-            jQuery(tooltipArrowBottomElement).css({'margin-left': rightShiftBottomArrow});
-            jQuery(tooltipArrowTopElement).css({'margin-right': rightShiftTopArrow});
+            tooltipArrowBottomElement.style['margin-left'] = rightShiftBottomArrow;
+            tooltipArrowTopElement.style['margin-right'] = rightShiftTopArrow;
             leftPosition = 5;
         }
         leftPosition = leftPosition + this.tooltipConfig.leftOffset;
-        jQuery(tooltipElement).css({left: leftPosition});
+        tooltipElement.style['left'] = leftPosition + 'px';
 
         // set top position
         const heightAboveElement = tooltipElement.offsetHeight + targetElement.offsetHeight;
-        const topPosition = targetElementOffset.top - heightAboveElement;
+        const topPosition = targetElementTop - heightAboveElement;
         if (this.tooltipConfig.topOffsetAbsolute > 0) {
-            jQuery(tooltipElement).css({position: 'fixed', top: this.tooltipConfig.topOffsetAbsolute + 'px'});
+            tooltipElement.style.position = 'fixed';
+            tooltipElement.style['top'] = this.tooltipConfig.topOffsetAbsolute + 'px';
         } else {
-            jQuery(tooltipElement).offset({top: topPosition + this.tooltipConfig.topOffset});
+            tooltipElement.style['top'] = (topPosition + this.tooltipConfig.topOffset + 10) + 'px';
         }
 
         // set location of arrow
-        jQuery('.tooltip-arrow-bottom').removeClass('show');
-        jQuery('.tooltip-arrow-top').removeClass('show');
+        tooltipArrowBottomElement.classList.remove('show');
+        tooltipArrowTopElement.classList.remove('show');
         if (this.tooltipConfig.arrowPositionVertical === 'top') {
-            jQuery(tooltipArrowTopElement).addClass('show');
+            tooltipArrowTopElement.classList.add('show');
         } else {
-            jQuery(tooltipArrowBottomElement).addClass('show');
+            tooltipArrowBottomElement.classList.add('show');
         }
 
         // hide previous en show current
-        jQuery('.tooltip-component-text').removeClass('show');
-        jQuery(tooltipElement).addClass('show');
+        tooltipElement.classList.remove('show');
+        tooltipElement.classList.add('show');
     }
 }
