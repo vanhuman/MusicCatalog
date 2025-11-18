@@ -8,7 +8,8 @@ import { TooltipService } from '../../services/tooltipService';
             <shared-tooltip-component
                     *ngFor="let tooltip of tooltipService.tooltips()" [tooltipConfig]="tooltip">
             </shared-tooltip-component>
-        </div>`
+        </div>`,
+    standalone: false
 })
 
 export class TooltipContainerComponent {

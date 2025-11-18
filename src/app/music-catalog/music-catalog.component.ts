@@ -8,6 +8,7 @@ import { AuthenticationServiceInterface } from './services/authentication.servic
     selector: 'music-catalog',
     templateUrl: './music-catalog.component.html',
     styleUrls: ['./music-catalog.component.css'],
+    standalone: false
 })
 export class MusicCatalogComponent implements OnInit, OnDestroy {
     public validSession = true;

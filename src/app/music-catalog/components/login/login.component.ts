@@ -10,6 +10,7 @@ import { AuthenticationServiceInterface } from '../../services/authentication.se
     selector: 'music-catalog-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
+    standalone: false
 })
 export class LoginComponent implements OnInit, OnDestroy {
     @Output() loggedIn: EventEmitter<boolean> = new EventEmitter<boolean>();

@@ -4,13 +4,14 @@ import { AlbumsFactoryInterface } from '../../../factories/albums/albums.factory
 import { AlbumPostData } from '../../../models/api-post-data/album-api-post-data.interface';
 import { McCommunication } from '../../../models/music-catalog-communication.interface';
 import { Configuration } from '../../../configuration';
-import * as moment from 'moment';
+import moment from 'moment';
 import { AuthenticationServiceInterface } from '../../../services/authentication.service.interface';
 
 @Component({
     selector: 'music-catalog-album',
     templateUrl: './album.component.html',
     styleUrls: ['./album.component.css'],
+    standalone: false
 })
 export class AlbumComponent {
     @Output() mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();

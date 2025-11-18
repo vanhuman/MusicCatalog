@@ -16,6 +16,7 @@ export interface TooltipConfig {
 
 @Directive({
     selector: '[sharedTooltip]',
+    standalone: false
 })
 export class TooltipDirective implements OnDestroy, OnChanges {
     public static tooltipConfigDefault: TooltipConfig = {

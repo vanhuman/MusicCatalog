@@ -91,8 +91,6 @@ form.header label {
 form.header input {
   padding: 0 5px;
   height: 18px;
-  font-family: "Andale Mono", "trebuchet ms", verdana, arial, sans-serif;
-  font-size: 12px;
 }
 form.header input.page {
   width: 25px;

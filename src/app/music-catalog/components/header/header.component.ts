@@ -16,6 +16,7 @@ import { CustomModalComponent } from '../../modals/custom-modal.component';
     selector: 'music-catalog-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css'],
+    standalone: false
 })
 export class HeaderComponent implements OnDestroy {
     @Output() mcCommunicationOut: EventEmitter<McCommunication> = new EventEmitter<McCommunication>();
