@@ -261,8 +261,6 @@ export class OverviewComponent {
     }
 
     private getAlbums(concat = true): void {
-        console.log('get albums');
-        console.log(this.page);
         this.loading = true;
         if (!concat) {
             this.albumsFactory.clearThrottleQueue();
