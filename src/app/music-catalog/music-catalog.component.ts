@@ -68,5 +68,9 @@ export class MusicCatalogComponent implements OnInit, OnDestroy {
 
     public processInputFromOverview(mcCommunication: McCommunication): void {
         this.outputToHeader = mcCommunication;
+        if (mcCommunication.action === 'logout') {
+            this.authenticationService.logout();
+            this.showLogin = true;
+        }
     }
 }

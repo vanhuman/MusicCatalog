@@ -236,11 +236,11 @@ export class AlbumEditComponent implements OnInit, OnDestroy, AfterViewInit {
                                 this.album = album;
                             }
                         },
-                        error: () => {
+                        error: (status) => {
                             this.waiting = false;
                             this.saving = false;
                             this.mcCommunication.emit({
-                                action: 'close',
+                                action: status === 401 ? 'logout' : 'close',
                             });
                         },
                     });
