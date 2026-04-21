@@ -5,9 +5,11 @@ import { TooltipService } from '../../services/tooltipService';
     selector: 'shared-tooltip-container',
     template: `
         <div class="tooltip-container">
+          @for (tooltip of tooltipService.tooltips(); track tooltip) {
             <shared-tooltip-component
-                    *ngFor="let tooltip of tooltipService.tooltips()" [tooltipConfig]="tooltip">
+              [tooltipConfig]="tooltip">
             </shared-tooltip-component>
+          }
         </div>`,
     standalone: false
 })

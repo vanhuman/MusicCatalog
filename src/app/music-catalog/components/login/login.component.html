@@ -18,7 +18,9 @@
                 >
             </div>
             <div class="field">
-                <div class="error" *ngIf="error">{{ error }}</div>
+                @if (error) {
+                    <div class="error">{{ error }}</div>
+                }
             </div>
         </fieldset>
         <div class="buttons">
