@@ -77,6 +77,7 @@ export class OverviewComponent {
                     break;
                 case 'loggedIn':
                     this.outputToAlbumRow = mcCommunication;
+                    this.getAlbums();
                     break;
                 default:
                     //
@@ -199,6 +200,13 @@ export class OverviewComponent {
     public processInputFromAlbumEdit(mcCommunication: McCommunication): void {
         let index: number;
         switch (mcCommunication.action) {
+            case 'logout':
+                this.albumToEdit = null;
+                this.showAlbumEdit = false;
+                this.page = 1;
+                this.albums = [];
+                this.mcCommunicationOut.emit({action: 'logout'});
+                break;
             case 'close':
                 this.albumToEdit = null;
                 this.showAlbumEdit = false;
@@ -252,7 +260,7 @@ export class OverviewComponent {
         this.selectedAlbum = album;
     }
 
-    private getAlbums(concat: boolean = true): void {
+    private getAlbums(concat = true): void {
         this.loading = true;
         if (!concat) {
             this.albumsFactory.clearThrottleQueue();
@@ -274,7 +282,12 @@ export class OverviewComponent {
                         this.albums = response;
                     }
                 },
-                error: () => {
+                error: (status) => {
+                    if (status === 401) {
+                        this.albums = [];
+                        this.page = 1;
+                        this.mcCommunicationOut.emit({action: 'logout'});
+                    }
                     this.loading = false;
                 }
             });

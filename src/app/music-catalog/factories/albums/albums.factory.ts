@@ -52,8 +52,8 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         //
     }
 
-    public getAlbums(getAlbumsParams: GetAlbumsParams): Observable<AlbumInterface[]> {
-        const observable: Subject<AlbumInterface[]> = new Subject<AlbumInterface[]>();
+    public getAlbums(getAlbumsParams: GetAlbumsParams): Subject<AlbumInterface[]> {
+        const subject: Subject<AlbumInterface[]> = new Subject<AlbumInterface[]>();
         const token = this.authenticationService.getToken();
         let params = new HttpParams();
         params = params.set('token', token);
@@ -63,29 +63,43 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
         params = params.set('sortdirection', getAlbumsParams.sortdirection);
         this.apiRequestService.get<AlbumsApiResponse>('/albums', params).subscribe({
             next: (response) => {
-                const albums: AlbumInterface[] = [];
-                this.albumsMetaData.next({
-                    totalNumberOfRecords: response.body.pagination.total_number_of_records,
-                    currentPage: response.body.pagination.page,
-                    pageSize: response.body.pagination.page_size,
-                });
-                response.body.albums.forEach((albumApiResponse) => {
-                    albumApiResponse = this.processLastfmUrl(albumApiResponse);
-                    if (this.state.cache[albumApiResponse.id]) {
-                        albums.push(this.updateAlbum(this.state.cache[albumApiResponse.id], albumApiResponse));
-                    } else {
-                        const newAlbum = this.newAlbum(albumApiResponse);
-                        albums.push(newAlbum);
-                        this.state.cache[newAlbum.getId()] = newAlbum;
-                    }
-                });
-                observable.next(albums);
+                if (response?.body?.pagination && response?.body?.albums) {
+                    const albums: AlbumInterface[] = [];
+                    this.albumsMetaData.next({
+                        totalNumberOfRecords: response.body.pagination.total_number_of_records,
+                        currentPage: response.body.pagination.page,
+                        pageSize: response.body.pagination.page_size,
+                    });
+                    response.body.albums.forEach((albumApiResponse) => {
+                        albumApiResponse = this.processLastfmUrl(albumApiResponse);
+                        if (this.state.cache[albumApiResponse.id]) {
+                            albums.push(this.updateAlbum(this.state.cache[albumApiResponse.id], albumApiResponse));
+                        } else {
+                            const newAlbum = this.newAlbum(albumApiResponse);
+                            albums.push(newAlbum);
+                            this.state.cache[newAlbum.getId()] = newAlbum;
+                        }
+                    });
+                    subject.next(albums);
+                } else {
+                    this.errorHelper.errorHandling(
+                        {
+                            status: 500,
+                            error: {
+                                message: 'An unknown error has occured.',
+                                error_type: {
+                                    id: 1,
+                                    description: 'System error'
+                                }
+                            }
+                        }, subject);
+                }
             },
             error: (error: HttpErrorResponse) => {
-                this.errorHelper.errorHandling(error, observable);
+                this.errorHelper.errorHandling(error, subject);
             }
         });
-        return observable;
+        return subject;
     }
 
     public getImagesFromLastfm(album: AlbumInterface): Promise<Map<ImageSize, string>> {
@@ -112,9 +126,8 @@ export class AlbumsFactory implements AlbumsFactoryInterface {
                             reject();
                         }
                     },
-                    error: (error) => {
+                    error: () => {
                         reject();
-                        console.log(error);
                     }
                 });
         });

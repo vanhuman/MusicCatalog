@@ -4,10 +4,15 @@ interface ErrorType {
 }
 
 export interface ErrorApiResponse {
-    error_code: number;
+    error_code?: number;
     error_type: ErrorType;
     message: string;
-    reference: string;
+    reference?: string;
+}
+
+export interface ErrorApiResponseWrapper {
+    status: number;
+    error: ErrorApiResponse;
 }
 
 export function isErrorApiResponse(object: any): object is ErrorApiResponse {

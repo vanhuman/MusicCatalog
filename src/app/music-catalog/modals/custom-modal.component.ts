@@ -37,6 +37,7 @@ export class CustomModalComponent implements OnInit, OnDestroy {
     private closeOnYes = true;
     private startedWaiting = false;
     private modalIsOpen = false;
+    private onCloseFunction: () => void;
 
     constructor(
         private modalService: ModalServiceInterface,
@@ -128,6 +129,10 @@ export class CustomModalComponent implements OnInit, OnDestroy {
         return this;
     }
 
+    public onClose (callBack: () => void): CustomModalComponent {
+        this.onCloseFunction = callBack;
+        return this;
+    }
     public doCloseOnYes(value: boolean): CustomModalComponent {
         this.closeOnYes = value;
         return this;
@@ -143,6 +148,7 @@ export class CustomModalComponent implements OnInit, OnDestroy {
         this.modalIsOpen = false;
         this.element.style.display = 'none';
         document.body.classList.remove('custom-modal-open');
+        this.onCloseFunction();
         this.reset();
     }
 

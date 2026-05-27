@@ -80,7 +80,7 @@ export class AuthenticationService implements AuthenticationServiceInterface, On
     }
 
     public getToken(): string {
-        return this.session.getToken();
+        return this.session?.getToken();
     }
 
     public isAdmin(): boolean {

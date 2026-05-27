@@ -3,6 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { ModalServiceInterface } from '../../services/modal.service.interface';
 import { ErrorHelperInterface } from './error.helper.interface';
+import { ErrorApiResponseWrapper } from '../../models/api-responses/error-api-response.interface';
 
 @Injectable()
 export class ErrorHelper implements ErrorHelperInterface {
@@ -11,7 +12,7 @@ export class ErrorHelper implements ErrorHelperInterface {
     ) {
     }
 
-    public errorHandling(error: HttpErrorResponse, observable: Subject<any>): void {
+    public errorHandling(error: HttpErrorResponse | ErrorApiResponseWrapper, subject: Subject<any>): void {
         if (error.status === 401) {
             error.error.message = 'Your session has expired. Please login again.';
         }
@@ -20,7 +21,7 @@ export class ErrorHelper implements ErrorHelperInterface {
         }
         this.modalService.getModal('modal1')
             .setErrorMessage(error.error)
+            .onClose(() => subject.error(error.status))
             .open();
-        observable.error(false);
     }
 }

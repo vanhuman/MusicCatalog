@@ -116,7 +116,6 @@ export class ApiRequestService implements ApiRequestServiceInterface {
     }
 
     private handleError(errorResponse: HttpErrorResponse) {
-        console.log(errorResponse);
         if (errorResponse.status === 401) { // authorisation error
             this.authorisationError.next(true);
         }

@@ -3,15 +3,17 @@
             [mcCommunication]="outputToHeader"
             (mcCommunicationOut)="processInputFromHeader($event)">
     </music-catalog-header>
-    <music-catalog-overview
-            *ngIf="validSession"
-            [mcCommunication]="outputToOverview"
-            (mcCommunicationOut)="processInputFromOverview($event)">
-    </music-catalog-overview>
-    <music-catalog-login
-            *ngIf="showLogin"
-            (loggedIn)="processInputFromLogin($event)">
-    </music-catalog-login>
+    @if (validSession) {
+        <music-catalog-overview
+                [mcCommunication]="outputToOverview"
+                (mcCommunicationOut)="processInputFromOverview($event)">
+        </music-catalog-overview>
+    }
+    @if (showLogin) {
+        <music-catalog-login
+                (loggedIn)="processInputFromLogin($event)">
+        </music-catalog-login>
+    }
     <custom-modal [id]="'modal1'"></custom-modal>
     <shared-tooltip-container></shared-tooltip-container>
 </div>
